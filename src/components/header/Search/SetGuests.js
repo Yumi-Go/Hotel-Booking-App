@@ -1,10 +1,8 @@
-/* eslint-disable no-unused-vars */
 import * as React from "react";
 import { styled, alpha } from "@mui/material/styles";
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-// import { Unstable_NumberInput as NumberInput } from "@mui/base/Unstable_NumberInput";
 import Box from "@mui/material/Box";
 import GroupIcon from '@mui/icons-material/Group';
 import Stack from '@mui/material/Stack';
@@ -50,44 +48,28 @@ const selectStyles = {
     },
 };
 
+const submit = () => {
+
+}
+
 export default function SetGuests() {
-    const [guestsType, setGuestsType] = React.useState('');
-    const [adultsNum, setAdultsNum] = React.useState(0);
-    const [childrenNum, setChildrenNum] = React.useState(0);
+    const [adults, setAdults] = React.useState(0);
+    const [children, setChildren] = React.useState(0);
 
     React.useEffect(() => {
-        console.log("guestsType: ", guestsType);
-        console.log("adultsNum: ", adultsNum);
-        console.log("childrenNum: ", childrenNum);
-      }, [guestsType, adultsNum, childrenNum]);
+        console.log("adults: ", adults);
+        console.log("children: ", children);
+      }, [adults, children]);
 
     const guestTypeOptions = ["Adults", "Children"];
-
-    const guestsTypeHandleChange = (event) => {
-        setGuestsType(event.target.value.length > 0 ? event.target.value : "");
-    };
-
-    const guestsNumHandleChange = (event) => {
-        console.log("_guestsType: ", guestsType);
-        if (guestsType === 'Adults') {
-            setAdultsNum(!isNaN(event.target.value) ? event.target.value : 0);
-            console.log("event.target.value(Adults): ", event.target.value);
-        } else if (guestsType === 'Children') {
-            setChildrenNum(!isNaN(event.target.value) ? event.target.value : 0);
-            console.log("event.target.value(Children): ", event.target.value);
-        }
-    };
 
     return (
         <StyledFormControl size="small">
             <Select
-                // multiple
                 displayEmpty
-                value={guestsType}
-                onChange={guestsTypeHandleChange}
                 sx={selectStyles}
-                renderValue={(selected) => {
-                    if (selected.length === 0) {
+                renderValue={() => {
+                    if (adults === 0 && children === 0) {
                         return (
                             <GroupIconWrapper>
                                 <Box sx={{ display: "flex", color: 'gray' }}>
@@ -97,11 +79,14 @@ export default function SetGuests() {
                             </GroupIconWrapper>
                         );
                     }
-                    return selected;
-                    // return selected.join(', ');
+                    return `Adults: ${adults} / Children: ${children}`;
+                    // return selectRenderValue(guestsType);
+
                 }}
             >
                 { guestTypeOptions.map((gType, index) => {
+                    console.log("_index: ", index);
+
                     return (
                         <MenuItem value={gType} key={index}>
                             <Stack
@@ -115,13 +100,24 @@ export default function SetGuests() {
                                     {gType}
                                 </Box>
                                 <Box>
-                                    <NumberInput min={1} max={99} changeHandler={guestsNumHandleChange} />
+                                    <NumberInput
+                                        min={0}
+                                        max={99}
+                                        changeHandler={
+                                            (event, val) => {
+                                                gType === 'Adults' ? setAdults(val) : setChildren(val);
+                                            }
+                                        }
+                                    />
                                 </Box>
                             </Stack>
                         </MenuItem>
                     );
                 })}
-                <Button width="" size="small">Done</Button>
+                <Button
+                    width=""
+                    size="small"
+                    onClick={submit}>Done</Button>
             </Select>
         </StyledFormControl>
     );
