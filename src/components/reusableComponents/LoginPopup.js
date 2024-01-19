@@ -1,5 +1,9 @@
+import firebase from 'firebase/compat/app';
+import * as firebaseui from 'firebaseui'
+import 'firebaseui/dist/firebaseui.css'
+import { useEffect } from 'react';
+import auth from '../../firebaseConfig';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -8,44 +12,63 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 
 export default function LoginPopup({ isOpen, closeHandler }) {
+
+    useEffect(() => {
+        if (isOpen) {
+            const timer = setTimeout(() => {
+                var uiConfig = {
+                    callbacks: {
+                        signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+                            return false;
+                        },
+                        uiShown: function() {
+                            document.getElementById('loader').style.display = 'none';
+                        }
+                    },
+                    signInFlow: 'popup',
+                    signInSuccessUrl: '/',
+                    signInOptions: [
+                        {
+                            provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+                            requireDisplayName: false
+                        },
+                        firebase.auth.GoogleAuthProvider.PROVIDER_ID
+                    ],
+                };
+                var ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(auth);
+                ui.start('#firebaseui-auth-container', uiConfig);
+            }, 500);
+
+            return () => {
+                clearTimeout(timer);
+                var ui = firebaseui.auth.AuthUI.getInstance();
+                if (ui) {
+                    ui.delete();
+                }
+            }
+        }
+
+    }, [isOpen]);
+
+
     return (
         <Dialog
-        open={isOpen}
-        onClose={closeHandler}
-        PaperProps={{
-        component: 'form',
-        onSubmit: (event) => {
-            event.preventDefault();
-            const formData = new FormData(event.currentTarget);
-            const formJson = Object.fromEntries(formData.entries());
-            const email = formJson.email;
-            console.log(email);
-            closeHandler();
-        },
-        }}
-    >
-        <DialogTitle>Subscribe</DialogTitle>
-        <DialogContent>
-        <DialogContentText>
-            This is login popup
-        </DialogContentText>
-        <TextField
-            autoFocus
-            required
-            margin="dense"
-            id="name"
-            name="email"
-            label="Email Address"
-            type="email"
-            fullWidth
-            variant="standard"
-        />
-        </DialogContent>
-        <DialogActions>
-        <Button onClick={closeHandler}>Cancel</Button>
-        <Button type="submit">Log In</Button>
-        </DialogActions>
-    </Dialog>
-
+            open={isOpen}
+            onClose={closeHandler}
+            // maxWidth={'xs'}
+            // fullWidth={true}
+        >
+            <DialogTitle>Log In</DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    This is login popup
+                </DialogContentText>
+                <div id="firebaseui-auth-container"></div>
+                <div id="loader" className="text-center">Loading...</div>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={closeHandler}>Cancel</Button>
+            </DialogActions>
+        </Dialog>
     );
 }
