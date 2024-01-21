@@ -2,16 +2,20 @@ import firebase from 'firebase/compat/app';
 import * as firebaseui from 'firebaseui'
 import 'firebaseui/dist/firebaseui.css'
 import { useEffect } from 'react';
-import auth from '../../firebaseConfig';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import firebaseConfig from '../../firebaseConfig';
+import useFirestore from '../../hooks/useFirestore';
 
 
 export default function LoginPopup({ isOpen, closeHandler }) {
+
+    const { auth } = firebaseConfig;
+    const { addUser } = useFirestore();
 
     useEffect(() => {
         if (isOpen) {
@@ -19,6 +23,7 @@ export default function LoginPopup({ isOpen, closeHandler }) {
                 var uiConfig = {
                     callbacks: {
                         signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+                            addUser(authResult.user.uid, authResult.user.email);
                             return false;
                         },
                         uiShown: function() {
@@ -48,7 +53,7 @@ export default function LoginPopup({ isOpen, closeHandler }) {
             }
         }
 
-    }, [isOpen]);
+    }, [isOpen, addUser, auth]);
 
 
     return (
