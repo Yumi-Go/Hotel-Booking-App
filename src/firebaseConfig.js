@@ -1,7 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
-const firebaseConfig = {
+const firebase = {
     apiKey: "***REMOVED***",
     authDomain: "hotel-booking-app-e61c6.firebaseapp.com",
     projectId: "hotel-booking-app-e61c6",
@@ -11,7 +12,10 @@ const firebaseConfig = {
     measurementId: "G-MS0REN55YG"
   };
 
-// Initialize Firebase Authentication and get a reference to the service
-const auth = getAuth(initializeApp(firebaseConfig));
+const app = initializeApp(firebase);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-export default auth;
+const firebaseConfig = { auth, db };
+
+export default firebaseConfig;
