@@ -11,6 +11,9 @@ import SetDates from "./SetDates";
 
 const StyledAppBar = styled(AppBar)(() => ({
     position: "static",
+    display: "flex",
+    width: "100%",
+    alignItems: 'center',
     backgroundColor: "#0a0079",
     color: 'white',
     boxShadow: 0
