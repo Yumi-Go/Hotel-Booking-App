@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { Box, Grid, Paper } from "@mui/material";
+import amadeus from "../../amadeusConfig";
 // import useAuth from "../../hooks/useAuth";
 
 
@@ -10,7 +11,8 @@ export default function Home() {
         padding: '10px',
         height: '200px',
         textAlign: 'center',
-       }));
+    }));
+
 
     return (
         <Box sx={{ width: "100%", display:"flex", position: "absolute", justifyContent: 'center'}}>
