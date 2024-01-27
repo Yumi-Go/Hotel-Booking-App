@@ -1,10 +1,79 @@
 import styled from "@emotion/styled";
 import { Box, Grid, Paper } from "@mui/material";
-import amadeus from "../../amadeusConfig";
+import { useEffect } from "react";
+// import amadeus from "../../amadeusConfig";
 // import useAuth from "../../hooks/useAuth";
 
 
+// amadeus.shopping.hotelOffersSearch
+// .get({
+//     hotelIds: 'RTPAR001',
+//     adults: '2'
+// })
+// .then(function(response) {
+//     console.log(response.data);
+// }).catch(function(responseError) {
+//     console.log(responseError.code);
+// });
+
+
+
+
+
+
+
+
 export default function Home() {
+
+
+  const getToken = () => {
+    fetch("https://test.api.amadeus.com/v1/security/oauth2/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: "grant_type=client_credentials&client_id=8MEG3LPspvqB3GoiWYfEibC4N4nZoBOD&client_secret=o1bK1JjBi39gIFDW",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("data.access_token: ", data.access_token);
+        fetch(
+          "https://test.api.amadeus.com/v3/shopping/hotel-offers?hotelIds=MCLONGHM&adults=1&checkInDate=2024-11-22&roomQuantity=1",
+          {
+            method: "GET",
+            headers: {
+              Authorization: 'Bearer Fkg7XwwpW4SS0JDoWjhXuWAKRACV',
+            },
+          }
+        )
+          .then((res) => res.json())
+          .then((datas) => {
+            if (datas.data.length) {
+              console.log("datas: ", datas);
+            }
+          })
+          .catch((err) => console.error("2", err));
+      })
+      .catch((err) => console.error("1", err));
+  };
+
+
+
+
+  useEffect(() => {
+    getToken();
+  }, []);
+
+
+
+
+
+
+
+
+
+
+
+
+
     // const { currentUser, logOut } = useAuth();
     const Item = styled(Paper)(() => ({
         backgroundColor: 'pink',
