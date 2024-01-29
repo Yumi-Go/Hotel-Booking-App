@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useEffect } from "react";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -15,7 +15,7 @@ import 'firebaseui/dist/firebaseui.css'
 
 
 export default function PrimarySearchAppBar() {
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     const handleClickOpen = () => {
          setOpen(true);
     };

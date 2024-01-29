@@ -1,10 +1,10 @@
 import Amadeus from 'amadeus';
 
 const amadeus = new Amadeus({
-    // clientId: process.env.AMADEUS_CLIENT_ID,
-    // clientSecret: process.env.AMADEUS_CLIENT_SECRET
-    clientId: "8MEG3LPspvqB3GoiWYfEibC4N4nZoBOD",
-    clientSecret: "o1bK1JjBi39gIFDW"
+    clientId: process.env.REACT_APP_AMADEUS_CLIENT_ID,
+    clientSecret: process.env.REACT_APP_AMADEUS_CLIENT_SECRET
+    // clientId: "8MEG3LPspvqB3GoiWYfEibC4N4nZoBOD",
+    // clientSecret: "o1bK1JjBi39gIFDW"
 });
 
 

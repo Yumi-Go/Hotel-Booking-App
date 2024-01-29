@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState, useEffect } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
@@ -53,10 +53,10 @@ const submit = () => {
 }
 
 export default function SetGuests() {
-    const [adults, setAdults] = React.useState(0);
-    const [children, setChildren] = React.useState(0);
+    const [adults, setAdults] = useState(0);
+    const [children, setChildren] = useState(0);
 
-    React.useEffect(() => {
+    useEffect(() => {
         console.log("adults: ", adults);
         console.log("children: ", children);
       }, [adults, children]);

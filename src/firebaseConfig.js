@@ -3,7 +3,7 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebase = {
-    apiKey: "AIzaSyB2avBY_fO6wPkMDaCEYpUOpQhTMe2Z80M",
+    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
     authDomain: "hotel-booking-app-e61c6.firebaseapp.com",
     projectId: "hotel-booking-app-e61c6",
     storageBucket: "hotel-booking-app-e61c6.appspot.com",
