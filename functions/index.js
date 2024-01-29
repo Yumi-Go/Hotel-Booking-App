@@ -36,7 +36,7 @@
 
 // const amadeus = new Amadeus({
 //   clientId: amadeusConfig.client_id,
-//   clientSecret: process.env.AMADEUS_CLIENT_SECRET,
+//   clientSecret: process.env.REACT_APP_AMADEUS_CLIENT_SECRET,
 // });
 
 // exports.hotelOffersSearch = onRequest(async (req, res) => {
