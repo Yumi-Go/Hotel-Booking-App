@@ -4,8 +4,10 @@ import { useState, useEffect } from "react";
 import useAuth from "../../hooks/useAuth";
 import searchRequest from "../../hooks/useSearchAPI";
 
-// search result (single item for each hotel from multiple hotels)
-export default function Home() {
+
+
+// this page is for multiple offers from single hotel
+export default function HotelDetail() {
 
   const [searchConditions, setSearchConditions] = useState({
     hotelId: "MCLONGHM",
@@ -19,6 +21,8 @@ export default function Home() {
   });
   const [offers, setOffers] = useState([]); // [ { hotel(+photos) }, [ {offer 1}, {offer 2}, {offer 3}, ... ] ]
   const [photos, setPhotos] = useState([]); // [ { hotel(+photos) + offer }, { hotel(+photos) + offer }, ... ]
+
+
 
 
   async function search() {
