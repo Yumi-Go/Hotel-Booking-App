@@ -2,13 +2,15 @@ import styled from "@emotion/styled";
 import { Box, Grid, Paper, Stack } from "@mui/material";
 import { useState, useEffect } from "react";
 import useAuth from "../../hooks/useAuth";
-import searchRequest from "../../hooks/useSearchAPI";
+import searchRequest from "../../hooks/useHotelAPI";
+import {getOffers} from "../../hooks/useHotelAPI";
+
 
 // search result (single item for each hotel from multiple hotels)
 export default function Home() {
 
   const [searchConditions, setSearchConditions] = useState({
-    hotelId: "MCLONGHM",
+    hotelId: ["MCLONGHM", "HNPARKGU"], // multiple hotels available.. for single hotel just ["MCLONGHM"]
     adults: 2,
     children: 0,
     checkInDate: '2024-05-22',
@@ -17,34 +19,25 @@ export default function Home() {
     priceRange: "100-800",
     currency: "EUR"
   });
-  const [offers, setOffers] = useState([]); // [ { hotel(+photos) }, [ {offer 1}, {offer 2}, {offer 3}, ... ] ]
-  const [photos, setPhotos] = useState([]); // [ { hotel(+photos) + offer }, { hotel(+photos) + offer }, ... ]
+  const [searchResult, setSearchResult] = useState([]); // [{ ...hotel, photoUrls: [url1, url2..], offers: [{offer1},{offer2}..] }, { ...hotel, photoUrls: [url1, url2..], offers: [{offer1},{offer2}..] }, ...]
+  const [photos, setPhotos] = useState([]);
 
 
   async function search() {
     try {
-      // searchResult should be the array of objects like this
-      // [ { hotel(+photos) }, [ {offer 1}, {offer 2}, {offer 3}, ... ] ]
-      const searchResult = await searchRequest(searchConditions);
-      console.log("searchResult in Home: ", searchResult);
-      setOffers(searchResult);
+      // response should be the array of objects like this
+      // [{ ...hotel, photoUrls: [url1, url2..], offers: [{offer1},{offer2}..] }, { ...hotel, photoUrls: [url1, url2..], offers: [{offer1},{offer2}..] }, ...]
+      const response = await getOffers(searchConditions);
+      console.log("searchResult in Home: ", response);
+      setSearchResult(response); // Assuming response structure is correct
+      setPhotos(response.map(hotel => hotel.photoUrls[0]));
+      console.log("searchResult updated: ", searchResult);
+      console.log("photos updated: ", photos);
     } catch (error) {
-      console.error("Error in useEffect: ", error);
+      console.error("Error in search(): ", error);
     }
   }
 
-  useEffect(() => {
-    if (offers.length > 0) {
-      console.log("offers updated: ", offers);
-      const hotelObj = offers[0];
-      // console.log("hotelObj: ", hotelObj);
-      // setPhotos(hotelObj.photoUrls); // 10 photos for each hotel.. when offers from single hotel should be shown (this will be used in hotel detail page)
-      const singlePhoto = [hotelObj.photoUrls[0]]; // single photo for each hotel.. when offers from multiple hotels should be shown
-      setPhotos(singlePhoto);
-    }
-  }, [offers]);
-
-  
   const { currentUser, logOut } = useAuth();
   const Item = styled(Paper)(() => ({
       backgroundColor: 'pink',
@@ -52,8 +45,6 @@ export default function Home() {
       height: '200px',
       textAlign: 'center',
   }));
-
-
 
 
   return (
@@ -76,15 +67,24 @@ export default function Home() {
         </Box>
         <Box sx={{ width: "95%", my: "20px", bgcolor: "red" }}>
           <Grid container padding="20px" spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-            {
-              Array.isArray(photos) && photos.map((photo, index) => (
-                <Grid item xs={2} sm={3} md={3} key={index}>
-                  <Item>
-                      <img src={photo} alt={`hotel ${index}`} style={{ maxWidth: '100%', height: '100%' }} />
-                  </Item>
-                </Grid>
-              ))
+
+          {
+              Array.isArray(searchResult) && searchResult.length > 0 ?
+              searchResult.map((hotel, index) => (
+                  <Grid item xs={2} sm={3} md={3} key={index}>
+                    <Item>
+                      <Box sx={{ height: "40%", display:"flex", justifyContent: 'center'}}>
+                        <h4>{hotel.name}</h4>
+                      </Box>
+                      <Box>
+                        <img src={hotel.photoUrls[0]} alt={`hotel ${index}`} style={{ maxWidth: '100%', height: '100%' }} />
+                      </Box>
+                    </Item>
+                  </Grid>
+                ))
+              : <div>No Search Result</div>
             }
+
           </Grid>
         </Box>
       </Stack>
