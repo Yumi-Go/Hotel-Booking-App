@@ -3,6 +3,7 @@ import * as React from "react";
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
+import { useSearch } from "../../../contexts/SearchContext";
 
 const Search = styled("div")(({ theme }) => ({
     position: "relative",
@@ -39,13 +40,27 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
   
 
+// App.js의 Grand-child이므로, props 대신 context 사용 시도해보기!
 export default function InputSearchTerm({ msg }) {
+
+    const { hotelName, setHotelName, cityArea, setCityArea } = useSearch();
+
+    const handleChange = (e) => {
+        if (msg === "Hotel Name") {
+            setHotelName(e.target.value);
+        } else if (msg === "City or Area") {
+            setCityArea(e.target.value);
+        }
+    };
+
     return (
         <Search>
             <SearchIconWrapper>
                 <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
+                value={msg === "Hotel Name" ? hotelName : cityArea}
+                onChange={handleChange}
                 placeholder={ "Enter " + msg + "..." }
                 inputProps={{ "aria-label": "search" }}
             />

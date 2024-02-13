@@ -10,6 +10,7 @@ import SetGuests from "./SetGuests";
 import InputSearchTerm from "./InputSearchTerm";
 import SetDates from "./SetDates";
 import { getIds, searchHotels } from "../../../hooks/useHotelAPI";
+import { useSearch } from "../../../contexts/SearchContext";
 
 
 const StyledAppBar = styled(AppBar)(() => ({
@@ -23,7 +24,25 @@ const StyledAppBar = styled(AppBar)(() => ({
 }));
 
 
+
+
+
+
 export default function SearchBar({ onSearch }) {
+
+
+    const { hotelName, cityArea } = useSearch();
+
+    console.log("hotelName in Search.js from Context: ", hotelName);
+    console.log("cityArea in Search.js from Context: ", cityArea);
+    
+    //// 이거 없어도 바로바로 반영 잘 됨.
+    // useEffect(() => {
+    //   console.log("updated hotelName in Search.js from Context: ", hotelName);
+    //   console.log("updated cityArea in Search.js from Context: ", cityArea);
+    // }, [hotelName, cityArea]);
+    
+
   
     const searchClick = () => {
       onSearch();
