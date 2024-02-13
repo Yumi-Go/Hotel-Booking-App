@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
 import * as React from "react";
+import { useState, useEffect } from "react";
+
 import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -7,6 +9,7 @@ import Toolbar from "@mui/material/Toolbar";
 import SetGuests from "./SetGuests";
 import InputSearchTerm from "./InputSearchTerm";
 import SetDates from "./SetDates";
+import { getIds, searchHotels } from "../../../hooks/useHotelAPI";
 
 
 const StyledAppBar = styled(AppBar)(() => ({
@@ -19,7 +22,13 @@ const StyledAppBar = styled(AppBar)(() => ({
     boxShadow: 0
 }));
 
-export default function PrimarySearchAppBar() {
+
+export default function SearchBar({ onSearch }) {
+  
+    const searchClick = () => {
+      onSearch();
+    };
+
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -36,6 +45,7 @@ export default function PrimarySearchAppBar() {
                     <InputSearchTerm msg={ "City or Area" } />
                     <SetDates />
                     <SetGuests />
+                    <button onClick={()=>searchClick()}>Search</button>
 
                     {/* <Box sx={{ flexGrow: 1 }} /> */}
                 </Toolbar>
