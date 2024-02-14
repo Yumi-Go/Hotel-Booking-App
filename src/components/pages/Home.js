@@ -5,7 +5,7 @@ import useAuth from "../../hooks/useAuth";
 
 
 // search result (single item for each hotel from multiple hotels)
-export default function Home({ searchResult, photos }) {
+export default function Home({ searchResult }) {
 
   const { currentUser, logOut } = useAuth();
   const Item = styled(Paper)(() => ({

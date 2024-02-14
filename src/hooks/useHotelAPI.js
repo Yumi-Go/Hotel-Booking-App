@@ -23,14 +23,13 @@ async function getToken() {
 }
 
 
-
 async function getData(token, url) {
     try {
         const response = await fetch(url, {
             method: "GET",
             headers: { Authorization: `Bearer ${token}` },
         });
-        console.log("response: ", response);
+        // console.log("response: ", response);
         let rawData = await response.json();
         rawData = await rawData.data;
         console.log("rawData: ", rawData);
@@ -60,7 +59,7 @@ async function getHotelIdByCity(token, cityCode) {
         if (hotels && hotels.length) {
             // result of below map will be array  e.g. ["TKSXRAHS", "VJPAR00S", ...]
             hotels.forEach(async eachHotel => {
-                result.push(eachHotel.hotelId);
+                result.push(eachHotel);
             });
         }
         else {
@@ -95,17 +94,16 @@ async function getHotelIdByName(token, name) {
             // So, hotels.map(async eachHotel => eachHotel.hotelIds) will be   e.g. [ ["TKSXRAHS"], ["VJPAR00S"], ...]
             // Finally, result of 2nd forEach(= ids.forEach) will be     e.g. ["TKSXRAHS", "VJPAR00S", ...]            
             hotels.forEach(async eachHotel => {
-                eachHotel.hotelIds.forEach(id => {
-                    // console.log("id: ", id);
-                    // console.log("type of id: ", typeof id);
-                    result.push(id);
-                });
+                // eachHotel.hotelIds.forEach(id => {
+                //     result.push(id);
+                // }); // save only hotel ids
+                result.push(eachHotel); // save hotel obj
             });
         }
         else {
             throw new Error(`No hotel data found in Name ${name}`);
         }
-        console.log("result in getHotelIdByName: ", result);
+        // console.log("result in getHotelIdByName: ", result);
         return result;
     } catch (err) {
         console.error("Error in getHotelIdByCity:", err);
@@ -123,102 +121,77 @@ export async function getIds(token, name, cityCode) {
     // cityCode로 검색 -> 그 결과 리스트 내에서 parameter name값이 포함된 호텔 검색 (e.g. parameter name이 'WESTERN'일때 name: "BEST WESTERN JARDIN DE CLUNY"이 찾아지는 것처럼..) 해서 호텔 아이디 리스트 추리기
 
     try {
-        const url =
-        "https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-city?" +
-        `cityCode=${cityCode}&` +
-        "radius=5&" +
-        "radiusUnit=KM&" +
-        "hotelSource=ALL";
-        
-        const hotelsData = await getData(token, url);
-
-        console.log("hotelsData: ", hotelsData);
-        
         const result = [];
 
-        if (hotelsData && hotelsData.length) {
-            // result of below map will be array  e.g. ["TKSXRAHS", "VJPAR00S", ...]
-            hotelsData.forEach(async eachHotel => {
-                if (eachHotel.name.includes(name)) {
-                    result.push(eachHotel.hotelId);
-                    // result.push(eachHotel); // to check if the intersection result of cityCode & name is correct
+        if (name.length > 0 && cityCode.length > 0) {
+            // Name Search API
+            const url =
+            "https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-city?" +
+            `cityCode=${cityCode}&` +
+            "radius=5&" +
+            "radiusUnit=KM&" +
+            "hotelSource=ALL";
+            
+            console.log("Searched result by hotel name and city both");
+
+            const hotelsData = await getData(token, url);
+
+            console.log("hotelsData: ", hotelsData);
+    
+            if (hotelsData && hotelsData.length) {
+                // result of below map will be array  e.g. ["TKSXRAHS", "VJPAR00S", ...]
+                hotelsData.forEach(async eachHotel => {
+                    if (eachHotel.name.includes(name)) {
+                        result.push(eachHotel.hotelId);
+                        // result.push(eachHotel); // to check if the intersection result of cityCode & name is correct
+                    }
+                });
+            } else {
+                throw new Error(`No hotel data found with Hotel name ${name} in City Code ${cityCode}`);
+            }
+
+        } else {
+            // Hotel Name Autocomplete API
+            if (name.length > 0) {
+                const hotelsData = await getHotelIdByName(token, name);
+                console.log("Searched result by hotel name without city (Name Autocomplete): ", hotelsData);
+                if (hotelsData && hotelsData.length) {
+                    hotelsData.forEach(async eachHotel => {
+                        result.push(eachHotel.id);
+                        // result.push(eachHotel); // to check if the result of name searching is correct
+                    });
+                } else {
+                    throw new Error(`No hotel data found with Hotel name ${name}`);
                 }
-            });
+            }
+
+            // Hotel List API
+            if (cityCode.length > 0) {
+                const hotelsData = await getHotelIdByCity(token, cityCode);
+                console.log("Searched result by city without name: ", hotelsData);
+                if (hotelsData && hotelsData.length) {
+                    hotelsData.forEach(async eachHotel => {
+                        result.push(eachHotel.hotelId);
+                        // result.push(eachHotel); // to check if the result of cityCode searching is correct
+                    });
+                } else {
+                    throw new Error(`No hotel data found with City Code ${cityCode}`);
+                }
+
+                
+            }
+
         }
-        else {
-            throw new Error(`No hotel data found with Hotel name ${name} in City Code ${cityCode}`);
-        }
+
+
         console.log("result in getIds: ", result);
         return result;
+
     } catch (err) {
         console.error("Error in getIds:", err);
         throw err;
     }
 
-
-    
-    // // 원래 방법 2..
-    // let idsByNamePromise = name.length > 0 ? await getHotelIdByName(token, name) : Promise.resolve([]);
-    // let idsByCityPromise = cityCode.length > 0 ? await getHotelIdByCity(token, cityCode) : Promise.resolve([]);
-
-    // return Promise.all([idsByNamePromise, idsByCityPromise]).then(([idsByName, idsByCity]) => {
-    //     let ids = [];
-    //     if (idsByName.length > 0 && idsByCity.length > 0) {
-    //         console.log("idsByName: ", idsByName);
-    //         console.log("idsByCity: ", idsByCity);
-    //         // ids = idsByName.filter(id => idsByCity.includes(id));
-    //         ids = idsByName.filter(id => {
-    //             const isIncluded = idsByCity.includes(id);
-    //             console.log(`Checking ${id}: ${isIncluded}`);
-    //             return isIncluded;
-    //         });
-    //     } else if (idsByName.length > 0) {
-    //         ids = idsByName;
-    //     } else if (idsByCity.length > 0) {
-    //         ids = idsByCity;
-    //     }
-    //     ids = [...new Set(ids)]; // Ensure uniqueness
-
-    //     console.log("ids in getIds: ", ids);
-    //     return ids;
-    // });
-
-
-    // // 원래 방법 1..
-    // let idsByName = [];
-    // let idsByCity = [];
-    
-    // if (name.length > 0) {
-    //     idsByName = await getHotelIdByName(token, name);
-    //     // console.log("idsByName: ", idsByName);
-    // }
-    // if (cityCode.length > 0) {
-    //     idsByCity = await getHotelIdByCity(token, cityCode);
-    //     // console.log("idsByCity: ", idsByCity);
-    // }
-
-    // let ids = [];
-    // if (idsByName.length > 0 && idsByCity.length > 0) {
-    //     console.log("idsByName: ", idsByName);
-    //     console.log("idsByCity: ", idsByCity);
-
-    //     // ids = idsByName.filter(async(id) => idsByCity.includes(id));
-    //     ids = idsByName.filter(id => {
-    //         const isIncluded = idsByCity.includes(id);
-    //         console.log(`Checking ${id}: ${isIncluded}`);
-    //         return isIncluded;
-    //     }); // for check
-
-
-    // } else if (idsByName.length > 0) {
-    //     ids = idsByName;
-    // } else if (idsByCity.length > 0) {
-    //     ids = idsByCity;
-    // }    
-    // ids = [...new Set(ids)];
-
-    // console.log("ids in getIds: ", ids);
-    // return ids;
 }
 
 

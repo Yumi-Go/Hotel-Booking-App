@@ -11,14 +11,12 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { AuthProvider } from './AuthContext';
 import { Box } from '@mui/material';
 import { searchHotels } from './hooks/useHotelAPI';
-import { SearchProvider } from './contexts/SearchContext';
 
 
 export default function App() {
   const [searchResult, setSearchResult] = useState([]);
-  const [photos, setPhotos] = useState([]);
-  const [cityCode, setCityCode] = useState("PAR");
-  const [name, setName] = useState("WESTERN");
+  const [hotelName, setHotelName] = useState("");
+  const [cityCode, setCityCode] = useState("");
   const [searchConditions, setSearchConditions] = useState({
     adults: 2,
     children: 0,
@@ -29,10 +27,22 @@ export default function App() {
     currency: "EUR"
   });
 
-  
+  useEffect(() => {
+    console.log("searchResult updated in App:", searchResult);
+  }, [searchResult]);
+
+  useEffect(() => {
+    console.log("hotelName updated in App:", hotelName);
+  }, [hotelName]);
+
+  useEffect(() => {
+    console.log("cityCode updated in App:", cityCode);
+  }, [cityCode]);
+
+
   const handleSearch = async () => {
     try {
-      const response = await searchHotels(name, cityCode, searchConditions);
+      const response = await searchHotels(hotelName, cityCode, searchConditions);
       setSearchResult(response);
       console.log("Updated searchResult in App:", response);
     } catch (error) {
@@ -44,17 +54,15 @@ export default function App() {
   return (
     <AuthProvider>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <SearchProvider>
           <Box className="App">
             <Top />
-            <Search onSearch={handleSearch} />
+            <Search onSearch={handleSearch} setHotelName={setHotelName} setCityCode={setCityCode} />
             <Routes>
-              <Route path="/" element={<Home searchResult={searchResult} photos={photos} />} />
+              <Route path="/" element={<Home searchResult={searchResult} />} />
               <Route path="/account" element={<Account />} />
               <Route path="/history" element={<BookingHistory />} />
             </Routes>
           </Box>
-        </SearchProvider>
       </LocalizationProvider>
     </AuthProvider>
   );
