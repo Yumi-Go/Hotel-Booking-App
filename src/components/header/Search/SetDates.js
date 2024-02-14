@@ -6,7 +6,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Stack from '@mui/material/Stack';
 
 
-const FromDatePicker = styled(DatePicker)(({ theme }) => ({
+const CheckInDatePicker = styled(DatePicker)(({ theme }) => ({
     position: "relative",
     borderRadius: theme.shape.borderRadius,
     backgroundColor: "white",
@@ -18,7 +18,7 @@ const FromDatePicker = styled(DatePicker)(({ theme }) => ({
     width: "auto",
 }));
 
-const UntilDatePicker = styled(DatePicker)(({ theme }) => ({
+const CheckOutDatePicker = styled(DatePicker)(({ theme }) => ({
     position: "relative",
     borderRadius: theme.shape.borderRadius,
     backgroundColor: "white",
@@ -32,11 +32,21 @@ const UntilDatePicker = styled(DatePicker)(({ theme }) => ({
 }));
 
 
-export default function SetDates() {
+export default function SetDates({ dates, setDates }) {
+
+    const handleCheckInDateChange = (newValue) => {
+        setDates((prevDates) => ({ ...prevDates, checkInDate: newValue }));
+    };
+    
+    const handleCheckOutDateChange = (newValue) => {
+        setDates((prevDates) => ({ ...prevDates, checkOutDate: newValue }));
+    };
 
     return (
         <Stack direction="row" spacing={0}>
-            <FromDatePicker
+            <CheckInDatePicker
+                value={dates.checkInDate}
+                onChange={handleCheckInDateChange}
                 slotProps={{ textField: { size: 'small' } }}
             />
             <Typography
@@ -47,7 +57,9 @@ export default function SetDates() {
             >
                 -
             </Typography>
-            <UntilDatePicker
+            <CheckOutDatePicker
+                value={dates.checkOutDate}
+                onChange={handleCheckOutDateChange}
                 slotProps={{ textField: { size: 'small' } }}                        
             />
         </Stack>

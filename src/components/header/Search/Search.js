@@ -28,7 +28,7 @@ const StyledAppBar = styled(AppBar)(() => ({
 
 
 
-export default function SearchBar({ onSearch, setHotelName, setCityCode }) {
+export default function SearchBar({ onSearch, setHotelName, setCityCode, dates, setDates, guests, setGuests }) {
 
   
     const searchClick = () => {
@@ -49,8 +49,8 @@ export default function SearchBar({ onSearch, setHotelName, setCityCode }) {
                 <Toolbar>
                     <InputSearchTerm msg={ "Hotel Name" } setValue={setHotelName} />
                     <InputSearchTerm msg={ "City or Area" } setValue={setCityCode} />
-                    <SetDates />
-                    <SetGuests />
+                    <SetDates dates={dates} setDates={setDates} />
+                    <SetGuests guests={guests} setGuests={setGuests} />
                     <button onClick={()=>searchClick()}>Search</button>
 
                     {/* <Box sx={{ flexGrow: 1 }} /> */}

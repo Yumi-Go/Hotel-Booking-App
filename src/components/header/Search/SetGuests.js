@@ -48,18 +48,25 @@ const selectStyles = {
     },
 };
 
-const submit = () => {
 
-}
+export default function SetGuests({ guests, setGuests }) {
 
-export default function SetGuests() {
-    const [adults, setAdults] = useState(0);
-    const [children, setChildren] = useState(0);
 
-    useEffect(() => {
-        console.log("adults: ", adults);
-        console.log("children: ", children);
-      }, [adults, children]);
+    const [tempGuests, setTempGuests] = useState({
+        adults: guests.adults,
+        children: guests.children,
+    });
+
+    const handleGuestChange = (type, value) => {
+        setTempGuests((prev) => ({
+            ...prev,
+            [type]: value,
+        }));
+    };
+
+    const handleSubmit = () => {
+        setGuests(tempGuests);
+    };
 
     const guestTypeOptions = ["Adults", "Children"];
 
@@ -69,7 +76,7 @@ export default function SetGuests() {
                 displayEmpty
                 sx={selectStyles}
                 renderValue={() => {
-                    if (adults === 0 && children === 0) {
+                    if (guests.adults === 0 && guests.children === 0) {
                         return (
                             <GroupIconWrapper>
                                 <Box sx={{ display: "flex", color: 'gray' }}>
@@ -79,7 +86,7 @@ export default function SetGuests() {
                             </GroupIconWrapper>
                         );
                     }
-                    return `Adults: ${adults} / Children: ${children}`;
+                    return `Adults: ${guests.adults} / Children: ${guests.children}`;
                     // return selectRenderValue(guestsType);
 
                 }}
@@ -103,11 +110,10 @@ export default function SetGuests() {
                                     <NumberInput
                                         min={0}
                                         max={99}
-                                        changeHandler={
-                                            (event, val) => {
-                                                gType === 'Adults' ? setAdults(val) : setChildren(val);
-                                            }
-                                        }
+                                        changeHandler={(event, value) => {
+                                            const guestType = gType === "Adults" ? "adults" : "children";
+                                            handleGuestChange(guestType, value);
+                                        }}
                                     />
                                 </Box>
                             </Stack>
@@ -117,7 +123,10 @@ export default function SetGuests() {
                 <Button
                     width=""
                     size="small"
-                    onClick={submit}>Done</Button>
+                    onClick={handleSubmit}
+                >
+                    Done
+                </Button>
             </Select>
         </StyledFormControl>
     );
