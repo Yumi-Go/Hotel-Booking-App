@@ -203,6 +203,7 @@ export async function getIds(token, name, cityCode) {
 // [{ ...hotel, photoUrls: [url1, url2..], offers: [{offer1},{offer2}..] }, { ...hotel, photoUrls: [url1, url2..], offers: [{offer1},{offer2}..] }, ...]
 export async function searchHotels(name, cityCode, searchConditions) {
     try {
+        console.log("received searchCondition: ", searchConditions);
         const token = await getToken(); // get token only once only in this function
         const ids = await getIds(token, name, cityCode);
         // const hotelIds = ids.join("%2C"); // multiple hotels.. seperated by '%2C' like this.. e.g. hotelIds=MCLONGHM%2CHNPARKGU
@@ -227,6 +228,7 @@ export async function searchHotels(name, cityCode, searchConditions) {
             `currency=${searchConditions.currency}&` +
             "paymentPolicy=NONE&" +
             "bestRateOnly=false";
+
 
             const hotelData = await getData(token, url);
             console.log("hotelData: ", hotelData);

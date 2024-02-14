@@ -17,15 +17,16 @@ export default function App() {
   const [searchResult, setSearchResult] = useState([]);
   const [hotelName, setHotelName] = useState("");
   const [cityCode, setCityCode] = useState("");
-  const [searchConditions, setSearchConditions] = useState({
-    adults: 2,
-    children: 0,
-    checkInDate: '2024-03-22',
-    checkOutDate: '2024-03-23',
-    roomQuantity: 1,
-    priceRange: "100-1500",
-    currency: "EUR"
+  const [dates, setDates] = useState({
+    checkInDate: '',
+    checkOutDate: '',
   });
+  const [guests, setGuests] = useState({
+    adults: 1,
+    children: 0,
+  });
+  
+
 
   useEffect(() => {
     console.log("searchResult updated in App:", searchResult);
@@ -39,9 +40,28 @@ export default function App() {
     console.log("cityCode updated in App:", cityCode);
   }, [cityCode]);
 
+  useEffect(() => {
+    console.log(`dates updated in App: checkIn ${dates.checkInDate}, checkOut ${dates.checkOutDate}`);
+  }, [dates]);
+
+  useEffect(() => {
+    console.log(`guests updated in App: adults ${guests.adults}, children ${guests.children}`);
+  }, [guests]);
+
 
   const handleSearch = async () => {
     try {
+
+      const searchConditions = ({
+        adults: 2,
+        children: 0,
+        checkInDate: dates.checkInDate,
+        checkOutDate: dates.checkOutDate,
+        roomQuantity: 1,
+        priceRange: "100-1500",
+        currency: "EUR"
+      });
+
       const response = await searchHotels(hotelName, cityCode, searchConditions);
       setSearchResult(response);
       console.log("Updated searchResult in App:", response);
@@ -56,7 +76,15 @@ export default function App() {
       <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Box className="App">
             <Top />
-            <Search onSearch={handleSearch} setHotelName={setHotelName} setCityCode={setCityCode} />
+            <Search
+              onSearch={handleSearch}
+              setHotelName={setHotelName}
+              setCityCode={setCityCode}
+              dates={dates}
+              setDates={setDates}
+              guests={guests}
+              setGuests={setGuests}
+            />
             <Routes>
               <Route path="/" element={<Home searchResult={searchResult} />} />
               <Route path="/account" element={<Account />} />

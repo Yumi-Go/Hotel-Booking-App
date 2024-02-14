@@ -118,7 +118,7 @@ export default function NumberInput({ min, max, changeHandler }) {
         <BaseNumberInput
             min={min}
             max={max}
-            placeholder={0}
+            placeholder={'0'}
             onChange={changeHandler}
             onClick={(event) => {
                 event.stopPropagation();
