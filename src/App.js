@@ -11,6 +11,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { AuthProvider } from './AuthContext';
 import { Box } from '@mui/material';
 import { searchHotels } from './hooks/useHotelAPI';
+import HotelDetail from './components/pages/HotelDetail';
+import { useDate } from './hooks/useDate';
 
 
 export default function App() {
@@ -18,15 +20,16 @@ export default function App() {
   const [hotelName, setHotelName] = useState("");
   const [cityCode, setCityCode] = useState("");
   const [dates, setDates] = useState({
-    checkInDate: '',
-    checkOutDate: '',
+    checkInDate: null,
+    checkOutDate: null,
   });
   const [guests, setGuests] = useState({
     adults: 1,
     children: 0,
   });
   
-
+  const formattedCheckInDate = useDate(dates.checkInDate);
+  const formattedCheckOutDate = useDate(dates.checkOutDate);
 
   useEffect(() => {
     console.log("searchResult updated in App:", searchResult);
@@ -40,9 +43,14 @@ export default function App() {
     console.log("cityCode updated in App:", cityCode);
   }, [cityCode]);
 
+
   useEffect(() => {
     console.log(`dates updated in App: checkIn ${dates.checkInDate}, checkOut ${dates.checkOutDate}`);
-  }, [dates]);
+    console.log("Formatted checkInDate: ", formattedCheckInDate);
+    console.log("Formatted checkOutDate: ", formattedCheckOutDate);
+}, [dates, formattedCheckInDate, formattedCheckOutDate]);
+
+
 
   useEffect(() => {
     console.log(`guests updated in App: adults ${guests.adults}, children ${guests.children}`);
@@ -51,12 +59,11 @@ export default function App() {
 
   const handleSearch = async () => {
     try {
-
       const searchConditions = ({
         adults: 2,
         children: 0,
-        checkInDate: dates.checkInDate,
-        checkOutDate: dates.checkOutDate,
+        checkInDate: formattedCheckInDate,
+        checkOutDate: formattedCheckOutDate,
         roomQuantity: 1,
         priceRange: "100-1500",
         currency: "EUR"
@@ -70,6 +77,7 @@ export default function App() {
       setSearchResult([]);
     }
   };
+
 
   return (
     <AuthProvider>
@@ -87,6 +95,21 @@ export default function App() {
             />
             <Routes>
               <Route path="/" element={<Home searchResult={searchResult} />} />
+
+
+
+
+
+
+              {/* for testing.. finishing testing, uncomment above Home component line */}
+              {/* <Route path="/" element={<HotelDetail hotelObj={hotelObj} />} /> */}
+
+
+
+
+
+
+
               <Route path="/account" element={<Account />} />
               <Route path="/history" element={<BookingHistory />} />
             </Routes>

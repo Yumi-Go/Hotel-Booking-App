@@ -92,7 +92,7 @@ export default function SetGuests({ guests, setGuests }) {
                 }}
             >
                 { guestTypeOptions.map((gType, index) => {
-                    console.log("_index: ", index);
+                    // console.log("_index: ", index);
 
                     return (
                         <MenuItem value={gType} key={index}>
