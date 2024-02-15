@@ -34,12 +34,12 @@ const CheckOutDatePicker = styled(DatePicker)(({ theme }) => ({
 
 export default function SetDates({ dates, setDates }) {
 
-    const handleCheckInDateChange = (newValue) => {
-        setDates((prevDates) => ({ ...prevDates, checkInDate: newValue }));
+    const handleCheckInDateChange = (newDate) => {
+        setDates((prevDates) => ({ ...prevDates, checkInDate: new Date(newDate) }));
     };
     
-    const handleCheckOutDateChange = (newValue) => {
-        setDates((prevDates) => ({ ...prevDates, checkOutDate: newValue }));
+    const handleCheckOutDateChange = (newDate) => {
+        setDates((prevDates) => ({ ...prevDates, checkOutDate: new Date(newDate) }));
     };
 
     return (

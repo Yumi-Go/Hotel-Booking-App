@@ -39,11 +39,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
   
 
-export default function InputSearchTerm({ msg,  setValue }) {
+export default function InputSearchTerm({ msg, setValue }) {
 
     const handleChange = (event) => {
         setValue(event.target.value.toUpperCase());
-      };
+    };
 
     return (
         <Search>
