@@ -215,6 +215,8 @@ export async function searchHotels(name, cityCode, searchConditions) {
         // https://developers.amadeus.com/pricing#pricing-list 여기 참고
         // 그 동안 다른 작업 하고있기.
         const result = [];
+
+        // 여기 forEach 안에서 순서대로 리퀘스트하는 것보다 url 리스트로 한번에 모아서 동시에 리퀘스트해야 한번 클릭했을때 한방에 뜨지 않을까 싶음.. 이거 꼭 수정해보기
         ids.forEach(async(id) => {
             // Hotel Search API
             const url =
@@ -260,29 +262,31 @@ export async function searchHotels(name, cityCode, searchConditions) {
     }
 }
 
-async function getPhotosByHotelName(hotelName) {
-    let result = [];
+
+// 나중에 테스트 끝나면 export 지우기
+export async function getPhotosByHotelName(hotelName) {
+    let result = {};
     const apiUrl = 'https://places.googleapis.com/v1/places:searchText';
     const apiKey = process.env.REACT_APP_FIREBASE_API_KEY;
     const headers = {
         "Content-Type": "application/json",
         "X-Goog-Api-Key": apiKey,
-        "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.photos"
+        "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.photos,places.id" // places.id 추가한거 관련 다른 코드 싹 다 고치기.. photoUrls에 id를 넣던가 등등..
     };
-    const body = JSON.stringify({ textQuery: hotelName });
+    const body = JSON.stringify({ textQuery: hotelName, maxResultCount: 20 });
 
     try {
         const response = await fetch(apiUrl, { method: "POST", body, headers });
         const data = await response.json();
-        // console.log("data in getPhotosByHotelName: ", data);
+        console.log("data in getPhotosByHotelName: ", data);
         if (data.places && data.places.length > 0 && data.places[0].photos) {
-            result = await data.places[0].photos.map(photo => 
+            result['ChIJZcFL1TMFdkgRZcciwfX0gr0'] = await data.places[0].photos.map(photo =>
                 `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=1000&maxWidthPx=1000&key=${apiKey}`
             );
         } else {
             throw new Error(`No photos found for hotel: ${hotelName}`);
         }
-        // console.log("photo result: ", result)
+        // console.log("photo result: ", result);
         return result;
     } catch (error) {
         console.error("Error fetching photos:", error);

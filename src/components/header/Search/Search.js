@@ -24,10 +24,6 @@ const StyledAppBar = styled(AppBar)(() => ({
 }));
 
 
-
-
-
-
 export default function SearchBar({ onSearch, setHotelName, setCityCode, dates, setDates, guests, setGuests }) {
 
   

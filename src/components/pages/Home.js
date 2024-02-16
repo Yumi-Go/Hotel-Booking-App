@@ -43,7 +43,6 @@ export default function Home({ searchResult }) {
           <Grid container padding="20px" spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 
           {
-
             searchResult && searchResult.length > 0 ?
               searchResult.map((hotel, index) => (
                   <Grid item xs={2} sm={3} md={3} key={index}>
@@ -52,13 +51,12 @@ export default function Home({ searchResult }) {
                         <h4>{hotel.name}</h4>
                       </Box>
                       <Box>
-                        <img src={hotel.photoUrls[0]} alt={`hotel ${index}`} style={{ maxWidth: '100%', height: '100%' }} />
+                        <img src={Object.values(hotel.photoUrls)[0][0]} alt={`hotel ${index}`} style={{ maxWidth: '100%', height: '100%' }} />
                       </Box>
                     </Item>
                   </Grid>
               ))
               : <div>No Search Result</div>
-
             }
 
           </Grid>
