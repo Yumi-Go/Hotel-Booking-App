@@ -25,22 +25,6 @@ const Item = styled(Paper)(({ theme }) => ({
 export default function HotelDetail({ hotelObj }) {
     console.log("Received hotelObj: ", hotelObj);
 
-    // for testing getPhotosByHotelName.. remove this later
-    const [photos, setPhotos] = useState([]);
-
-    useEffect(() => {
-        const fetchPhotos = async () => {
-            try {
-                const photoUrls = await getPhotosByHotelName(hotelObj.hotel.name);
-                setPhotos(photoUrls);
-                // console.log("photoUrls: ", photoUrls);
-            } catch (error) {
-                console.error("Failed to fetch photos:", error);
-            }
-        };
-        fetchPhotos();
-    }, [hotelObj.hotel.name]);
-
   return (
     <Box sx={{ width: "100%", height: "100%", display:"flex", position: "absolute", justifyContent: 'center'}}>
       <Stack sx={{ width: "100%", alignItems: 'center', bgcolor: '#dedede', margin: 0, padding: 0 }}>
@@ -52,7 +36,7 @@ export default function HotelDetail({ hotelObj }) {
         </Box>
         <Box sx={{ width: "95%", my: "20px", bgcolor: "red" }}>
             <Grid container spacing={2}>
-                <Grid xs={6} md={5} sx={{ height: 500, padding: 2 }}>
+                <Grid xs={6} md={7} sx={{ height: 500, padding: 2 }}>
                     <Item sx={{ height: "100%", bgcolor: "pink"}}>
                         <ImageList sx={{ width: "100%", height: "100%", margin: 0, padding: 0 }}>
                             {/* <ImageListItem key="Subheader" cols={2}>
@@ -81,8 +65,15 @@ export default function HotelDetail({ hotelObj }) {
                         </ImageList>
                     </Item>
                 </Grid>
-                <Grid xs={6} md={7} sx={{ padding: 2 }}>
-                    <Item sx={{ height: '100%', bgcolor: "pink" }}>xs=6 md=4</Item>
+                <Grid xs={6} md={5} sx={{ padding: 2 }}>
+                    <Item sx={{ height: '100%', bgcolor: "pink" }}>
+                        <iframe
+                            src={`https://www.google.com/maps/embed/v1/place?key=${process.env.REACT_APP_FIREBASE_API_KEY}&q=place_id:ChIJZcFL1TMFdkgRZcciwfX0gr0`}
+                            style={{ width: "100%", height: "100%", border: "0" }}
+                            title="map"
+                            allowFullScreen
+                        />
+                    </Item>
                 </Grid>
                 <Grid xs={6} md={4}>
                     <Item>xs=6 md=4</Item>
