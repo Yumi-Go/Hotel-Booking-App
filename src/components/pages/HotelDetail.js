@@ -10,8 +10,7 @@ import ImageListItemBar from '@mui/material/ImageListItemBar';
 import ListSubheader from '@mui/material/ListSubheader';
 import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
-import { getPhotosByHotelName } from '../../hooks/useHotelAPI';
-
+import { getPhotosByHotelName, getRatingsByHotelId } from '../../hooks/useHotelAPI';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -22,8 +21,32 @@ const Item = styled(Paper)(({ theme }) => ({
     color: theme.palette.text.secondary,
   }));
 
-export default function HotelDetail({ hotelObj }) {
+export default function HotelDetail({ hotelObj, ratings }) {
     console.log("Received hotelObj: ", hotelObj);
+    console.log("Received ratings: ", ratings);
+
+
+
+    // // for testing getPhotosByHotelName.. remove this later
+    // const [photos, setPhotos] = useState([]);
+
+    // useEffect(() => {
+    //     const fetchPhotos = async () => {
+    //         try {
+    //             const photoUrls = await getPhotosByHotelName(hotelObj.hotel.name);
+    //             setPhotos(photoUrls);
+    //             // console.log("photoUrls: ", photoUrls);
+    //         } catch (error) {
+    //             console.error("Failed to fetch photos:", error);
+    //         }
+    //     };
+    //     fetchPhotos();
+    // }, [hotelObj.hotel.name]);
+
+
+
+
+
 
   return (
     <Box sx={{ width: "100%", height: "100%", display:"flex", position: "absolute", justifyContent: 'center'}}>
@@ -76,10 +99,36 @@ export default function HotelDetail({ hotelObj }) {
                     </Item>
                 </Grid>
                 <Grid xs={6} md={4}>
-                    <Item>xs=6 md=4</Item>
+                    <Item>Available roome list here!!</Item>
                 </Grid>
                 <Grid xs={6} md={8}>
-                    <Item>xs=6 md=8</Item>
+                    <Item>something else...</Item>
+                </Grid>
+                <Grid xs={6} md={4}>
+                    <Item>Detailed information!!</Item>
+                </Grid>
+                <Grid xs={6} md={8}>
+                    <Item>
+
+
+
+                    {ratings ? (
+                  <div>
+                    {Object.entries(ratings).map(([key, value]) => (
+                      <div key={key}>
+                        {key}: {JSON.stringify(value)}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div>Loading ratings...</div> // Placeholder while loading
+                )}
+
+
+
+
+
+                    </Item>
                 </Grid>
             </Grid>
         </Box>

@@ -10,7 +10,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { AuthProvider } from './AuthContext';
 import { Box } from '@mui/material';
-import { searchHotels } from './hooks/useHotelAPI';
+import { searchHotels, getRatingsByHotelId } from './hooks/useHotelAPI';
 import HotelDetail from './components/pages/HotelDetail';
 import { useDate } from './hooks/useDate';
 
@@ -55,6 +55,23 @@ export default function App() {
   useEffect(() => {
     console.log(`guests updated in App: adults ${guests.adults}, children ${guests.children}`);
   }, [guests]);
+
+
+  const [ratings, setRatings] = useState(null);
+
+  // merge ratings to hotelObj later.. after testing
+  useEffect(() => {
+      const fetchRatings = async () => {
+          try {
+              const ratingsData = await getRatingsByHotelId("TELONMFS"); // replace hard-coded parameter with hotelObj.hote.hotelId later..
+              setRatings(ratingsData);
+              console.log("ratings in App.js: ", ratingsData);
+          } catch (error) {
+              console.error("Failed to fetch ratings:", error);
+          }
+      };
+      fetchRatings();
+  }, []);
 
 
   const handleSearch = async () => {
@@ -182,7 +199,7 @@ export default function App() {
               {/* <Route path="/" element={<Home searchResult={searchResult} />} /> */}
 
               {/* for testing.. finishing testing, uncomment above Home component line */}
-              <Route path="/" element={<HotelDetail hotelObj={hotelObj} />} />
+              <Route path="/" element={<HotelDetail hotelObj={hotelObj} ratings={ratings} />} />
 
               <Route path="/account" element={<Account />} />
               <Route path="/history" element={<BookingHistory />} />
