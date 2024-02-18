@@ -296,3 +296,29 @@ export async function getPhotosByHotelName(hotelName) {
 
 
 
+// Hotel Ratings API
+export async function getRatingsByHotelId(hotelId) {
+    try {
+        const url = 
+        `https://test.api.amadeus.com/v2/e-reputation/hotel-sentiments?hotelIds=${hotelId}`;
+        
+        const token = await getToken();
+        const rawRatings = await getData(token, url);
+        // const ratings = await rawRatings[0];
+
+        console.log("ratings: ", rawRatings[0]);
+        // const result = {};
+        if (rawRatings[0]) {
+            console.log("raw ratings: ", rawRatings[0]);
+
+            return rawRatings[0];
+        }
+        else {
+            console.log(`No Ratings data for the hotel ${hotelId}`);
+            return `No Ratings data for the hotel ${hotelId}`;
+        }
+    } catch (err) {
+        console.error("Error in getRatingsByHotelId:", err);
+        return "Error in Ratings Data";
+    }
+}
