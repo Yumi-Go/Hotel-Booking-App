@@ -10,7 +10,9 @@ import ImageListItemBar from '@mui/material/ImageListItemBar';
 import ListSubheader from '@mui/material/ListSubheader';
 import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
-import { getPhotosByHotelName, getRatingsByHotelId } from '../../hooks/useHotelAPI';
+import CircularProgress from '@mui/material/CircularProgress';
+import Typography from '@mui/material/Typography';
+import LinearProgress from '@mui/material/LinearProgress';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -21,31 +23,50 @@ const Item = styled(Paper)(({ theme }) => ({
     color: theme.palette.text.secondary,
   }));
 
-export default function HotelDetail({ hotelObj, ratings }) {
+  function CircularProgressWithLabel(props) {
+    return (
+      <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+        <CircularProgress variant="determinate" value={props.value} />
+        <Box
+          sx={{
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+            position: 'absolute',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Typography variant="caption" component="div" color="text.secondary">
+            {`${Math.round(props.value)}%`}
+          </Typography>
+        </Box>
+      </Box>
+    );
+  }
+
+
+  function LinearProgressWithLabel(props) {
+    return (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ width: '100%', mr: 1 }}>
+            <LinearProgress variant="determinate" value={props.value} sx={{height: 10}} />
+        </Box>
+        <Box sx={{ minWidth: 35 }}>
+            <Typography variant="body2" color="text.secondary">
+                {`${Math.round(props.value)}%`}
+            </Typography>
+        </Box>
+      </Box>
+    );
+  }
+
+
+export default function HotelDetail({ hotelObj, ratings }) { // make hotelObj, ratings single parameter merged later...
     console.log("Received hotelObj: ", hotelObj);
     console.log("Received ratings: ", ratings);
-
-
-
-    // // for testing getPhotosByHotelName.. remove this later
-    // const [photos, setPhotos] = useState([]);
-
-    // useEffect(() => {
-    //     const fetchPhotos = async () => {
-    //         try {
-    //             const photoUrls = await getPhotosByHotelName(hotelObj.hotel.name);
-    //             setPhotos(photoUrls);
-    //             // console.log("photoUrls: ", photoUrls);
-    //         } catch (error) {
-    //             console.error("Failed to fetch photos:", error);
-    //         }
-    //     };
-    //     fetchPhotos();
-    // }, [hotelObj.hotel.name]);
-
-
-
-
 
 
   return (
@@ -55,7 +76,6 @@ export default function HotelDetail({ hotelObj, ratings }) {
             <h1>
                 {hotelObj.hotel.name}
             </h1>
-
         </Box>
         <Box sx={{ width: "95%", my: "20px", bgcolor: "red" }}>
             <Grid container spacing={2}>
@@ -104,30 +124,46 @@ export default function HotelDetail({ hotelObj, ratings }) {
                 <Grid xs={6} md={8}>
                     <Item>something else...</Item>
                 </Grid>
-                <Grid xs={6} md={4}>
-                    <Item>Detailed information!!</Item>
-                </Grid>
-                <Grid xs={6} md={8}>
+
+                <Grid xs={12} md={12}>
                     <Item>
+                        {ratings ? (
+                            <Stack
+                                direction="column"
+                                justifyContent="center"
+                                alignItems="center"
+                            >
 
+                                <Item sx={{ width: '80%', boxShadow: 0 }}>
+                                    <h3>Overall</h3>
+                                    [{ratings.numberOfReviews} reviews / {ratings.numberOfRatings} ratings]
+                                    <LinearProgressWithLabel variant="determinate" value={ratings.overallRating} />
+                                </Item>
 
-
-                    {ratings ? (
-                  <div>
-                    {Object.entries(ratings).map(([key, value]) => (
-                      <div key={key}>
-                        {key}: {JSON.stringify(value)}
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div>Loading ratings...</div> // Placeholder while loading
-                )}
-
-
-
-
-
+                                {Object.entries(ratings)
+                                .map(([key, value]) => {
+                                    if (key === 'sentiments') {
+                                        return (
+                                            <Item key={key} sx={{ boxShadow: 0 }} alignItems="center">
+                                                {/* <div>Sentiments:</div> */}
+                                                <Stack direction="row" spacing={2} >
+                                                    {Object.entries(value).map(([k, v]) => (
+                                                        <Item key={k} sx={{ width: '100px', boxShadow: 0, border: 1 }}>
+                                                            <div>
+                                                                <div>{k}</div>
+                                                                <div><CircularProgressWithLabel value={v} /></div>
+                                                            </div>
+                                                        </Item>
+                                                    ))}
+                                                </Stack>  
+                                            </Item>
+                                        );
+                                    } else {
+                                        return "";
+                                    }
+                                })}
+                            </Stack>
+                        ) : <div>Loading ratings...</div>}
                     </Item>
                 </Grid>
             </Grid>
