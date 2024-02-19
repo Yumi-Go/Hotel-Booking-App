@@ -11,7 +11,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { AuthProvider } from './AuthContext';
 import { Box } from '@mui/material';
 import { searchHotels, getRatingsByHotelId } from './hooks/useHotelAPI';
-import HotelDetail from './components/pages/HotelDetail';
+import HotelDetail from './components/pages/Hotel/HotelDetail';
 import { useDate } from './hooks/useDate';
 
 
