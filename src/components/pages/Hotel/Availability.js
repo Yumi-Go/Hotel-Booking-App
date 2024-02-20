@@ -4,6 +4,21 @@ import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Unstable_Grid2';
+import Modal from '@mui/material/Modal';
+import OfferDetail from "./OfferDetail";
+
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -12,7 +27,7 @@ const Item = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(1),
     textAlign: 'center',
     color: theme.palette.text.secondary,
-  }));
+}));
 
 
 export default function Availability({ hotelObj }) {
@@ -47,7 +62,8 @@ export default function Availability({ hotelObj }) {
                     spacing={2}
                 >
                     {hotelObj.offers.map((offerObj, index) => (
-                        <Item key={index} sx={{ width: '95%', border: 1 }}>
+                        <>
+                        <Item key={index} onClick={handleOpen} sx={{ width: '95%', border: 1 }}>
                             <Box sx={{ textAlign: 'left' }}>
                                 Room Type: {offerObj.room.typeEstimated.category}
                             </Box>
@@ -61,6 +77,19 @@ export default function Availability({ hotelObj }) {
                                 Price: {offerObj.price.total} {offerObj.price.currency}
                             </Box>
                         </Item>
+
+                        <Modal
+                            open={open}
+                            onClose={handleClose}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                        >
+
+                            <OfferDetail offerObj={offerObj} />
+
+                        </Modal>
+                        </>
+
                     ))}
                 </Stack>
             </Item>
