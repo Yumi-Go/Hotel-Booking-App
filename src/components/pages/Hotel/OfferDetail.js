@@ -16,11 +16,26 @@ import CloseIcon from '@mui/icons-material/Close';
 import PaymentIcon from '@mui/icons-material/Payment';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import BedIcon from '@mui/icons-material/Bed';
+import ListItemButton from '@mui/material/ListItemButton';
+import Divider from '@mui/material/Divider';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Slide from '@mui/material/Slide';
+import Button from '@mui/material/Button';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SendIcon from '@mui/icons-material/Send';
+import Stack from '@mui/material/Stack';
+import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+
+
 
 import { capitalize, capitalizeWords, extractSquareMeters, formatDescription } from '../../../hooks/useFormat';
 
 
-export default function OfferDetail({ offerObj }) {
+export default function OfferDetail({ offerObj, handleClose }) {
 
     const style = {
         position: 'absolute',
@@ -29,67 +44,205 @@ export default function OfferDetail({ offerObj }) {
         transform: 'translate(-50%, -50%)',
         width: 800,
         bgcolor: 'background.paper',
-        border: '2px solid #000',
         boxShadow: 24,
-        p: 4,
+        p: 0,
     };
 
-console.log(formatDescription("Prepay Non-refundable Non-changeable, prepay in full\nSuperior King Room, 1 King,\n23sqm/247sqft-35sqm/377sqft, Wireless"));
+    console.log(formatDescription("Prepay Non-refundable Non-changeable, prepay in full\nSuperior King Room, 1 King,\n23sqm/247sqft-35sqm/377sqft, Wireless"));
 
 
     return (
-    <Box sx={style}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-            ROOM DETAIL
-        </Typography>
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Any description...........
-        </Typography>
-        <h1>{offerObj.price.total} {offerObj.price.currency}</h1>
-        
-        <List sx={{ bgcolor: 'background.paper' }}>
-            <ListItem>
-                <ListItemAvatar>
-                    <Avatar>
-                        <HotelIcon />
-                    </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={capitalize(offerObj.room.typeEstimated.category)} secondary="Room Type" />
-            </ListItem>
-            <ListItem>
-                <ListItemAvatar>
-                    <Avatar>
-                        <BedIcon />
-                    </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={capitalize(offerObj.room.typeEstimated.bedType) + " " + offerObj.room.typeEstimated.beds} secondary="Beds" />
-            </ListItem>
-            <ListItem>
-                <ListItemAvatar>
-                    <Avatar>
+
+        <Box sx={style}>
+            <AppBar sx={{ position: 'relative' }} style={{ padding: 0 }}>
+                <Toolbar>
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        onClick={handleClose}
+                        aria-label="close"
+                    >
                         <CloseIcon />
-                    </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={capitalizeWords(offerObj.policies.cancellations[0].description.text)} secondary="Cancellation" />
-            </ListItem>
-            <ListItem>
-                <ListItemAvatar>
-                    <Avatar>
-                        <PaymentIcon />
-                    </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={offerObj.policies.paymentType} secondary="Payment" />
-            </ListItem>
-            {formatDescription(offerObj.room.description.text).map(el => (
-                <ListItem>
-                    <ListItemIcon>
-                        <CheckIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={capitalizeWords(el)} />
-                </ListItem>
-            ))}
-        </List>
-    </Box>
+                    </IconButton>
+                    <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+                        Room Details
+                    </Typography>
+                    <StarBorderIcon sx={{ padding: 0, margin: 0 }}/>
+                </Toolbar>
+            </AppBar>
+            <List sx={{ bgcolor: 'background.paper' }}>
+                    <ListItem>
+                        <ListItemAvatar>
+                            <Avatar>
+                                <HotelIcon />
+                            </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                            primary={capitalize(offerObj.room.typeEstimated.category)}
+                            secondary="Room Type"
+                        />
+                    </ListItem>
+                    <Divider />
+                    <ListItem>
+                        <ListItemAvatar>
+                            <Avatar>
+                                <BedIcon />
+                            </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                            primary={
+                                capitalize(offerObj.room.typeEstimated.bedType) 
+                                + " " + offerObj.room.typeEstimated.beds
+                            }
+                            secondary="Beds"
+                        />
+                    </ListItem>
+                    <Divider />
+                    <ListItem>
+                        <ListItemAvatar>
+                            <Avatar>
+                                <PaymentIcon />
+                            </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                            primary={
+                                extractSquareMeters(offerObj.room.description.text)[0] 
+                                + " - " + extractSquareMeters(offerObj.room.description.text)[1] 
+                                + " \u33A1"
+                            }
+                            secondary="Area"
+                        />
+                    </ListItem>
+                    <Divider />
+                    <ListItem>
+                        <ListItemAvatar>
+                            <Avatar>
+                                <CloseIcon />
+                            </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                            primary={capitalizeWords(offerObj.policies.cancellations[0].description.text)}
+                            secondary="Cancellation"
+                        />
+                    </ListItem>
+                    <Divider />
+                    <ListItem>
+                        <ListItemAvatar>
+                            <Avatar>
+                                <PaymentIcon />
+                            </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                            primary={offerObj.policies.paymentType}
+                            secondary="Payment"
+                        />
+                    </ListItem>
+                    <Divider />
+                    {formatDescription(offerObj.room.description.text).map(el => (
+                        <ListItem>
+                            <ListItemIcon>
+                                <CheckIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={capitalizeWords(el)} />
+                        </ListItem>
+                    ))}
+                    <Divider />
+                </List>
+                <Stack
+                    direction="row"
+                    spacing={2}
+                    justifyContent="center"
+                    alignItems="center"
+                    sx={{ pb: 4, pt: 1 }}
+                >
+                    <Button
+                        variant="outlined"
+                        onClick={handleClose}
+                        size="large"
+                        startIcon={<CloseIcon />}
+                        sx={{ width: '200px' }}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        variant="contained"
+                        size="large"
+                        endIcon={<DoubleArrowIcon />}
+                        sx={{ width: '200px' }}
+                    >
+                        Reserve
+                    </Button>
+                </Stack>
+        </Box>
     );
-    
 }
+
+
+
+
+
+
+
+
+
+
+        // <Box sx={style}>
+        //     <Typography id="modal-modal-title" variant="h6" component="h2">
+        //         ROOM DETAIL
+        //     </Typography>
+        //     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+        //         Any description...........
+        //     </Typography>
+        //     <h1>{offerObj.price.total} {offerObj.price.currency}</h1>
+            
+        //     <List sx={{ bgcolor: 'background.paper' }}>
+        //         <ListItem>
+        //             <ListItemAvatar>
+        //                 <Avatar>
+        //                     <HotelIcon />
+        //                 </Avatar>
+        //             </ListItemAvatar>
+        //             <ListItemText primary={capitalize(offerObj.room.typeEstimated.category)} secondary="Room Type" />
+        //         </ListItem>
+        //         <ListItem>
+        //             <ListItemAvatar>
+        //                 <Avatar>
+        //                     <BedIcon />
+        //                 </Avatar>
+        //             </ListItemAvatar>
+        //             <ListItemText primary={capitalize(offerObj.room.typeEstimated.bedType) + " " + offerObj.room.typeEstimated.beds} secondary="Beds" />
+        //         </ListItem>
+        //         <ListItem>
+        //             <ListItemAvatar>
+        //                 <Avatar>
+        //                     <PaymentIcon />
+        //                 </Avatar>
+        //             </ListItemAvatar>
+        //             <ListItemText primary={extractSquareMeters(offerObj.room.description.text)[0] + " - " + extractSquareMeters(offerObj.room.description.text)[1] + " \u33A1"} secondary="Area" />
+        //         </ListItem>
+        //         <ListItem>
+        //             <ListItemAvatar>
+        //                 <Avatar>
+        //                     <CloseIcon />
+        //                 </Avatar>
+        //             </ListItemAvatar>
+        //             <ListItemText primary={capitalizeWords(offerObj.policies.cancellations[0].description.text)} secondary="Cancellation" />
+        //         </ListItem>
+        //         <ListItem>
+        //             <ListItemAvatar>
+        //                 <Avatar>
+        //                     <PaymentIcon />
+        //                 </Avatar>
+        //             </ListItemAvatar>
+        //             <ListItemText primary={offerObj.policies.paymentType} secondary="Payment" />
+        //         </ListItem>
+        //         {formatDescription(offerObj.room.description.text).map(el => (
+        //             <ListItem>
+        //                 <ListItemIcon>
+        //                     <CheckIcon />
+        //                 </ListItemIcon>
+        //                 <ListItemText primary={capitalizeWords(el)} />
+        //             </ListItem>
+        //         ))}
+        //     </List>
+        // </Box>

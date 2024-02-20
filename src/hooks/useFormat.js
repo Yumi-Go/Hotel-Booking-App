@@ -28,8 +28,15 @@ export function capitalizeWords(paragraph) {
 
 export function formatDescription(text) {
     if (!text) return [];
-    return text.replace(/\n/g, ' ').split(', ');
+    const result = text.replace(/\n/g, ' ').split(', ');
+    return result.filter((string) => !string.includes('sqm') || !string.includes("sqft"));
 }
+
+// export function formatDescription(text) {
+//     if (!text) return [];
+//     return text.replace(/\n/g, ' ').split(', ');
+// }
+
 
 
 export function extractSquareMeters(text) {
