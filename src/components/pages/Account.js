@@ -8,9 +8,6 @@ import useAuth from '../../hooks/useAuth';
 import CancelSubmitBtn from '../reusableComponents/CancelSubmitBtn';
 import Button from '@mui/material/Button';
 import LogoutIcon from '@mui/icons-material/Logout';
-import LogIn from '../reusableComponents/LogIn';
-
-
 
 
 export default function Account() {
@@ -20,23 +17,12 @@ export default function Account() {
 
     const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('CurrentUser')) || null);
     // const currentUser = JSON.parse(localStorage.getItem('CurrentUser')) || null;
-
-    const [fName, setFName] = useState('');
-    const [mName, setMName] = useState('');
-    const [lName, setLName] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('');
-    const [country, setCountry] = useState("Ireland");    
     
-
-
-
-
-
-    // // useEffect(() => {
-    //     if (!currentUser) {
-    //         navigate('/login');
-    //     }
-    // // }, [currentUser, navigate]);
+    const [fName, setFName] = useState(currentUser?.fName || '');
+    const [mName, setMName] = useState(currentUser?.mName || '');
+    const [lName, setLName] = useState(currentUser?.lName || '');
+    const [phoneNumber, setPhoneNumber] = useState(currentUser?.pNum || '');
+    const [country, setCountry] = useState("Ireland");
 
     const logoutHandler = async () => {
         await logOut();
@@ -86,6 +72,7 @@ export default function Account() {
                     placeholder="Enter Your First Name"
                     variant="standard"
                     value={fName}
+                    onChange={(e) => setFName(e.target.value)}
                 />
                 <TextField
                     id="outlined-textarea"
@@ -93,6 +80,7 @@ export default function Account() {
                     placeholder="(Optional) Enter Your Middle Name"
                     variant="standard"
                     value={mName}
+                    onChange={(e) => setMName(e.target.value)}
                 />
                 <TextField
                     required
@@ -101,6 +89,7 @@ export default function Account() {
                     placeholder="Enter Your Last Name"
                     variant="standard"
                     value={lName}
+                    onChange={(e) => setLName(e.target.value)}
                 />
             </div>
 
@@ -120,6 +109,7 @@ export default function Account() {
                     placeholder="Enter Your Phone Number"
                     variant="standard"
                     value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
                 />
                 <TextField
                     id="standard-select-countries"
@@ -128,6 +118,7 @@ export default function Account() {
                     defaultValue="Ireland"
                     variant="standard"
                     value={country}
+                    onChange={(e) => setCountry(e.target.value)}
                 >
                     {countries.map((option) => (
                         <MenuItem key={option.value} value={option.value}>
@@ -146,8 +137,6 @@ export default function Account() {
             </Button>
         </Box>
     )
-
-
 }
 
 
