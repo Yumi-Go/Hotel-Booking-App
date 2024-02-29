@@ -5,33 +5,20 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
-import ImageIcon from '@mui/icons-material/Image';
-import WorkIcon from '@mui/icons-material/Work';
-import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import CheckIcon from '@mui/icons-material/Check';
 import HotelIcon from '@mui/icons-material/Hotel';
-import CancelIcon from '@mui/icons-material/Cancel';
 import CloseIcon from '@mui/icons-material/Close';
 import PaymentIcon from '@mui/icons-material/Payment';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import BedIcon from '@mui/icons-material/Bed';
-import ListItemButton from '@mui/material/ListItemButton';
 import Divider from '@mui/material/Divider';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-import Slide from '@mui/material/Slide';
 import Button from '@mui/material/Button';
-import DeleteIcon from '@mui/icons-material/Delete';
-import SendIcon from '@mui/icons-material/Send';
 import Stack from '@mui/material/Stack';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
-
-
-
 import { capitalize, capitalizeWords, extractSquareMeters, formatDescription } from '../../../hooks/useFormat';
 
 
