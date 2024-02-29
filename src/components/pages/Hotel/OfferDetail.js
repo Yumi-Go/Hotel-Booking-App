@@ -20,6 +20,9 @@ import Stack from '@mui/material/Stack';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { capitalize, capitalizeWords, extractSquareMeters, formatDescription } from '../../../hooks/useFormat';
+import CancelSubmitBtn from '../../reusableComponents/CancelSubmitBtn';
+import { useNavigate } from 'react-router-dom';
+
 
 
 export default function OfferDetail({ offerObj, handleClose }) {
@@ -34,6 +37,20 @@ export default function OfferDetail({ offerObj, handleClose }) {
         boxShadow: 24,
         p: 0,
     };
+
+    const navigate = useNavigate();
+
+
+    const cancelHandler = () => {
+        // navigate('/');
+        handleClose();
+
+    }
+
+    const submitHandler = () => {
+        navigate('/booking');
+
+    }
 
     console.log(formatDescription("Prepay Non-refundable Non-changeable, prepay in full\nSuperior King Room, 1 King,\n23sqm/247sqft-35sqm/377sqft, Wireless"));
 
@@ -58,178 +75,117 @@ export default function OfferDetail({ offerObj, handleClose }) {
                 </Toolbar>
             </AppBar>
             <List sx={{ bgcolor: 'background.paper' }}>
+                <ListItem>
+                    <ListItemAvatar>
+                        <Avatar>
+                            <HotelIcon />
+                        </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                        primary={capitalize(offerObj.room.typeEstimated.category)}
+                        secondary="Room Type"
+                    />
+                </ListItem>
+                <Divider />
+                <ListItem>
+                    <ListItemAvatar>
+                        <Avatar>
+                            <BedIcon />
+                        </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                        primary={
+                            capitalize(offerObj.room.typeEstimated.bedType) 
+                            + " " + offerObj.room.typeEstimated.beds
+                        }
+                        secondary="Beds"
+                    />
+                </ListItem>
+                <Divider />
+                <ListItem>
+                    <ListItemAvatar>
+                        <Avatar>
+                            <PaymentIcon />
+                        </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                        primary={
+                            extractSquareMeters(offerObj.room.description.text)[0] 
+                            + " - " + extractSquareMeters(offerObj.room.description.text)[1] 
+                            + " \u33A1"
+                        }
+                        secondary="Area"
+                    />
+                </ListItem>
+                <Divider />
+                <ListItem>
+                    <ListItemAvatar>
+                        <Avatar>
+                            <CloseIcon />
+                        </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                        primary={capitalizeWords(offerObj.policies.cancellations[0].description.text)}
+                        secondary="Cancellation"
+                    />
+                </ListItem>
+                <Divider />
+                <ListItem>
+                    <ListItemAvatar>
+                        <Avatar>
+                            <PaymentIcon />
+                        </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                        primary={offerObj.policies.paymentType}
+                        secondary="Payment"
+                    />
+                </ListItem>
+                <Divider />
+                {formatDescription(offerObj.room.description.text).map(el => (
                     <ListItem>
-                        <ListItemAvatar>
-                            <Avatar>
-                                <HotelIcon />
-                            </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText
-                            primary={capitalize(offerObj.room.typeEstimated.category)}
-                            secondary="Room Type"
-                        />
+                        <ListItemIcon>
+                            <CheckIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={capitalizeWords(el)} />
                     </ListItem>
-                    <Divider />
-                    <ListItem>
-                        <ListItemAvatar>
-                            <Avatar>
-                                <BedIcon />
-                            </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText
-                            primary={
-                                capitalize(offerObj.room.typeEstimated.bedType) 
-                                + " " + offerObj.room.typeEstimated.beds
-                            }
-                            secondary="Beds"
-                        />
-                    </ListItem>
-                    <Divider />
-                    <ListItem>
-                        <ListItemAvatar>
-                            <Avatar>
-                                <PaymentIcon />
-                            </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText
-                            primary={
-                                extractSquareMeters(offerObj.room.description.text)[0] 
-                                + " - " + extractSquareMeters(offerObj.room.description.text)[1] 
-                                + " \u33A1"
-                            }
-                            secondary="Area"
-                        />
-                    </ListItem>
-                    <Divider />
-                    <ListItem>
-                        <ListItemAvatar>
-                            <Avatar>
-                                <CloseIcon />
-                            </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText
-                            primary={capitalizeWords(offerObj.policies.cancellations[0].description.text)}
-                            secondary="Cancellation"
-                        />
-                    </ListItem>
-                    <Divider />
-                    <ListItem>
-                        <ListItemAvatar>
-                            <Avatar>
-                                <PaymentIcon />
-                            </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText
-                            primary={offerObj.policies.paymentType}
-                            secondary="Payment"
-                        />
-                    </ListItem>
-                    <Divider />
-                    {formatDescription(offerObj.room.description.text).map(el => (
-                        <ListItem>
-                            <ListItemIcon>
-                                <CheckIcon />
-                            </ListItemIcon>
-                            <ListItemText primary={capitalizeWords(el)} />
-                        </ListItem>
-                    ))}
-                    <Divider />
-                </List>
-                <Stack
-                    direction="row"
-                    spacing={2}
-                    justifyContent="center"
-                    alignItems="center"
-                    sx={{ pb: 4, pt: 1 }}
+                ))}
+                <Divider />
+            </List>
+            {/* <Stack
+                direction="row"
+                spacing={2}
+                justifyContent="center"
+                alignItems="center"
+                sx={{ pb: 4, pt: 1 }}
+            >
+                <Button
+                    variant="outlined"
+                    onClick={handleClose}
+                    size="large"
+                    startIcon={<CloseIcon />}
+                    sx={{ width: '200px' }}
                 >
-                    <Button
-                        variant="outlined"
-                        onClick={handleClose}
-                        size="large"
-                        startIcon={<CloseIcon />}
-                        sx={{ width: '200px' }}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        variant="contained"
-                        size="large"
-                        endIcon={<DoubleArrowIcon />}
-                        sx={{ width: '200px' }}
-                    >
-                        Reserve
-                    </Button>
-                </Stack>
+                    Cancel
+                </Button>
+                <Button
+                    variant="contained"
+                    size="large"
+                    endIcon={<DoubleArrowIcon />}
+                    sx={{ width: '200px' }}
+                >
+                    Reserve
+                </Button>
+            </Stack> */}
+
+            <CancelSubmitBtn
+                cancelHandler={cancelHandler}
+                submitHandler={submitHandler}
+                cancelText={"cancel"}
+                submitText={"next"}
+            />            
         </Box>
     );
 }
 
 
-
-
-
-
-
-
-
-
-        // <Box sx={style}>
-        //     <Typography id="modal-modal-title" variant="h6" component="h2">
-        //         ROOM DETAIL
-        //     </Typography>
-        //     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-        //         Any description...........
-        //     </Typography>
-        //     <h1>{offerObj.price.total} {offerObj.price.currency}</h1>
-            
-        //     <List sx={{ bgcolor: 'background.paper' }}>
-        //         <ListItem>
-        //             <ListItemAvatar>
-        //                 <Avatar>
-        //                     <HotelIcon />
-        //                 </Avatar>
-        //             </ListItemAvatar>
-        //             <ListItemText primary={capitalize(offerObj.room.typeEstimated.category)} secondary="Room Type" />
-        //         </ListItem>
-        //         <ListItem>
-        //             <ListItemAvatar>
-        //                 <Avatar>
-        //                     <BedIcon />
-        //                 </Avatar>
-        //             </ListItemAvatar>
-        //             <ListItemText primary={capitalize(offerObj.room.typeEstimated.bedType) + " " + offerObj.room.typeEstimated.beds} secondary="Beds" />
-        //         </ListItem>
-        //         <ListItem>
-        //             <ListItemAvatar>
-        //                 <Avatar>
-        //                     <PaymentIcon />
-        //                 </Avatar>
-        //             </ListItemAvatar>
-        //             <ListItemText primary={extractSquareMeters(offerObj.room.description.text)[0] + " - " + extractSquareMeters(offerObj.room.description.text)[1] + " \u33A1"} secondary="Area" />
-        //         </ListItem>
-        //         <ListItem>
-        //             <ListItemAvatar>
-        //                 <Avatar>
-        //                     <CloseIcon />
-        //                 </Avatar>
-        //             </ListItemAvatar>
-        //             <ListItemText primary={capitalizeWords(offerObj.policies.cancellations[0].description.text)} secondary="Cancellation" />
-        //         </ListItem>
-        //         <ListItem>
-        //             <ListItemAvatar>
-        //                 <Avatar>
-        //                     <PaymentIcon />
-        //                 </Avatar>
-        //             </ListItemAvatar>
-        //             <ListItemText primary={offerObj.policies.paymentType} secondary="Payment" />
-        //         </ListItem>
-        //         {formatDescription(offerObj.room.description.text).map(el => (
-        //             <ListItem>
-        //                 <ListItemIcon>
-        //                     <CheckIcon />
-        //                 </ListItemIcon>
-        //                 <ListItemText primary={capitalizeWords(el)} />
-        //             </ListItem>
-        //         ))}
-        //     </List>
-        // </Box>

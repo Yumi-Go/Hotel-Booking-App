@@ -8,6 +8,7 @@ import useAuth from '../../hooks/useAuth';
 import CancelSubmitBtn from '../reusableComponents/CancelSubmitBtn';
 import Button from '@mui/material/Button';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { capitalize } from '../../hooks/useFormat';
 
 
 export default function Account() {
@@ -71,7 +72,7 @@ export default function Account() {
                     label="First Name"
                     placeholder="Enter Your First Name"
                     variant="standard"
-                    value={fName}
+                    value={capitalize(fName)}
                     onChange={(e) => setFName(e.target.value)}
                 />
                 <TextField
@@ -79,7 +80,7 @@ export default function Account() {
                     label="Middle Name"
                     placeholder="(Optional) Enter Your Middle Name"
                     variant="standard"
-                    value={mName}
+                    value={capitalize(mName)}
                     onChange={(e) => setMName(e.target.value)}
                 />
                 <TextField
@@ -88,7 +89,7 @@ export default function Account() {
                     label="Last Name"
                     placeholder="Enter Your Last Name"
                     variant="standard"
-                    value={lName}
+                    value={capitalize(lName)}
                     onChange={(e) => setLName(e.target.value)}
                 />
             </div>
@@ -127,7 +128,12 @@ export default function Account() {
                     ))}
                 </TextField>
             </div>
-            <CancelSubmitBtn cancelHandler={cancelHandler} submitHandler={submitHandler}/>
+            <CancelSubmitBtn
+                cancelHandler={cancelHandler}
+                submitHandler={submitHandler}
+                cancelText={"cancel"}
+                submitText={"submit"}
+            />
             <Button
                 variant="text"
                 onClick={logoutHandler}

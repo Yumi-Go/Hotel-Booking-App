@@ -1,5 +1,3 @@
-import Divider from '@mui/material/Divider';
-import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import CloseIcon from '@mui/icons-material/Close';
@@ -7,8 +5,7 @@ import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 
 
 
-
-export default function CancelSubmitBtn({ cancelHandler, submitHandler }) {
+export default function CancelSubmitBtn({ cancelHandler, submitHandler, cancelText, submitText }) {
 
 
     return (
@@ -18,7 +15,7 @@ export default function CancelSubmitBtn({ cancelHandler, submitHandler }) {
                 spacing={2}
                 justifyContent="center"
                 alignItems="center"
-                sx={{ py: 10 }}
+                sx={{ py: 5 }}
             >
                 <Button
                     onClick={cancelHandler}
@@ -27,7 +24,7 @@ export default function CancelSubmitBtn({ cancelHandler, submitHandler }) {
                     startIcon={<CloseIcon />}
                     sx={{ width: '200px' }}
                 >
-                    Cancel
+                    {cancelText}
                 </Button>
                 <Button
                     onClick={submitHandler}
@@ -36,7 +33,7 @@ export default function CancelSubmitBtn({ cancelHandler, submitHandler }) {
                     endIcon={<DoubleArrowIcon />}
                     sx={{ width: '200px' }}
                 >
-                    Submit
+                    {submitText}
                 </Button>
             </Stack>
         </div>
