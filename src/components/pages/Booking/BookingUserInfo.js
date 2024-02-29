@@ -2,19 +2,21 @@ import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
-import useFirestore from '../../../hooks/useFirestore';
+import { capitalize } from '../../../hooks/useFormat';
+import NoAccountsIcon from '@mui/icons-material/NoAccounts';
+import Button from '@mui/material/Button';
+import EditIcon from '@mui/icons-material/Edit';
 
 
-export default function BookingUserInfo() {
+export default function BookingUserInfo({ userInfoEditHandler }) {
 
     const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('CurrentUser')) || {});
 
     useEffect(() => {
-        setCurrentUser(JSON.parse(localStorage.getItem('CurrentUser')) || {});
+        setCurrentUser(JSON.parse(localStorage.getItem('CurrentUser')));
     }, []);
 
-    // Destructure user details or provide default values
-    const { fName = "", mName = "", lName = "", email = "", phoneNumber = "" } = currentUser;
+    // const { fName = "", mName = "", lName = "", email = "", phoneNumber = "" } = currentUser;
 
     
     // change later..
@@ -24,7 +26,10 @@ export default function BookingUserInfo() {
         { value: 'Korea', label: 'KO' },
         { value: 'France', label: 'FR' },
     ];
-
+    
+    if (!currentUser) {
+        return <div><NoAccountsIcon sx={{ fontSize: 100, color: "grey" }}/></div>
+    }
     return (
         <Box
             component="form"
@@ -39,7 +44,7 @@ export default function BookingUserInfo() {
                     label="First Name"
                     placeholder="Enter Your First Name"
                     variant="standard"
-                    defaultValue={fName}
+                    defaultValue={capitalize(currentUser?.fName)}
                     disabled
                 />
                 <TextField
@@ -47,7 +52,7 @@ export default function BookingUserInfo() {
                     label="Middle Name"
                     placeholder="(Optional) Enter Your Middle Name"
                     variant="standard"
-                    defaultValue={mName}
+                    defaultValue={capitalize(currentUser?.mName)}
                     disabled
                 />
                 <TextField
@@ -56,7 +61,7 @@ export default function BookingUserInfo() {
                     label="Last Name"
                     placeholder="Enter Your Last Name"
                     variant="standard"
-                    defaultValue={lName}
+                    defaultValue={capitalize(currentUser?.lName)}
                     disabled
                 />
             </div>
@@ -68,7 +73,7 @@ export default function BookingUserInfo() {
                     label="Email"
                     placeholder="Enter Your Last Name"
                     variant="standard"
-                    defaultValue={email}
+                    defaultValue={currentUser?.email}
                     disabled
                 />
                 <TextField
@@ -76,7 +81,7 @@ export default function BookingUserInfo() {
                     label="Phone Number"
                     placeholder="Enter Your Phone Number"
                     variant="standard"
-                    defaultValue={phoneNumber}
+                    defaultValue={currentUser?.pNum}
                     disabled
                 />
                 <TextField
@@ -94,108 +99,20 @@ export default function BookingUserInfo() {
                     ))}
                 </TextField>
             </div>
+
+            <Button
+                onClick={userInfoEditHandler}
+                variant="text"
+                color='secondary'
+                size="large"
+                endIcon={<EditIcon />}
+                sx={{ width: '200px' }}
+            >
+                Edit
+            </Button>
+
+
         </Box>
     )
 }
 
-
-
-
-
-
-
-//// load currentUser info directly from useAuth() without local storage
-
-// import Box from '@mui/material/Box';
-// import TextField from '@mui/material/TextField';
-// import MenuItem from '@mui/material/MenuItem';
-// import useAuth from '../../../hooks/useAuth';
-
-
-// export default function BookingForm() {
-
-//     const { currentUser } = useAuth(); // Destructure currentUser from useAuth
-
-//         // change later..
-
-//     const countries = [
-//         { value: 'Ireland', label: 'IR' },
-//         { value: 'USA', label: 'US' },
-//         { value: 'Korea', label: 'KO' },
-//         { value: 'France', label: 'FR' },
-//     ];
-
-//     const fName = currentUser?.fName || "";
-//     const mName = currentUser?.mName || "";
-//     const lName = currentUser?.lName || "";
-//     const email = currentUser?.email || "";
-//     const phoneNumber = currentUser?.phoneNumber || "";
-
-
-
-//     return (
-//         <Box
-//             component="form"
-//             sx={{ '& .MuiTextField-root': { m: 1, width: '40ch' } }}
-//             noValidate
-//             autoComplete="off"
-//         >
-//             <div>
-//                 <TextField
-//                     required
-//                     id="outlined-textarea"
-//                     label="First Name"
-//                     placeholder="Enter Your First Name"
-//                     variant="standard"
-//                     defaultValue={fName}
-//                 />
-//                 <TextField
-//                     id="outlined-textarea"
-//                     label="Middle Name"
-//                     placeholder="(Optional) Enter Your Middle Name"
-//                     variant="standard"
-//                     defaultValue={mName}
-//                 />
-//                 <TextField
-//                     required
-//                     id="outlined-textarea"
-//                     label="Last Name"
-//                     placeholder="Enter Your Last Name"
-//                     variant="standard"
-//                     defaultValue={lName}
-//                 />
-//             </div>
-
-//             <div>
-//                 <TextField
-//                     required
-//                     id="outlined-textarea"
-//                     label="Email"
-//                     placeholder="Enter Your Last Name"
-//                     variant="standard"
-//                     defaultValue={email}
-//                 />
-//                 <TextField
-//                     id="filled-textarea"
-//                     label="Phone Number"
-//                     placeholder="Enter Your Phone Number"
-//                     variant="standard"
-//                     defaultValue={phoneNumber}
-//                 />
-//                 <TextField
-//                     id="standard-select-countries"
-//                     select
-//                     label="Contries"
-//                     defaultValue="Ireland"
-//                     variant="standard"
-//                 >
-//                     {countries.map((option) => (
-//                         <MenuItem key={option.value} value={option.value}>
-//                             {option.label}
-//                         </MenuItem>
-//                     ))}
-//                 </TextField>
-//             </div>
-//         </Box>
-//     )
-// }

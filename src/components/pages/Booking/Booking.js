@@ -3,7 +3,6 @@ import Divider from '@mui/material/Divider';
 import BookingDetail from './BookingDetail';
 import Button from '@mui/material/Button';
 import CancelSubmitBtn from '../../reusableComponents/CancelSubmitBtn';
-import EditIcon from '@mui/icons-material/Edit';
 import BookingUserInfo from './BookingUserInfo';
 
 
@@ -30,8 +29,8 @@ export default function Booking() {
     return (
         <div>
             <h1>Booking</h1>
-            <BookingUserInfo />
-            <Button
+            <BookingUserInfo userInfoEditHandler={userInfoEditHandler} />
+            {/* <Button
                 onClick={userInfoEditHandler}
                 variant="text"
                 color='secondary'
@@ -40,7 +39,7 @@ export default function Booking() {
                 sx={{ width: '200px' }}
             >
                 Edit
-            </Button>
+            </Button> */}
             <Divider sx={{p: 10, pt: 10, pb: 5}}>
                 <h3>Offer Detail</h3>
                 {/* <Button
@@ -56,7 +55,12 @@ export default function Booking() {
                 {/* <Chip label="Booking Detail" size="medium" color="secondary" variant="outlined"/> */}
             </Divider>
             <BookingDetail/>
-            <CancelSubmitBtn cancelHandler={cancelHandler} submitHandler={submitHandler} />
+            <CancelSubmitBtn
+                cancelHandler={cancelHandler}
+                submitHandler={submitHandler}
+                cancelText={"cancel"}
+                submitText={"next"}
+            />
         </div>
     )
 }
