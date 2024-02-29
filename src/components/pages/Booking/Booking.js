@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Divider from '@mui/material/Divider';
 import BookingDetail from './BookingDetail';
 import Button from '@mui/material/Button';
@@ -8,9 +9,15 @@ import BookingUserInfo from './BookingUserInfo';
 
 
 
+
 export default function Booking() {
 
     const navigate = useNavigate();
+    const location = useLocation();
+    const offerObj = location.state?.offerObj;
+    
+    console.log("offerObj from OfferDetail.js: ", offerObj);
+
 
     const cancelHandler = () => {
         // navigate('/');

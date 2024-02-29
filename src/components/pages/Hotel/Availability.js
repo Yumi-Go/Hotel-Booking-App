@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, forwardRef } from "react";
 import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Modal from '@mui/material/Modal';
 import OfferDetail from "./OfferDetail";
+import { useRef } from 'react';
+
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -17,6 +19,8 @@ const Item = styled(Paper)(({ theme }) => ({
 
 
 export default function Availability({ hotelObj }) {
+    const ref = useRef(null);
+
     console.log("Received hotelObj in Availability: ", hotelObj);
 
     const [open, setOpen] = useState(false);
@@ -67,7 +71,7 @@ export default function Availability({ hotelObj }) {
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >
-                        <OfferDetail offerObj={offerObj} handleClose={handleClose} />
+                        <OfferDetail offerObj={offerObj} handleClose={handleClose} ref={ref} />
                     </Modal>
                 </React.Fragment>
             ))}

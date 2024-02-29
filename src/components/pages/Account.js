@@ -25,6 +25,13 @@ export default function Account() {
     const [phoneNumber, setPhoneNumber] = useState(currentUser?.pNum || '');
     const [country, setCountry] = useState("Ireland");
 
+    useEffect(() => {
+        if (!currentUser) {
+          navigate('/login');
+        }
+      }, [currentUser, navigate]);
+
+
     const logoutHandler = async () => {
         await logOut();
         navigate('/');
@@ -53,9 +60,10 @@ export default function Account() {
         { value: 'France', label: 'FR' },
     ];
 
-    if (!currentUser) {
-        return <Navigate to="/login" replace />;
-    }
+    //// if above useEffect is not working, use this..
+    // if (!currentUser) {
+    //     return <Navigate to="/login" replace />;
+    // }
     return (
         <Box
             component="form"
