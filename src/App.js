@@ -13,9 +13,12 @@ import { Box } from '@mui/material';
 import { searchHotels, getRatingsByHotelId } from './hooks/useHotelAPI';
 import HotelDetail from './components/pages/Hotel/HotelDetail';
 import { useDate } from './hooks/useDate';
+import Booking from './components/pages/Booking/Booking';
+import LogIn from './components/reusableComponents/LogIn';
 
 
 export default function App() {
+  const [openBooking, setOpenBooking] = useState(false);
   const [searchResult, setSearchResult] = useState([]);
   const [hotelName, setHotelName] = useState("");
   const [cityCode, setCityCode] = useState("");
@@ -64,7 +67,9 @@ export default function App() {
       const fetchRatings = async () => {
           try {
               const ratingsData = await getRatingsByHotelId("TELONMFS"); // replace hard-coded parameter with hotelObj.hote.hotelId later..
-              setRatings(ratingsData);
+              if (JSON.stringify(ratingsData) !== JSON.stringify(ratings)) {
+                setRatings(ratingsData);
+              }
               console.log("ratings in App.js: ", ratingsData);
           } catch (error) {
               console.error("Failed to fetch ratings:", error);
@@ -199,9 +204,18 @@ export default function App() {
               {/* <Route path="/" element={<Home searchResult={searchResult} />} /> */}
 
               {/* for testing.. finishing testing, uncomment above Home component line */}
-              <Route path="/" element={<HotelDetail hotelObj={hotelObj} ratings={ratings} />} />
+              <Route path="/hotel" element={<HotelDetail hotelObj={hotelObj} ratings={ratings} />} />
+
+              {openBooking ?
+              <Route path="/" element={<Booking />} /> 
+              : <Route path="/" element={<Home searchResult={searchResult} />} />
+              }
+
+
+              <Route path="/booking" element={<Booking />} />
 
               <Route path="/account" element={<Account />} />
+              <Route path="/login" element={<LogIn />} />
               <Route path="/history" element={<BookingHistory />} />
             </Routes>
           </Box>

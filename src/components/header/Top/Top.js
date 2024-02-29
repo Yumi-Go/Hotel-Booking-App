@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -9,21 +10,19 @@ import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import LoginPopup from '../../reusableComponents/LoginPopup';
 
 import 'firebaseui/dist/firebaseui.css'
 
 
-export default function PrimarySearchAppBar() {
-    const [open, setOpen] = useState(false);
-    const handleClickOpen = () => {
-         setOpen(true);
-    };
-    const handleClose = () => {
-        setOpen(false);
+export default function TopBar() {
+
+    const navigate = useNavigate();
+    const menuId = 'primary-search-account-menu';
+
+    const handleAccountClick = () => {
+        navigate('/account');
     };
 
-    const menuId = 'primary-search-account-menu';
     
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -75,12 +74,11 @@ export default function PrimarySearchAppBar() {
                             aria-label="account of current user"
                             aria-controls={menuId}
                             aria-haspopup="true"
-                            onClick={handleClickOpen}
+                            onClick={handleAccountClick}
                             color="inherit"
                         >
                             <AccountCircle />
                         </IconButton>
-                        <LoginPopup isOpen={open} closeHandler={handleClose} />
                     </Box>
 
                 </Toolbar>

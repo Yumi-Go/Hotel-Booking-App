@@ -322,3 +322,45 @@ export async function getRatingsByHotelId(hotelId) {
         return "Error in Ratings Data";
     }
 }
+
+
+
+async function bookingRequest(token) {
+    try {
+        const url = `test.api.amadeus.com/v1/booking/hotel-bookings`
+        const response = await fetch(url, {
+            method: "POST",
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        // console.log("response: ", response);
+        let rawData = await response.json();
+        rawData = await rawData.data;
+        console.log("rawData: ", rawData);
+        return rawData;
+
+    } catch (err) {
+        console.error("Error in searchRequest:", err);
+    }
+}
+
+
+// const requestOptions = {
+//     method: "POST",
+//     headers: { "Content-Type": "application/x-www-form-urlencoded" },
+//     body: `grant_type=client_credentials&client_id=${amadeusClientId}&client_secret=${amadeusClientSecret}`,
+// };
+
+// try {
+//     const authResponse = await fetch(amadeusAuthUrl, requestOptions);
+//     const authData = await authResponse.json();
+//     const token = authData.access_token;
+//     console.log("token:", token);
+//     return token;
+
+// Hotel Ratings API
+export async function bookOffer(offerObj) {
+
+
+
+
+}

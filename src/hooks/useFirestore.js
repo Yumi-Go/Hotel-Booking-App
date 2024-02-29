@@ -31,6 +31,10 @@ export default function useFirestore() {
     }
 
     async function updateUserInfo(newFName, newMName, newLName, newAddress, newPnum) {
+        if (!auth.currentUser) {
+            console.error("No user logged in.");
+            return;
+        }
         const toLowerCaseIfPresent = (value) => value ? value.toLowerCase() : value;
         const userRef = doc(db, "users", auth.currentUser.uid);
         await updateDoc(userRef, {
