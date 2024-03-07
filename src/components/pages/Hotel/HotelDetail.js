@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useNavigate, useLocation } from 'react-router-dom';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -20,9 +21,18 @@ const Item = styled(Paper)(({ theme }) => ({
 
   
 
-export default function HotelDetail({ hotelObj, ratings }) { // make hotelObj, ratings single parameter merged later...
+// export default function HotelDetail({ hotelObj, ratings }) { // make hotelObj, ratings single parameter merged later...
+export default function HotelDetail() { // make hotelObj, ratings single parameter merged later...
+
+    
+    const navigate = useNavigate();
+    const location = useLocation();
+    const hotelObj = location.state?.hotelObj;
+    
     console.log("Received hotelObj in HotelDetail: ", hotelObj);
-    console.log("Received ratings in HotelDetail: ", ratings);
+
+    console.log("hotelObj from Home.js: ", hotelObj);
+
 
     // // for testing getPhotosByHotelName.. remove this later
     // const [photos, setPhotos] = useState([]);
@@ -39,6 +49,7 @@ export default function HotelDetail({ hotelObj, ratings }) { // make hotelObj, r
     //     };
     //     fetchPhotos();
     // }, [hotelObj.hotel.name]);
+
 
     useEffect(() => {
         const rooms = () => {
@@ -59,7 +70,7 @@ export default function HotelDetail({ hotelObj, ratings }) { // make hotelObj, r
     <Box sx={{ width: "100%", height: "100%", display:"flex", position: "absolute", justifyContent: 'center'}}>
         <Stack sx={{ width: "100%", alignItems: 'center', bgcolor: '#dedede', margin: 0, padding: 0 }}>
             <Box>
-                <h1>{hotelObj.hotel.name}</h1>
+                <h1>{hotelObj.name}</h1>
             </Box>
             <Box sx={{ width: "95%", my: "20px", bgcolor: "red" }}>
                 <Grid container spacing={0} sx={{ width: '100%'}}>
@@ -82,10 +93,13 @@ export default function HotelDetail({ hotelObj, ratings }) { // make hotelObj, r
                     </Grid>
                     <Grid item xs={6} md={4} sx={{ py: 2, px: 0, mx: 0, backgroundColor: 'green' }}>
                         <Item sx={{ boxShadow: 0, border: 1, backgroundColor: "purple" }}>
-                            <Ratings ratings={ratings} />
+                            <Ratings ratings={hotelObj.ratings} />
                         </Item>
                     </Grid>
                 </Grid>
+
+
+
             </Box>
         </Stack>
     </Box>

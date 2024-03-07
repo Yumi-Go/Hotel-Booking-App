@@ -47,8 +47,8 @@ export default function Booking() {
             >
                 Edit
             </Button> */}
-            <Divider sx={{p: 10, pt: 10, pb: 5}}>
-                <h3>Offer Detail</h3>
+            <Divider sx={{p: 10, pt: 10, pb: 5 }}>
+                <h3>Booking Detail</h3>
                 {/* <Button
                     onClick={userInfoEditHandler}
                     variant="contained"
@@ -61,7 +61,7 @@ export default function Booking() {
                 </Button> */}
                 {/* <Chip label="Booking Detail" size="medium" color="secondary" variant="outlined"/> */}
             </Divider>
-            <BookingDetail/>
+            <BookingDetail offerObj={offerObj} />
             <CancelSubmitBtn
                 cancelHandler={cancelHandler}
                 submitHandler={submitHandler}

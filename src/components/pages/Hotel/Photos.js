@@ -37,11 +37,11 @@ export default function Photos({ hotelObj }) {
                         loading="lazy"
                     />
                     <ImageListItemBar
-                        title={hotelObj.hotel.name}
+                        title={hotelObj.name}
                         actionIcon={
                             <IconButton
                                 sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
-                                aria-label={`info about ${hotelObj.hotel.name}`}
+                                aria-label={`info about ${hotelObj.name}`}
                             >
                                 <InfoIcon />
                             </IconButton>

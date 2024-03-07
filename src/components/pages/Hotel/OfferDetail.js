@@ -1,5 +1,4 @@
 import React, { forwardRef } from 'react';
-
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
@@ -12,6 +11,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import HotelIcon from '@mui/icons-material/Hotel';
 import CloseIcon from '@mui/icons-material/Close';
 import PaymentIcon from '@mui/icons-material/Payment';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import BedIcon from '@mui/icons-material/Bed';
 import Divider from '@mui/material/Divider';
 import AppBar from '@mui/material/AppBar';
@@ -83,7 +83,7 @@ const OfferDetail = forwardRef(({ offerObj, handleClose }, ref) => {
                         </Avatar>
                     </ListItemAvatar>
                     <ListItemText
-                        primary={capitalize(offerObj.room.typeEstimated.category)}
+                        primary={capitalize(offerObj.room?.typeEstimated?.category)}
                         secondary="Room Type"
                     />
                 </ListItem>
@@ -96,8 +96,8 @@ const OfferDetail = forwardRef(({ offerObj, handleClose }, ref) => {
                     </ListItemAvatar>
                     <ListItemText
                         primary={
-                            capitalize(offerObj.room.typeEstimated.bedType) 
-                            + " " + offerObj.room.typeEstimated.beds
+                            capitalize(offerObj.room?.typeEstimated?.bedType) 
+                            + " " + offerObj.room?.typeEstimated?.beds
                         }
                         secondary="Beds"
                     />
@@ -111,8 +111,8 @@ const OfferDetail = forwardRef(({ offerObj, handleClose }, ref) => {
                     </ListItemAvatar>
                     <ListItemText
                         primary={
-                            extractSquareMeters(offerObj.room.description.text)[0] 
-                            + " - " + extractSquareMeters(offerObj.room.description.text)[1] 
+                            extractSquareMeters(offerObj.room?.description?.text)[0] 
+                            + " - " + extractSquareMeters(offerObj.room?.description?.text)[1] 
                             + " \u33A1"
                         }
                         secondary="Area"
@@ -126,7 +126,7 @@ const OfferDetail = forwardRef(({ offerObj, handleClose }, ref) => {
                         </Avatar>
                     </ListItemAvatar>
                     <ListItemText
-                        primary={capitalizeWords(offerObj.policies.cancellations[0].description.text)}
+                        primary={capitalizeWords(offerObj.policies?.cancellations[0]?.description?.text)}
                         secondary="Cancellation"
                     />
                 </ListItem>
@@ -138,12 +138,12 @@ const OfferDetail = forwardRef(({ offerObj, handleClose }, ref) => {
                         </Avatar>
                     </ListItemAvatar>
                     <ListItemText
-                        primary={offerObj.policies.paymentType}
+                        primary={offerObj.policies?.paymentType}
                         secondary="Payment"
                     />
                 </ListItem>
                 <Divider />
-                {formatDescription(offerObj.room.description.text).map((el, index) => (
+                {formatDescription(offerObj.room?.description?.text).map((el, index) => (
                     <ListItem key={index}>
                         <ListItemIcon>
                             <CheckIcon />
@@ -152,6 +152,19 @@ const OfferDetail = forwardRef(({ offerObj, handleClose }, ref) => {
                     </ListItem>
                 ))}
                 <Divider />
+                <ListItem>
+                    <ListItemAvatar>
+                        <Avatar>
+                            <AttachMoneyIcon />
+                        </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                        primary={offerObj.price?.total + " (" + offerObj.price?.currency + ")"}
+                        secondary="Price"
+                    />
+                </ListItem>
+                <Divider />
+
             </List>
             {/* <Stack
                 direction="row"
