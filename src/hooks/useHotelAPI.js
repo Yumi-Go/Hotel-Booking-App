@@ -233,14 +233,16 @@ export async function searchHotels(name, cityCode, searchConditions) {
 
 
             const hotelData = await getData(token, url);
-            console.log("hotelData: ", hotelData);
+            // console.log("hotelData: ", hotelData);
 
             let eachHotel = {};
             if (hotelData && hotelData.length) {
                 console.log(`data of hotel id ${id}: `, hotelData[0]);
                 if (hotelData[0].hotel && hotelData[0].offers) {
                     const photoUrls = await getPhotosByHotelName(hotelData[0].hotel.name);
-                    eachHotel = await { ...hotelData[0].hotel, photoUrls: photoUrls, offers: hotelData[0].offers };
+                    // console.log("hotelData[0].hotel.hotelId before getRatingsByHotelId: ", hotelData[0].hotel.hotelId);
+                    const ratings = await getRatingsByHotelId(hotelData[0].hotel.hotelId);
+                    eachHotel = await { ...hotelData[0].hotel, photoUrls: photoUrls, offers: hotelData[0].offers, ratings: ratings };
                     console.log("each Hotel with photos: ", eachHotel);
                     result.push(eachHotel);
                     localStorage.setItem('searchResult', JSON.stringify(result));
@@ -304,14 +306,13 @@ export async function getRatingsByHotelId(hotelId) {
         
         const token = await getToken();
         const rawRatings = await getData(token, url);
-        // const ratings = await rawRatings[0];
 
-        console.log("ratings: ", rawRatings[0]);
         // const result = {};
-        if (rawRatings[0]) {
-            console.log("raw ratings: ", rawRatings[0]);
-
-            return rawRatings[0];
+        if (rawRatings) {
+            console.log("rawRatings in getRatingsByHotelId: ", rawRatings);
+            const ratings = await rawRatings.data[0];
+            console.log("ratings in getRatingsByHotelId: ", ratings);
+            return ratings;
         }
         else {
             console.log(`No Ratings data for the hotel ${hotelId}`);
@@ -356,6 +357,7 @@ async function bookingRequest(token) {
 //     const token = authData.access_token;
 //     console.log("token:", token);
 //     return token;
+
 
 // Hotel Ratings API
 export async function bookOffer(offerObj) {

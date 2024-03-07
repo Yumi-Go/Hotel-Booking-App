@@ -60,7 +60,7 @@ export default function Ratings({ ratings }) {
   console.log("Received ratings in Ratings: ", ratings);
 
   return (
-    ratings ? (
+    typeof ratings === 'object' ? (
       <Stack>
         <Item>
           <h3>Overall</h3>
@@ -82,6 +82,6 @@ export default function Ratings({ ratings }) {
           </Grid>
         </Item>
       </Stack>
-    ) : <div>Loading ratings...</div>
+    ) : <div>{ratings}</div>
   );
 }
