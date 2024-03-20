@@ -12,9 +12,9 @@ export default function useAuth() {
     const [currentUser, setCurrentUser] = useState(auth.currentUser);
 
     useEffect(() => {
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async(user) => {
             if (user) {
-                getUserInfoByUID(user.uid)
+                await getUserInfoByUID(user.uid)
                 .then(userData => {
                     setCurrentUser(userData);
                     localStorage.setItem('CurrentUser', JSON.stringify(userData));

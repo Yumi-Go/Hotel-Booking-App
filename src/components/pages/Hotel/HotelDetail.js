@@ -29,9 +29,7 @@ export default function HotelDetail() { // make hotelObj, ratings single paramet
     const location = useLocation();
     const hotelObj = location.state?.hotelObj;
     
-    console.log("Received hotelObj in HotelDetail: ", hotelObj);
-
-    console.log("hotelObj from Home.js: ", hotelObj);
+    console.log("Received hotelObj in HotelDetail.js (from Home.js): ", hotelObj);
 
 
     // // for testing getPhotosByHotelName.. remove this later

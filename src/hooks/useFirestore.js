@@ -42,7 +42,7 @@ export default function useFirestore() {
             mName: toLowerCaseIfPresent(newMName),
             lName: toLowerCaseIfPresent(newLName),
             address: newAddress,
-            pNum: newPnum
+            pNum: newPnum,
         });
     }
 
