@@ -14,6 +14,7 @@ import { searchHotels, getRatingsByHotelId } from './hooks/useHotelAPI';
 import HotelDetail from './components/pages/Hotel/HotelDetail';
 import { useDate } from './hooks/useDate';
 import Booking from './components/pages/Booking/Booking';
+import Payment from './components/pages/Booking/Payment';
 import LogIn from './components/reusableComponents/LogIn';
 
 
@@ -200,6 +201,8 @@ export default function App() {
               } */}
 
               <Route path="/booking" element={<Booking />} />
+              <Route path="/payment" element={<Payment />} />
+
 
               <Route path="/account" element={<Account />} />
               <Route path="/login" element={<LogIn />} />

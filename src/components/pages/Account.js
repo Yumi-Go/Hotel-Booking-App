@@ -23,7 +23,10 @@ export default function Account() {
     const [mName, setMName] = useState(currentUser?.mName || '');
     const [lName, setLName] = useState(currentUser?.lName || '');
     const [phoneNumber, setPhoneNumber] = useState(currentUser?.pNum || '');
-    const [country, setCountry] = useState("Ireland");
+    const [address, setAddress] = useState(currentUser?.address || '');
+
+    // useEffect(() => {
+    //   }, [fName, mName, lName, phoneNumber, address]);
 
     useEffect(() => {
         if (!currentUser) {
@@ -44,8 +47,10 @@ export default function Account() {
             return;
         }
         
-        console.log(fName, mName, lName, phoneNumber, country);
-        await updateUserInfo(fName, mName, lName, phoneNumber, country);
+        console.log(fName, mName, lName, address, phoneNumber);
+        await updateUserInfo(fName, mName, lName, address, phoneNumber);
+        // window.location.reload();
+        navigate('/account');
     };
 
     const cancelHandler = () => {
@@ -120,7 +125,7 @@ export default function Account() {
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
                 />
-                <TextField
+                {/* <TextField
                     id="standard-select-countries"
                     select
                     label="Contries"
@@ -134,7 +139,15 @@ export default function Account() {
                             {option.label}
                         </MenuItem>
                     ))}
-                </TextField>
+                </TextField> */}
+                <TextField
+                    id="filled-textarea"
+                    label="Address"
+                    placeholder="Enter Your Address"
+                    variant="standard"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                />
             </div>
             <CancelSubmitBtn
                 cancelHandler={cancelHandler}

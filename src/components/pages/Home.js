@@ -78,6 +78,7 @@ export default function Home({ searchResult }) {
                     <Box sx={{ width: "100%", height: "80%" }}>
                       <img src={Object.values(hotelObj.photoUrls)[0][0]} alt={`hotel ${index}`} style={{ width: '100%', height: '100%' }} />
                     </Box>
+                    
                     <Box
                       sx={{ height: "20%", display:"flex", justifyContent: 'center', padding: '10px', margin: '0px' }}>
                       <h4>{hotelObj.name}</h4>

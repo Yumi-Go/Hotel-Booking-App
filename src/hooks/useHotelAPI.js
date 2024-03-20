@@ -1,4 +1,13 @@
+let cachedToken = null;
+let tokenExpiry = null;
+
+// to minimize the number of accessing token
 async function getToken() {
+    const now = new Date();
+    if (cachedToken && tokenExpiry && now < tokenExpiry) {
+        console.log("Using cached token");
+        return cachedToken;
+    }
 
     const amadeusClientId = process.env.REACT_APP_AMADEUS_CLIENT_ID;
     const amadeusClientSecret = process.env.REACT_APP_AMADEUS_CLIENT_SECRET;
@@ -13,35 +22,55 @@ async function getToken() {
     try {
         const authResponse = await fetch(amadeusAuthUrl, requestOptions);
         const authData = await authResponse.json();
-        const token = authData.access_token;
-        console.log("token:", token);
-        return token;
-
+        cachedToken = authData.access_token;
+        // Token for test version is valid for 30 minutes
+        tokenExpiry = new Date(now.getTime() + 1800 * 1000); // 1800 seconds * 1000 milliseconds per second = 30 minutes
+        console.log("Token refreshed: ", cachedToken);
+        return cachedToken;
     } catch (err) {
-        console.error("Error in searchRequest:", err);
+        console.error("Error obtaining token:", err);
     }
 }
 
-
-async function getData(token, url) {
+async function getData(url) {
+    const token = await getToken();
     try {
         const response = await fetch(url, {
             method: "GET",
             headers: { Authorization: `Bearer ${token}` },
         });
-        // console.log("response: ", response);
-        let rawData = await response.json();
-        rawData = await rawData.data;
-        console.log("rawData: ", rawData);
-        return rawData;
-
+        const rawData = await response.json();
+        console.log("Data fetched with token:", token);
+        return rawData.data;
     } catch (err) {
-        console.error("Error in searchRequest:", err);
+        console.error("Error fetching data:", err);
     }
 }
 
+async function postData(url, requestBodyObj) {
+    const token = await getToken();
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(requestBodyObj),
+        });
+        // console.log("response: ", response);
+        let rawData = await response.json();
+        // rawData = await rawData.data;
+        console.log("response of Post: ", rawData);
+        return rawData;
+    } catch (err) {
+        console.error("Error posting data:", err);
+    }
+}
+
+
 // Hotel List API
-async function getHotelIdByCity(token, cityCode) {
+async function getHotelIdByCity(cityCode) {
     try {
         const url =
         "https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-city?" +
@@ -50,7 +79,7 @@ async function getHotelIdByCity(token, cityCode) {
         "radiusUnit=KM&" +
         "hotelSource=ALL";
         
-        const hotels = await getData(token, url);
+        const hotels = await getData(url);
 
         console.log("hotels: ", hotels);
         
@@ -75,7 +104,7 @@ async function getHotelIdByCity(token, cityCode) {
 
 
 // Hotel Name Autocomplete API
-async function getHotelIdByName(token, name) {
+async function getHotelIdByName(name) {
     try {
         const url = 
         "https://test.api.amadeus.com/v1/reference-data/locations/hotel?" +
@@ -85,7 +114,7 @@ async function getHotelIdByName(token, name) {
         "lang=EN&" +
         "max=20";
         
-        const hotels = await getData(token, url);
+        const hotels = await getData(url);
 
         console.log("hotels: ", hotels);
         const result = [];
@@ -113,7 +142,7 @@ async function getHotelIdByName(token, name) {
 
 
 
-export async function getIds(token, name, cityCode) {
+export async function getIds(name, cityCode) {
 
 
     // Name Autocomplete API에서는 결과값이 20개까지만 나오고, 그 안에서도 뭐가 잘못된 건지 cityCode로 검색한거랑 겹치는게 하나도 없음. (e.g. 'CITADINES'으로 검색했을때 파리에 있는 CITADINES 호텔이 몇개 나옴에도 불구하고 PAR로 cityCode로 얻은 리스트에 존재하는 호텔 아이디가 하나도 발견이 안됨. 둘이 뭔가 문제가 있는듯..)
@@ -134,7 +163,7 @@ export async function getIds(token, name, cityCode) {
             
             console.log("Searched result by hotel name and city both");
 
-            const hotelsData = await getData(token, url);
+            const hotelsData = await getData(url);
 
             console.log("hotelsData: ", hotelsData);
     
@@ -153,7 +182,7 @@ export async function getIds(token, name, cityCode) {
         } else {
             // Hotel Name Autocomplete API
             if (name.length > 0) {
-                const hotelsData = await getHotelIdByName(token, name);
+                const hotelsData = await getHotelIdByName(name);
                 console.log("Searched result by hotel name without city (Name Autocomplete): ", hotelsData);
                 if (hotelsData && hotelsData.length) {
                     hotelsData.forEach(async eachHotel => {
@@ -167,7 +196,7 @@ export async function getIds(token, name, cityCode) {
 
             // Hotel List API
             if (cityCode.length > 0) {
-                const hotelsData = await getHotelIdByCity(token, cityCode);
+                const hotelsData = await getHotelIdByCity(cityCode);
                 console.log("Searched result by city without name: ", hotelsData);
                 if (hotelsData && hotelsData.length) {
                     hotelsData.forEach(async eachHotel => {
@@ -204,8 +233,7 @@ export async function getIds(token, name, cityCode) {
 export async function searchHotels(name, cityCode, searchConditions) {
     try {
         console.log("received searchCondition: ", searchConditions);
-        const token = await getToken(); // get token only once only in this function
-        const ids = await getIds(token, name, cityCode);
+        const ids = await getIds(name, cityCode);
         // const hotelIds = ids.join("%2C"); // multiple hotels.. seperated by '%2C' like this.. e.g. hotelIds=MCLONGHM%2CHNPARKGU
         // console.log("aggregated hotelIds: ", hotelIds);
         console.log("ids: ", ids);
@@ -232,7 +260,7 @@ export async function searchHotels(name, cityCode, searchConditions) {
             "bestRateOnly=false";
 
 
-            const hotelData = await getData(token, url);
+            const hotelData = await getData(url);
             // console.log("hotelData: ", hotelData);
 
             let eachHotel = {};
@@ -304,17 +332,15 @@ export async function getRatingsByHotelId(hotelId) {
         const url = 
         `https://test.api.amadeus.com/v2/e-reputation/hotel-sentiments?hotelIds=${hotelId}`;
         
-        const token = await getToken();
-        const rawRatings = await getData(token, url);
+        const rawRatings = await getData(url);
 
         // const result = {};
         if (rawRatings) {
-            console.log("rawRatings in getRatingsByHotelId: ", rawRatings);
+            console.log("rawRatings in getRatingsByHotelId(): ", rawRatings);
             const ratings = await rawRatings.data[0];
-            console.log("ratings in getRatingsByHotelId: ", ratings);
+            console.log("ratings in getRatingsByHotelId(): ", ratings);
             return ratings;
-        }
-        else {
+        } else {
             console.log(`No Ratings data for the hotel ${hotelId}`);
             return `No Ratings data for the hotel ${hotelId}`;
         }
@@ -326,21 +352,25 @@ export async function getRatingsByHotelId(hotelId) {
 
 
 
-async function bookingRequest(token) {
-    try {
-        const url = `test.api.amadeus.com/v1/booking/hotel-bookings`
-        const response = await fetch(url, {
-            method: "POST",
-            headers: { Authorization: `Bearer ${token}` },
-        });
-        // console.log("response: ", response);
-        let rawData = await response.json();
-        rawData = await rawData.data;
-        console.log("rawData: ", rawData);
-        return rawData;
+export async function bookingRequest(requestBodyObj) {
+    console.log("requestBodyObj in bookingRequest() received from Payment.js: ", requestBodyObj);
 
+
+    const formattedRequestBodyObj = {data: {...requestBodyObj}};
+
+    console.log("formattedRequestBodyObj: ", formattedRequestBodyObj);
+    try {
+        const url = 'https://test.api.amadeus.com/v1/booking/hotel-bookings';
+        const bookingResponse = await postData(url, formattedRequestBodyObj);
+        if (bookingResponse) {
+            console.log("bookingResponse in bookingRequest(): ", bookingResponse);
+            return bookingResponse;
+        } else {
+            console.log(`No response for the Booking Request of offer ${requestBodyObj.offerId}`);
+            return `No response for the Booking Request of offer ${requestBodyObj.offerId}`;
+        }
     } catch (err) {
-        console.error("Error in searchRequest:", err);
+        console.error("Error in bookingRequest:", err);
     }
 }
 

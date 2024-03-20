@@ -84,7 +84,7 @@ export default function BookingUserInfo({ userInfoEditHandler }) {
                     defaultValue={currentUser?.pNum}
                     disabled
                 />
-                <TextField
+                {/* <TextField
                     id="standard-select-countries"
                     select
                     label="Contries"
@@ -97,7 +97,15 @@ export default function BookingUserInfo({ userInfoEditHandler }) {
                             {option.label}
                         </MenuItem>
                     ))}
-                </TextField>
+                </TextField> */}
+                <TextField
+                    id="filled-textarea"
+                    label="Address"
+                    placeholder="Enter Your Address"
+                    variant="standard"
+                    defaultValue={currentUser?.address}
+                    disabled
+                />
             </div>
 
             <Button

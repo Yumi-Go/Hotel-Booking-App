@@ -27,6 +27,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 
+// offerObj, handleClose from Availability.js
 const OfferDetail = forwardRef(({ offerObj, handleClose }, ref) => {
     const style = {
         position: 'absolute',
@@ -49,7 +50,99 @@ const OfferDetail = forwardRef(({ offerObj, handleClose }, ref) => {
     }
 
     const submitHandler = () => {
-        navigate('/booking', { state: { offerObj } });
+        // navigate('/booking', { state: { offerObj } });
+        // console.log("여기!!!!!!! 복사하기!! offerObj");
+        // console.log(offerObj);
+
+        // booking부터 payment까지 테스트 이걸로 하기 (테스트 끝나면 이거 지우고 위에 코멘트처리한거 해제)
+        const offerObj = {
+            "id": "5CD6N4B5OW",
+            "checkInDate": "2024-10-01",
+            "checkOutDate": "2024-10-02",
+            "rateCode": "RAC",
+            "rateFamilyEstimated": {
+                "code": "BAR",
+                "type": "P"
+            },
+            "commission": {
+                "percentage": "10.0"
+            },
+            "boardType": "BREAKFAST",
+            "room": {
+                "type": "T1D",
+                "typeEstimated": {
+                    "category": "STANDARD_ROOM",
+                    "beds": 1,
+                    "bedType": "KING"
+                },
+                "description": {
+                    "text": "BEST AVAILABLE RATES BREAKFAST INCLUDED \n45*53sq -queen-king size bed -free wifi -AC marble bathroom-\ncomplimentary soft drinks ",
+                    "lang": "EN"
+                }
+            },
+            "guests": {
+                "adults": 2
+            },
+            "price": {
+                "currency": "EUR",
+                "total": "750.00",
+                "variations": {
+                    "average": {
+                        "total": "750.00"
+                    },
+                    "changes": [
+                        {
+                            "startDate": "2024-10-01",
+                            "endDate": "2024-10-02",
+                            "total": "750.00"
+                        }
+                    ]
+                }
+            },
+            "policies": {
+                "cancellations": [
+                    {
+                        "numberOfNights": 1,
+                        "deadline": "2024-09-30T14:00:00+02:00"
+                    }
+                ],
+                "guarantee": {
+                    "acceptedPayments": {
+                        "creditCards": [
+                            "AX",
+                            "DC",
+                            "JC",
+                            "CA",
+                            "VI"
+                        ],
+                        "methods": [
+                            "CREDIT_CARD"
+                        ],
+                        "creditCardPolicies": [
+                            {
+                                "vendorCode": "AX"
+                            },
+                            {
+                                "vendorCode": "DC"
+                            },
+                            {
+                                "vendorCode": "JC"
+                            },
+                            {
+                                "vendorCode": "CA"
+                            },
+                            {
+                                "vendorCode": "VI"
+                            }
+                        ]
+                    }
+                },
+                "paymentType": "guarantee"
+            },
+            "self": "https://test.api.amadeus.com/v3/shopping/hotel-offers/5CD6N4B5OW"
+        }
+
+        navigate('/booking', { state: { offerObj } }); // 테스트 끝나면 위에 테스트용 offerObj 데이터랑 같이 지우기
 
     }
 
