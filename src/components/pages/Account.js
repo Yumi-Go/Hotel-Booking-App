@@ -9,6 +9,7 @@ import CancelSubmitBtn from '../reusableComponents/CancelSubmitBtn';
 import Button from '@mui/material/Button';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { capitalize } from '../../hooks/useFormat';
+import Title from '../reusableComponents/Title';
 
 
 export default function Account() {
@@ -70,6 +71,9 @@ export default function Account() {
     //     return <Navigate to="/login" replace />;
     // }
     return (
+        <>
+        <Title title={"Account"} />
+        
         <Box
             component="form"
             sx={{ '& .MuiTextField-root': { m: 1, width: '40ch' } }}
@@ -77,7 +81,6 @@ export default function Account() {
             autoComplete="off"
             onSubmit={submitHandler}
         >
-            <div><h1>Account</h1></div>
             <div>
                 <TextField
                     required
@@ -163,6 +166,7 @@ export default function Account() {
                 Log Out
             </Button>
         </Box>
+        </>
     )
 }
 

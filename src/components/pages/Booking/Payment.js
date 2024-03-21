@@ -2,19 +2,27 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import Divider from '@mui/material/Divider';
+import Box from '@mui/material/Box';
 import CancelSubmitBtn from '../../reusableComponents/CancelSubmitBtn';
 import PaymentDetail from "./PaymentDetail";
+import Title from "../../reusableComponents/Title";
 import { bookingRequest } from "../../../hooks/useHotelAPI";
+import useFirestore from "../../../hooks/useFirestore";
+import { useHotelContext } from "../../../contexts/HotelContext";
 
 
 
 export default function Payment() {
-
+    const { addBooking } = useFirestore();
     const navigate = useNavigate();
     const location = useLocation();
     const offerObj = location.state?.offerObj; // from Booking.js
     const [paymentObj, setPaymentObj] = useState({});
     const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('CurrentUser')) || {});
+
+
+    const { hotelObj } = useHotelContext();
+    console.log("Load hotelObj from HotelContext in Payment.js: ", hotelObj);
 
     useEffect(() => {
         setCurrentUser(JSON.parse(localStorage.getItem('CurrentUser')));
@@ -75,9 +83,6 @@ export default function Payment() {
         }
     }
 
-
-    // console.log("{ offerId: offerObj.id, guests: {...guestsObj}, payments: {...paymentObj} }");
-    // console.log({ offerId: offerObj.id, guests: {...guestsObj}, payments: {...paymentObj} });
     
     const cancelHandler = () => {
         // navigate('/');
@@ -87,20 +92,36 @@ export default function Payment() {
 
     const submitHandler = async() => {
         const requestBodyObj = {offerId: offerObj.id, guests: [{...guestsObj}], payments: [{...paymentObj}] };
-        await bookingRequest(requestBodyObj);
-        // navigate('/booking_result', { state: { offerObj } });
+        const bookingResponse = await bookingRequest(requestBodyObj);
+        //// for testing... example data
+        // const bookingResponse = {
+        //     "data": [{
+        //         "type": "hotel-booking",
+        //         "id": "XD_8138319951754",
+        //         "providerConfirmationId": "8138319951754",
+        //         "associatedRecords": [{
+        //             "reference": "QVH2BX",
+        //             "originSystemCode": "GDS"
+        //         }]
+        //     }]
+        // }
+
+    
+        navigate('/booking_result', { state: { bookingResponse, offerObj, paymentObj } });
     }
 
     return (
-        <div>
-            <h1>Payment</h1>
-            <PaymentDetail setPaymentObj={setPaymentObj} />
+        <>
+        <Title title={"Payment"} />
+        <Box sx={{ height: "300px" }}>
+            <PaymentDetail currency={offerObj.price.currency} price={offerObj.price.total} setPaymentObj={setPaymentObj} />
+        </Box>
             <CancelSubmitBtn
                 cancelHandler={cancelHandler}
                 submitHandler={submitHandler}
                 cancelText={"cancel"}
                 submitText={"pay now"}
             />
-        </div>
+        </>
     )
 }

@@ -1,14 +1,16 @@
 import { useEffect } from "react";
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
+import Title from "../../reusableComponents/Title";
 import Availability from "./Availability";
 import Ratings from "./Ratings";
 import Photos from "./Photos";
 import Map from "./Map";
+import { useHotelContext } from "../../../contexts/HotelContext";
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -23,12 +25,12 @@ const Item = styled(Paper)(({ theme }) => ({
 
 // export default function HotelDetail({ hotelObj, ratings }) { // make hotelObj, ratings single parameter merged later...
 export default function HotelDetail() { // make hotelObj, ratings single parameter merged later...
-
     
-    const navigate = useNavigate();
     const location = useLocation();
     const hotelObj = location.state?.hotelObj;
-    
+    const { setHotelObj } = useHotelContext();
+    setHotelObj(hotelObj); // Keep hotelObj in HotelContext
+
     console.log("Received hotelObj in HotelDetail.js (from Home.js): ", hotelObj);
 
 
@@ -49,27 +51,14 @@ export default function HotelDetail() { // make hotelObj, ratings single paramet
     // }, [hotelObj.hotel.name]);
 
 
-    useEffect(() => {
-        const rooms = () => {
-            for (const [key, value] of Object.entries(hotelObj.offers[0].room)) {
-                if (key === "typeEstimated" || key === "description") {
-                    console.log(`*** ${key}:`);
-                    for (const [k, v] of Object.entries(value)) {
-                        console.log(`${k}: ${v}`);
-                    }
-                }  
-            }
-        };
-        rooms();
-    }, [hotelObj]);
-
-
   return (
+    <>
+    <Title title={hotelObj.name} />
     <Box sx={{ width: "100%", height: "100%", display:"flex", position: "absolute", justifyContent: 'center'}}>
         <Stack sx={{ width: "100%", alignItems: 'center', bgcolor: '#dedede', margin: 0, padding: 0 }}>
-            <Box>
+            {/* <Box>
                 <h1>{hotelObj.name}</h1>
-            </Box>
+            </Box> */}
             <Box sx={{ width: "95%", my: "20px", bgcolor: "red" }}>
                 <Grid container spacing={0} sx={{ width: '100%'}}>
                     <Grid item xs={6} md={7} sx={{ height: 500, py: 2, px: 0, mx: 0 }}>
@@ -86,7 +75,7 @@ export default function HotelDetail() { // make hotelObj, ratings single paramet
 
                     <Grid item xs={6} md={8} sx={{ py: 2, px: 0, mx: 0, backgroundColor: 'orange' }}>
                         <Item sx={{ boxShadow: 0 }}>
-                            <Availability hotelObj={hotelObj} />
+                            <Availability offersObj={hotelObj.offers} />
                         </Item>
                     </Grid>
                     <Grid item xs={6} md={4} sx={{ py: 2, px: 0, mx: 0, backgroundColor: 'green' }}>
@@ -95,11 +84,9 @@ export default function HotelDetail() { // make hotelObj, ratings single paramet
                         </Item>
                     </Grid>
                 </Grid>
-
-
-
             </Box>
         </Stack>
     </Box>
+    </>
   );
 }

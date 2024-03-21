@@ -5,7 +5,6 @@ import useAuth from "../../hooks/useAuth";
 import { useNavigate, Navigate } from 'react-router-dom';
 
 
-
 // search result (single item for each hotel from multiple hotels)
 export default function Home({ searchResult }) {
 
@@ -28,7 +27,6 @@ export default function Home({ searchResult }) {
   }, [searchResult]);
 
 
-
   // // for testing Ratings API.. merge ratings to hotelObj later.. after testing
   // useEffect(() => {
   //     const fetchRatings = async() => {
@@ -44,7 +42,6 @@ export default function Home({ searchResult }) {
   //     };
   //     fetchRatings();
   // }, []);
-
 
   const clickHotel = (hotelObj) => {
     navigate("/hotel-detail", { state: { hotelObj } });

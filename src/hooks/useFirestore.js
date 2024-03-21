@@ -1,5 +1,5 @@
 import firebaseConfig from "../firebaseConfig";
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
 
 
 
@@ -46,6 +46,55 @@ export default function useFirestore() {
         });
     }
 
+
+
+    // const bookingRequestResult = {
+    //     "data": [{
+    //         "type": "hotel-booking",
+    //         "id": "XD_8138319951754",
+    //         "providerConfirmationId": "8138319951754",
+    //         "associatedRecords": [{
+    //             "reference": "QVH2BX",
+    //             "originSystemCode": "GDS"
+    //         }]
+    //     }]
+    // }
+    async function addBooking(bookingResponseId, hotelObj, offerObj, paymentObj) {
+
+        console.log("bookingResponseId, hotelObj, offerObj, paymentObj in addBooking() in useFirestore.js ", bookingResponseId, hotelObj, offerObj, paymentObj);
+        if (!auth.currentUser) {
+            // 여기에는 Non-member user용으로 Booking collection만 생성하면 됨. (이해안되면 FYP 지난학기에 제출한 PDF에서 Database Structure 확인!)
+            const bookingsRef = doc(db, "bookings", bookingResponseId);
+            const docSnap = await getDoc(bookingsRef);
+            if (docSnap.exists()) {
+                console.log("existing user");
+            } else {
+                console.log("new booking");
+                await setDoc(bookingsRef, {
+                    offerId: offerObj.id,
+                    hotelId: hotelObj.hotelId,
+                    hotelName: hotelObj.name,
+                    guests: offerObj.guests,
+                    price: offerObj.price.total,
+                    currency: offerObj.price.currency,
+                    payment: {...paymentObj},
+                    password: null // password of each booking for non-member user
+                });
+                console.log("Booking added!");
+                window.location.reload();
+            }
+
+            return;
+        } else {
+            const userRef = doc(db, "users", auth.currentUser.uid);
+            await updateDoc(userRef, {
+                bookings: arrayUnion(bookingResponseId),
+            });
+        }
+
+
+    }
+
     async function getUserInfoByUID(uid) {
         console.log("uid: ", uid);
         const docRef = doc(db, "users", uid);
@@ -62,6 +111,7 @@ export default function useFirestore() {
     return {
         addUser,
         updateUserInfo,
+        addBooking,
         getUserInfoByUID
     };
 }

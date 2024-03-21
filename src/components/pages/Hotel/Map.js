@@ -3,19 +3,19 @@ import { useEffect } from "react";
 export default function Map({ hotelObj }) {
     console.log("Received hotelObj in Map: ", hotelObj);
 
-    useEffect(() => {
-        const rooms = () => {
-            for (const [key, value] of Object.entries(hotelObj.offers[0].room)) {
-                if (key === "typeEstimated" || key === "description") {
-                    console.log(`*** ${key}:`);
-                    for (const [k, v] of Object.entries(value)) {
-                        console.log(`${k}: ${v}`);
-                    }
-                }  
-            }
-        };
-        rooms();
-    }, [hotelObj]);
+    // useEffect(() => {
+    //     const rooms = () => {
+    //         for (const [key, value] of Object.entries(hotelObj.offers[0].room)) {
+    //             if (key === "typeEstimated" || key === "description") {
+    //                 console.log(`*** ${key}:`);
+    //                 for (const [k, v] of Object.entries(value)) {
+    //                     console.log(`${k}: ${v}`);
+    //                 }
+    //             }  
+    //         }
+    //     };
+    //     rooms();
+    // }, [hotelObj]);
 
     return (
         <iframe
