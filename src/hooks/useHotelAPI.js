@@ -282,10 +282,7 @@ export async function searchHotels(name, cityCode, searchConditions) {
             // }
         });
         console.log("result: ", result);
-
-
         return result;
-
     } catch (err) {
         console.error("Error in searchHotels:", err);
         throw err;

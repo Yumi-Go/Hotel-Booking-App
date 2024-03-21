@@ -9,21 +9,6 @@ import InfoIcon from '@mui/icons-material/Info';
 export default function Photos({ hotelObj }) {
     console.log("Received hotelObj in Photos: ", hotelObj);
 
-    useEffect(() => {
-        const rooms = () => {
-            for (const [key, value] of Object.entries(hotelObj.offers[0].room)) {
-                if (key === "typeEstimated" || key === "description") {
-                    console.log(`*** ${key}:`);
-                    for (const [k, v] of Object.entries(value)) {
-                        console.log(`${k}: ${v}`);
-                    }
-                }  
-            }
-        };
-        rooms();
-    }, [hotelObj]);
-
-
     return (
         <ImageList sx={{ width: "100%", height: "100%", margin: 0, padding: 0 }}>
             {/* <ImageListItem key="Subheader" cols={2}>

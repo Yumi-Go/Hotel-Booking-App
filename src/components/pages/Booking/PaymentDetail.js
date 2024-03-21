@@ -5,7 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 
 
-export default function PaymentDetail({ setPaymentObj }) { // offerObj from Payment.js
+export default function PaymentDetail({ currency, price, setPaymentObj }) { // offerObj from Payment.js
 
     const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('CurrentUser')) || {});
 
@@ -75,15 +75,15 @@ export default function PaymentDetail({ setPaymentObj }) { // offerObj from Paym
             noValidate
             autoComplete="off"
         >
+            <h2>{currency} {price}</h2>
             <div>
                 <TextField
                     id="select-payMethod"
                     select
-                    label="Payment Method"
-                    defaultValue="creditCard" // Ensure this matches one of the available MenuItem value attributes
+                    defaultValue="creditCard"
                     variant="standard"
                     onChange={(e) => setMethod(e.target.value)}
-                    disabled
+                    // disabled
                 >
                     {payMethod.map((option) => (
                         <MenuItem key={option.value} value={option.value}>

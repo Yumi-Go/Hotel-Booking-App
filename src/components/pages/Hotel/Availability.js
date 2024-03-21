@@ -8,7 +8,6 @@ import OfferDetail from "./OfferDetail";
 import { useRef } from 'react';
 
 
-
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
     ...theme.typography.body2,
@@ -18,28 +17,22 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 
-export default function Availability({ hotelObj }) {
+export default function Availability({ offersObj }) {
     const ref = useRef(null);
 
-    console.log("Received hotelObj in Availability: ", hotelObj);
-
+    console.log("Received offersObj in Availability: ", offersObj);
+    const [selectedOffer, setSelectedOffer] = useState(null);
     const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    
+    const handleOpen = (offer) => {
+        setSelectedOffer(offer);
+        setOpen(true);
+    };
 
-    useEffect(() => {
-        const rooms = () => {
-            for (const [key, value] of Object.entries(hotelObj.offers[0].room)) {
-                if (key === "typeEstimated" || key === "description") {
-                    console.log(`*** ${key}:`);
-                    for (const [k, v] of Object.entries(value)) {
-                        console.log(`${k}: ${v}`);
-                    }
-                }  
-            }
-        };
-        rooms();
-    }, [hotelObj]);
+    const handleClose = () => {
+        setOpen(false);
+        setSelectedOffer(null);
+    };
 
     return (
         <Stack
@@ -48,30 +41,31 @@ export default function Availability({ hotelObj }) {
             alignItems="center"
             spacing={2}
         >
-            {hotelObj.offers.map((offerObj, index) => (
+            {offersObj.map((offer, index) => (
                 <React.Fragment key={index}>
-                    <Item key={index} onClick={handleOpen} sx={{ width: '95%', border: 1 }}>
+                    <Item key={index} onClick={() => handleOpen(offer)} sx={{ width: '95%', border: 1 }}>
                         <Box sx={{ textAlign: 'left' }}>
-                            Room Type: {offerObj.room.typeEstimated.category}
+                            Room Type: {offer.room.typeEstimated.category}
                         </Box>
                         <Box sx={{ textAlign: 'left' }}>
-                            Beds: {offerObj.room.typeEstimated.bedType} {offerObj.room.typeEstimated.beds}
+                            Beds: {offer.room.typeEstimated.bedType} {offer.room.typeEstimated.beds}
                         </Box>
                         {/* <Box sx={{ textAlign: 'left' }}>
                             Description: {offerObj.room.description.text}
                         </Box> */}
                         <Box sx={{ textAlign: 'left' }}>
-                            Price: {offerObj.price.total} {offerObj.price.currency}
+                            Price: {offer.price.total} {offer.price.currency}
                         </Box>
                     </Item>
 
                     <Modal
+                        key={selectedOffer?.id || 'modal'}
                         open={open}
                         onClose={handleClose}
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >
-                        <OfferDetail offerObj={offerObj} handleClose={handleClose} ref={ref} />
+                        <OfferDetail offerObj={selectedOffer} handleClose={handleClose} ref={ref} />
                     </Modal>
                 </React.Fragment>
             ))}
