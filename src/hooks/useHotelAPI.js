@@ -352,7 +352,6 @@ export async function getRatingsByHotelId(hotelId) {
 export async function bookingRequest(requestBodyObj) {
     console.log("requestBodyObj in bookingRequest() received from Payment.js: ", requestBodyObj);
 
-
     const formattedRequestBodyObj = {data: {...requestBodyObj}};
 
     console.log("formattedRequestBodyObj: ", formattedRequestBodyObj);

@@ -21,6 +21,9 @@ export default function BookingResult() {
 
     const offerObj = location.state?.offerObj; // from Payment.js
     const paymentObj = location.state?.paymentObj; // from Payment.js
+    const nonMemberPwd = location.state?.nonMemberPwd; // from Payment.js
+
+
     // const bookingResponse = location.state?.bookingResponse; // from Payment.js
 
     // successful booking 테스트 끝나면 위에 코멘트처리된 라인 언코멘트하고 밑에 테스트용 데이터 코멘트처리하기
@@ -49,14 +52,14 @@ export default function BookingResult() {
     const addSuccessfulBooking = async() => {
         // save only successful Booking to DB
         if (!hasErrors) {            
-            await addBooking(bookingResponse.data[0].id, hotelObj, offerObj, paymentObj);
+            await addBooking(bookingResponse.data[0].id, hotelObj, offerObj, paymentObj, nonMemberPwd);
         }
     }
 
     addSuccessfulBooking();
 
 
-    const cancelHandler = () => {
+    const homeHandler = () => {
         // navigate('/');
         navigate("/");
 
@@ -76,13 +79,14 @@ export default function BookingResult() {
         <Box>
             {hasErrors ? (
                 <CancelSubmitBtn
-                    cancelHandler={cancelHandler}
+                    cancelHandler={homeHandler}
                     submitHandler={redoHandler}
                     cancelText={"home"}
                     submitText={"try again"}
                 />
             ) : (
                 <Button
+                    onClick={homeHandler}
                     variant="contained"
                     size="large"
                     startIcon={<HomeIcon />}

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
-import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 
 
 export default function PaymentDetail({ currency, price, setPaymentObj }) { // offerObj from Payment.js
@@ -65,9 +64,9 @@ export default function PaymentDetail({ currency, price, setPaymentObj }) { // o
         { value: 'VE', label: 'Visa Electron' },
     ];
 
-    if (!currentUser) {
-        return <div><NoAccountsIcon sx={{ fontSize: 100, color: "grey" }}/></div>
-    }
+    // if (!currentUser) {
+    //     return <div><NoAccountsIcon sx={{ fontSize: 100, color: "grey" }}/></div>
+    // }
     return (
         <Box
             component="form"

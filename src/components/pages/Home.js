@@ -46,7 +46,7 @@ export default function Home({ searchResult }) {
   const clickHotel = (hotelObj) => {
     navigate("/hotel-detail", { state: { hotelObj } });
 
-} 
+}
 
   return (
     <Box sx={{ width: "100%", display:"flex", position: "absolute", justifyContent: 'center'}}>
