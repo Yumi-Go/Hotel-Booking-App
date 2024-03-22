@@ -59,37 +59,41 @@ export default function useFirestore() {
     //         }]
     //     }]
     // }
-    async function addBooking(bookingResponseId, hotelObj, offerObj, paymentObj) {
+    async function addBooking(bookingResponseId, hotelObj, offerObj, paymentObj, nonMemberPwd) {
 
-        console.log("bookingResponseId, hotelObj, offerObj, paymentObj in addBooking() in useFirestore.js ", bookingResponseId, hotelObj, offerObj, paymentObj);
-        if (!auth.currentUser) {
+        console.log("bookingResponseId, hotelObj, offerObj, paymentObj in addBooking() in useFirestore.js: \n", bookingResponseId, hotelObj, offerObj, paymentObj);
+        console.log("auth.currentUser: ", auth.currentUser);
+        if (auth.currentUser === null && nonMemberPwd !== null) { // for non-member booking
             // 여기에는 Non-member user용으로 Booking collection만 생성하면 됨. (이해안되면 FYP 지난학기에 제출한 PDF에서 Database Structure 확인!)
             const bookingsRef = doc(db, "bookings", bookingResponseId);
             const docSnap = await getDoc(bookingsRef);
             if (docSnap.exists()) {
-                console.log("existing user");
+                console.log("existing booking");
             } else {
                 console.log("new booking");
                 await setDoc(bookingsRef, {
                     offerId: offerObj.id,
                     hotelId: hotelObj.hotelId,
                     hotelName: hotelObj.name,
-                    guests: offerObj.guests,
+                    guests: {...offerObj.guests},
                     price: offerObj.price.total,
                     currency: offerObj.price.currency,
                     payment: {...paymentObj},
-                    password: null // password of each booking for non-member user
+                    password: nonMemberPwd // password of each booking for non-member user
                 });
-                console.log("Booking added!");
-                window.location.reload();
+                console.log("Booking is added for Non-member user!");
             }
-
             return;
         } else {
-            const userRef = doc(db, "users", auth.currentUser.uid);
-            await updateDoc(userRef, {
-                bookings: arrayUnion(bookingResponseId),
-            });
+            if (auth.currentUser) {
+                const userRef = doc(db, "users", auth.currentUser.uid);
+                await updateDoc(userRef, {
+                    bookings: arrayUnion(bookingResponseId),
+                });
+                console.log("Booking is added for the user!");
+            } else {
+                console.log("Something goes wrong in DB. Booking data is not stored!")
+            }
         }
 
 

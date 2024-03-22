@@ -7,6 +7,11 @@ import Button from '@mui/material/Button';
 import Title from "../../reusableComponents/Title";
 import CancelSubmitBtn from '../../reusableComponents/CancelSubmitBtn';
 import BookingUserInfo from './BookingUserInfo';
+import BookingNonMemberUserInfo from "./BookingNonMemberUserInfo";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import NoAccountsIcon from '@mui/icons-material/NoAccounts';
+import { Box } from "@mui/material";
+
 
 
 export default function Booking() {
@@ -106,9 +111,15 @@ export default function Booking() {
 
 
     const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('CurrentUser')) || null);
-    
+    const [nonMemberObj, setNonMemberObj] = useState({});
+
+
     console.log("offerObj from OfferDetail.js in Booking.js: ", offerObj);
 
+
+    useEffect(() => {
+        console.log("nonMemberObj is updated: ", nonMemberObj);
+    }, [nonMemberObj]);
 
     const cancelHandler = () => {
         // navigate('/');
@@ -117,23 +128,59 @@ export default function Booking() {
     }
 
     const submitHandler = () => {
-        navigate('/payment', { state: { offerObj } });
-        // proceedPayment();
-
+        if (!currentUser && nonMemberObj.password !== nonMemberObj.confirmPassword) {
+            alert("The password and confirm password do not match!");
+        } else {
+            const nonMemberPwd = currentUser ? null : nonMemberObj.password;
+            const guestsObj = {
+                "name": {
+                    "title": "MR",
+                    "firstName": currentUser ? currentUser.fName : nonMemberObj.fName,
+                    "lastName": currentUser ? currentUser.lName : nonMemberObj.lName,
+                },
+                "contact": {
+                    "phone": currentUser ? currentUser.pNum : nonMemberObj.pNum,
+                    "email": currentUser ? currentUser.email : nonMemberObj.email,
+                }
+            };
+            navigate('/payment', { state: { offerObj, guestsObj, nonMemberPwd } });
+        }
     }
 
     const userInfoEditHandler = () => {
         navigate('/account');
     }
 
+
     return (
         <div>
             <Title title={"Booking"} />
+            
+            {/* {currentUser ? (
             <Divider sx={{ px: 50 }}>
-                <h3>Your Information</h3>
+                <h3>
+                    "Your Information" : "Non-member User Information"
+                </h3>
             </Divider>
-            {/* <BookingUserInfo> is shown to only member users  */}
-            { currentUser ? (<BookingUserInfo userInfoEditHandler={userInfoEditHandler} />) : "" }
+            ) : ""} */}
+
+            {currentUser ? (
+                <Box>
+                    <AccountCircleIcon sx={{ fontSize: 50, color: "grey" }}/>
+                    <p>Your Information</p>
+                </Box>
+            ) : (
+                <Box>
+                    <NoAccountsIcon sx={{ fontSize: 50, color: "grey" }}/>
+                    <p>Non-member User Information</p>
+                </Box>
+            )}
+
+            <Box>
+            {currentUser ? (
+                <BookingUserInfo userInfoEditHandler={userInfoEditHandler} />
+            ) : <BookingNonMemberUserInfo setNonMemberObj={setNonMemberObj} />}
+            </Box>
             {/* <Button
                 onClick={userInfoEditHandler}
                 variant="text"

@@ -13,10 +13,11 @@ import { useHotelContext } from "../../../contexts/HotelContext";
 
 
 export default function Payment() {
-    const { addBooking } = useFirestore();
     const navigate = useNavigate();
     const location = useLocation();
     const offerObj = location.state?.offerObj; // from Booking.js
+    const guestsObj = location.state?.guestsObj; // from Booking.js
+    const nonMemberPwd = location.state?.nonMemberPwd; // from Booking.js
     const [paymentObj, setPaymentObj] = useState({});
     const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('CurrentUser')) || {});
 
@@ -30,7 +31,7 @@ export default function Payment() {
 
 
     useEffect(() => {
-        console.log("paymentObj is changed: ", paymentObj);
+        console.log("paymentObj is updated: ", paymentObj);
     }, [paymentObj]);
 
 
@@ -38,6 +39,9 @@ export default function Payment() {
     // const handleBookingResult = () => setBookingResult(true);
     
     console.log("offerObj from Booking.js: ", offerObj);
+    console.log("guestsObj from Booking.js: ", guestsObj);
+    console.log("nonMemberPwd from Booking.js: ", nonMemberPwd);
+
 
 
     // Test data (Requesting payment with real credit card is allowed in Production version. So I should use this test data in Test version)
@@ -71,17 +75,18 @@ export default function Payment() {
     // }
 
 
-    const guestsObj = {
-        "name": {
-            "title": "MR",
-            "firstName": currentUser.fName,
-            "lastName": currentUser.lName
-        },
-        "contact": {
-            "phone": currentUser.pNum,
-            "email": currentUser.email
-        }
-    }
+
+    // const guestsObj = {
+    //     "name": {
+    //         "title": "MR",
+    //         "firstName": currentUser?.fName,
+    //         "lastName": currentUser?.lName
+    //     },
+    //     "contact": {
+    //         "phone": currentUser?.pNum,
+    //         "email": currentUser?.email
+    //     }
+    // }
 
     
     const cancelHandler = () => {
@@ -107,7 +112,7 @@ export default function Payment() {
         // }
 
     
-        navigate('/booking_result', { state: { bookingResponse, offerObj, paymentObj } });
+        navigate('/booking_result', { state: { bookingResponse, offerObj, paymentObj, nonMemberPwd } });
     }
 
     return (
