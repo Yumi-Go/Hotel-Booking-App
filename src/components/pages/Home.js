@@ -13,7 +13,7 @@ export default function Home({ searchResult }) {
   const navigate = useNavigate();
 
   const Item = styled(Paper)(() => ({
-      backgroundColor: 'pink',
+      backgroundColor: '#dedede',
       padding: '0px',
       margin: '0px',
       height: '300px',
@@ -45,13 +45,12 @@ export default function Home({ searchResult }) {
 
   const clickHotel = (hotelObj) => {
     navigate("/hotel-detail", { state: { hotelObj } });
-
-}
+  }
 
   return (
     <Box sx={{ width: "100%", display:"flex", position: "absolute", justifyContent: 'center'}}>
       <Stack sx={{ width: "90%", alignItems: 'center', bgcolor: '#dedede', margin: 0, padding: 0 }}>
-        <Box>
+        {/* <Box>
           {
           currentUser ?
           <div>
@@ -64,20 +63,20 @@ export default function Home({ searchResult }) {
           </div>
           : "No User Logged in"
           }
-        </Box>
-        <Box sx={{ width: "95%", my: "20px", bgcolor: "red" }}>
-          <Grid container padding="20px" spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} sx={{ justifyContent: 'center' }}>
+        </Box> */}
+        
+        <Box sx={{ width: "95%", my: "20px", bgcolor: "white" }}>
+          <Grid container padding="20px" spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} sx={{ justifyContent: 'left' }}>
           {
           searchResult && searchResult.length > 0 ?
             searchResult.map((hotelObj, index) => (
                 <Grid item xs={2} sm={3} md={3} key={index}>
-                  <Item onClick={() => clickHotel(hotelObj)} sx={{cursor: 'pointer'}}>
-                    <Box sx={{ width: "100%", height: "80%" }}>
+                  <Item onClick={() => clickHotel(hotelObj)} sx={{cursor: 'pointer' }}>
+                    <Box sx={{ width: "100%", height: "70%", bgcolor: "pink" }}>
                       <img src={Object.values(hotelObj.photoUrls)[0][0]} alt={`hotel ${index}`} style={{ width: '100%', height: '100%' }} />
                     </Box>
-                    
                     <Box
-                      sx={{ height: "20%", display:"flex", justifyContent: 'center', padding: '10px', margin: '0px' }}>
+                      sx={{ height: "30%", display:"flex", justifyContent: 'center', padding: '10px', margin: '0px' }}>
                       <h4>{hotelObj.name}</h4>
                     </Box>
                   </Item>

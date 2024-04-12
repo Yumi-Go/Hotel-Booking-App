@@ -144,7 +144,6 @@ async function getHotelIdByName(name) {
 
 export async function getIds(name, cityCode) {
 
-
     // Name Autocomplete API에서는 결과값이 20개까지만 나오고, 그 안에서도 뭐가 잘못된 건지 cityCode로 검색한거랑 겹치는게 하나도 없음. (e.g. 'CITADINES'으로 검색했을때 파리에 있는 CITADINES 호텔이 몇개 나옴에도 불구하고 PAR로 cityCode로 얻은 리스트에 존재하는 호텔 아이디가 하나도 발견이 안됨. 둘이 뭔가 문제가 있는듯..)
     // 그래서 방법을 바꿈.. 일단은 Hotel List API만 쓰기로.. 아래처럼..
     // cityCode로 검색 -> 그 결과 리스트 내에서 parameter name값이 포함된 호텔 검색 (e.g. parameter name이 'WESTERN'일때 name: "BEST WESTERN JARDIN DE CLUNY"이 찾아지는 것처럼..) 해서 호텔 아이디 리스트 추리기
@@ -205,14 +204,9 @@ export async function getIds(name, cityCode) {
                     });
                 } else {
                     throw new Error(`No hotel data found with City Code ${cityCode}`);
-                }
-
-                
+                }   
             }
-
         }
-
-
         console.log("result in getIds: ", result);
         return result;
 
@@ -222,8 +216,6 @@ export async function getIds(name, cityCode) {
     }
 
 }
-
-
 
 
 // Hotel Search API
@@ -259,7 +251,6 @@ export async function searchHotels(name, cityCode, searchConditions) {
             "paymentPolicy=NONE&" +
             "bestRateOnly=false";
 
-
             const hotelData = await getData(url);
             // console.log("hotelData: ", hotelData);
 
@@ -271,7 +262,7 @@ export async function searchHotels(name, cityCode, searchConditions) {
                     // console.log("hotelData[0].hotel.hotelId before getRatingsByHotelId: ", hotelData[0].hotel.hotelId);
                     const ratings = await getRatingsByHotelId(hotelData[0].hotel.hotelId);
                     eachHotel = await { ...hotelData[0].hotel, photoUrls: photoUrls, offers: hotelData[0].offers, ratings: ratings };
-                    console.log("each Hotel with photos: ", eachHotel);
+                    console.log("each Hotel with photoUrls & ratings: ", eachHotel);
                     result.push(eachHotel);
                     localStorage.setItem('searchResult', JSON.stringify(result));
 
@@ -306,8 +297,11 @@ export async function getPhotosByHotelName(hotelName) {
         const response = await fetch(apiUrl, { method: "POST", body, headers });
         const data = await response.json();
         console.log("data in getPhotosByHotelName: ", data);
+        const placeId = Object.values(data.places)[0].id;
+        console.log("place Id in getPhotosByHotelName: ", placeId);
+
         if (data.places && data.places.length > 0 && data.places[0].photos) {
-            result['ChIJZcFL1TMFdkgRZcciwfX0gr0'] = await data.places[0].photos.map(photo =>
+            result[placeId] = await data.places[0].photos.map(photo =>
                 `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=1000&maxWidthPx=1000&key=${apiKey}`
             );
         } else {
@@ -368,27 +362,4 @@ export async function bookingRequest(requestBodyObj) {
     } catch (err) {
         console.error("Error in bookingRequest:", err);
     }
-}
-
-
-// const requestOptions = {
-//     method: "POST",
-//     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-//     body: `grant_type=client_credentials&client_id=${amadeusClientId}&client_secret=${amadeusClientSecret}`,
-// };
-
-// try {
-//     const authResponse = await fetch(amadeusAuthUrl, requestOptions);
-//     const authData = await authResponse.json();
-//     const token = authData.access_token;
-//     console.log("token:", token);
-//     return token;
-
-
-// Hotel Ratings API
-export async function bookOffer(offerObj) {
-
-
-
-
 }

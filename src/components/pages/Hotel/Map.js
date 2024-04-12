@@ -11,11 +11,12 @@ export default function Map({ hotelObj }) {
     //                 for (const [k, v] of Object.entries(value)) {
     //                     console.log(`${k}: ${v}`);
     //                 }
-    //             }  
+    //             }
     //         }
     //     };
     //     rooms();
     // }, [hotelObj]);
+
 
     return (
         <iframe
