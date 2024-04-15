@@ -43,7 +43,7 @@ export default function Availability({ offersObj }) {
         >
             {offersObj.map((offer, index) => (
                 <React.Fragment key={index}>
-                    <Item key={index} onClick={() => handleOpen(offer)} sx={{ width: '95%', border: 1 }}>
+                    <Item key={index} onClick={() => handleOpen(offer)} sx={{ width: '95%', border: 1, cursor: 'pointer' }}>
                         <Box sx={{ textAlign: 'left' }}>
                             Room Type: {offer.room.typeEstimated.category}
                         </Box>

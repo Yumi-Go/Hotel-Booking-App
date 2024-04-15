@@ -84,4 +84,7 @@ export default function Ratings({ ratings }) {
       </Stack>
     ) : <div>{ratings}</div>
   );
+
+
+  
 }

@@ -259,13 +259,19 @@ export async function searchHotels(name, cityCode, searchConditions) {
                 console.log(`data of hotel id ${id}: `, hotelData[0]);
                 if (hotelData[0].hotel && hotelData[0].offers) {
                     const photoUrls = await getPhotosByHotelName(hotelData[0].hotel.name);
-                    // console.log("hotelData[0].hotel.hotelId before getRatingsByHotelId: ", hotelData[0].hotel.hotelId);
-                    const ratings = await getRatingsByHotelId(hotelData[0].hotel.hotelId);
+
+                    //// Uncomment after testing..
+                    // const ratings = await getRatingsByHotelId(hotelData[0].hotel.hotelId);
+                    
+                    
+                    const ratings = await getRatingsByHotelId("TELONMFS");
+                    console.log("ratings: ", ratings);
+
+                    
                     eachHotel = await { ...hotelData[0].hotel, photoUrls: photoUrls, offers: hotelData[0].offers, ratings: ratings };
                     console.log("each Hotel with photoUrls & ratings: ", eachHotel);
                     result.push(eachHotel);
                     localStorage.setItem('searchResult', JSON.stringify(result));
-
                 }                
             }
             // else {
@@ -327,16 +333,16 @@ export async function getRatingsByHotelId(hotelId) {
 
         // const result = {};
         if (rawRatings) {
-            console.log("rawRatings in getRatingsByHotelId(): ", rawRatings);
-            const ratings = await rawRatings.data[0];
-            console.log("ratings in getRatingsByHotelId(): ", ratings);
+            console.log("rawRatings in getRatingsByHotelId: ", rawRatings);
+            const ratings = await {...rawRatings[0]};
+            console.log("ratings in getRatingsByHotelId: ", ratings);
             return ratings;
         } else {
             console.log(`No Ratings data for the hotel ${hotelId}`);
             return `No Ratings data for the hotel ${hotelId}`;
         }
     } catch (err) {
-        console.error("Error in getRatingsByHotelId:", err);
+        console.error("Error in getRatingsByHotelId: ", err);
         return "Error in Ratings Data";
     }
 }
