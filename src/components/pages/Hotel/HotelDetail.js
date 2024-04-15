@@ -14,7 +14,7 @@ import { useHotelContext } from "../../../contexts/HotelContext";
 
 
 const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    backgroundColor: 'pink',
     ...theme.typography.body2,
     padding: theme.spacing(1),
     textAlign: 'center',
@@ -54,32 +54,31 @@ export default function HotelDetail() { // make hotelObj, ratings single paramet
   return (
     <>
     <Title title={hotelObj.name} />
-    <Box sx={{ width: "100%", height: "100%", display:"flex", position: "absolute", justifyContent: 'center'}}>
+    <Box sx={{ width: "100%", height: "auto", display:"flex", position: "absolute", justifyContent: 'center'}}>
         <Stack sx={{ width: "100%", alignItems: 'center', bgcolor: '#dedede', margin: 0, padding: 0 }}>
             {/* <Box>
                 <h1>{hotelObj.name}</h1>
             </Box> */}
-            <Box sx={{ width: "95%", my: "20px", bgcolor: "red" }}>
-                <Grid container spacing={0} sx={{ width: '100%'}}>
+            <Box sx={{ width: "95%", height: "auto", my: "20px" }}>
+                <Grid container spacing={0} sx={{ width: '100%', bgcolor: 'yellow'}}>
                     <Grid item xs={6} md={7} sx={{ height: 500, py: 2, px: 0, mx: 0 }}>
-                        <Item sx={{ height: "100%", padding: 0, margin: 0, bgcolor: "pink"}}>
+                        <Item sx={{ height: "100%", padding: 0, margin: 0 }}>
                             <Photos hotelObj={hotelObj} />
                         </Item>
                     </Grid>
 
-                    <Grid item xs={6} md={5} sx={{ py: 2, px: 0, mx: 0, backgroundColor: 'blue' }}>
+                    <Grid item xs={6} md={5} sx={{ py: 2 }}>
                         <Item sx={{ height: '100%', bgcolor: "pink", padding: 0 }}>
                             <Map hotelObj={hotelObj} />
                         </Item>
                     </Grid>
-
-                    <Grid item xs={6} md={8} sx={{ py: 2, px: 0, mx: 0, backgroundColor: 'orange' }}>
+                    <Grid item xs={6} md={8} sx={{ height: '100%' }}>
                         <Item sx={{ boxShadow: 0 }}>
                             <Availability offersObj={hotelObj.offers} />
                         </Item>
                     </Grid>
-                    <Grid item xs={6} md={4} sx={{ py: 2, px: 0, mx: 0, backgroundColor: 'green' }}>
-                        <Item sx={{ boxShadow: 0, border: 1, backgroundColor: "purple" }}>
+                    <Grid item xs={6} md={4} >
+                        <Item sx={{ height: "100%", boxShadow: 0, bgcolor: 'red' }}>
                             <Ratings ratings={hotelObj.ratings} />
                         </Item>
                     </Grid>
