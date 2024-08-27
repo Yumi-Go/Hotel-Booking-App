@@ -19,7 +19,6 @@ import Payment from './components/pages/Booking/Payment';
 import BookingResult from './components/pages/Booking/BookingResult';
 import LogIn from './components/reusableComponents/LogIn';
 
-
 export default function App() {
   const [openBooking, setOpenBooking] = useState(false);
   const [searchResult, setSearchResult] = useState([]);
@@ -49,23 +48,18 @@ export default function App() {
     console.log("cityCode updated in App:", cityCode);
   }, [cityCode]);
 
-
   useEffect(() => {
     console.log(`dates updated in App: checkIn ${dates.checkInDate}, checkOut ${dates.checkOutDate}`);
     console.log("Formatted checkInDate: ", formattedCheckInDate);
     console.log("Formatted checkOutDate: ", formattedCheckOutDate);
-}, [dates, formattedCheckInDate, formattedCheckOutDate]);
-
-
+  }, [dates, formattedCheckInDate, formattedCheckOutDate]);
 
   useEffect(() => {
     console.log(`guests updated in App: adults ${guests.adults}, children ${guests.children}`);
   }, [guests]);
 
-
-
-
   const handleSearch = async() => {
+    setSearchResult([]);
     try {
       const searchConditions = ({
         adults: 2,
@@ -77,10 +71,9 @@ export default function App() {
         currency: "EUR"
       });
 
-
       const response = await searchHotels(hotelName, cityCode, searchConditions);
       setSearchResult(response);
-      console.log("Updated searchResult in App:", response);
+      console.log("Updated searchResult in App.js:", response);
     } catch (error) {
       console.error("Error in handleSearch: ", error);
       setSearchResult([]);
@@ -117,7 +110,6 @@ export default function App() {
                 <Route path="/booking" element={<Booking />} />
                 <Route path="/payment" element={<Payment />} />
                 <Route path="/booking_result" element={<BookingResult />} />
-
 
                 <Route path="/account" element={<Account />} />
                 <Route path="/login" element={<LogIn />} />

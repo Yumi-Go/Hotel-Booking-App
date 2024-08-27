@@ -19,13 +19,13 @@ export default function Home({ searchResult }) {
       height: '300px',
       textAlign: 'center',
   }));
+  
 
-  console.log("Received searchResult: ", searchResult);
+  console.log("searchResult received: ", searchResult);
 
   useEffect(() => {
     console.log("searchResult prop updated in Home:", searchResult);
   }, [searchResult]);
-
 
   // // for testing Ratings API.. merge ratings to hotelObj later.. after testing
   // useEffect(() => {
@@ -78,17 +78,19 @@ export default function Home({ searchResult }) {
                     <Box
                       sx={{ height: "30%", display:"flex", justifyContent: 'center', padding: '10px', margin: '0px' }}>
                       <h4>{hotelObj.name}</h4>
+
                     </Box>
                   </Item>
                 </Grid>
             ))
-            : <div>No Search Result</div>
+            : <div>{searchResult.length === 0 ? "No Search Result" : "Loading..."}</div>
+
+            
             }
+
           </Grid>
         </Box>
       </Stack>
     </Box>
   );
 }
-
-

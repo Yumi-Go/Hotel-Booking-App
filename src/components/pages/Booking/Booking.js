@@ -143,7 +143,7 @@ export default function Booking() {
                     "email": currentUser ? currentUser.email : nonMemberObj.email,
                 }
             };
-            navigate('/payment', { state: { offerObj, guestsObj, nonMemberPwd } });
+            navigate('/payment', { state: { offerObj, guestsObj, nonMemberPwd } }); // to Payment.js
         }
     }
 

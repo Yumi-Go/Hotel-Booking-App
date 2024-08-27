@@ -4,7 +4,6 @@ import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
 import Title from "../../reusableComponents/Title";
 import Availability from "./Availability";
 import Ratings from "./Ratings";
@@ -13,12 +12,12 @@ import Map from "./Map";
 import { useHotelContext } from "../../../contexts/HotelContext";
 
 
-const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: 'pink',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
+const Item = styled(Box)(({ theme }) => ({
+    padding: 0,
     textAlign: 'center',
-    color: theme.palette.text.secondary,
+    backgroundColor: 'transparent',
+    height: 'auto',
+    boxShadow: 0,
   }));
 
   
@@ -27,9 +26,13 @@ const Item = styled(Paper)(({ theme }) => ({
 export default function HotelDetail() { // make hotelObj, ratings single parameter merged later...
     
     const location = useLocation();
-    const hotelObj = location.state?.hotelObj;
+    const hotelObj = location.state?.hotelObj; // Passing data between pages with useLocation and useNavigate from Home.js
     const { setHotelObj } = useHotelContext();
-    setHotelObj(hotelObj); // Keep hotelObj in HotelContext
+    // setHotelObj(hotelObj); // Keep hotelObj in HotelContext
+
+    useEffect(() => {
+        setHotelObj(hotelObj);
+    }, [hotelObj, setHotelObj]);
 
     console.log("Received hotelObj in HotelDetail.js (from Home.js): ", hotelObj);
 
@@ -60,25 +63,28 @@ export default function HotelDetail() { // make hotelObj, ratings single paramet
                 <h1>{hotelObj.name}</h1>
             </Box> */}
             <Box sx={{ width: "95%", height: "auto", my: "20px" }}>
-                <Grid container spacing={0} sx={{ width: '100%', bgcolor: 'yellow'}}>
-                    <Grid item xs={6} md={7} sx={{ height: 500, py: 2, px: 0, mx: 0 }}>
+                <Grid container spacing={0} sx={{ width: '100%' }}>
+                    <Grid item xs={6} md={7} sx={{ height: 500, py: 2, px: 0 }}>
                         <Item sx={{ height: "100%", padding: 0, margin: 0 }}>
                             <Photos hotelObj={hotelObj} />
                         </Item>
                     </Grid>
 
                     <Grid item xs={6} md={5} sx={{ py: 2 }}>
-                        <Item sx={{ height: '100%', bgcolor: "pink", padding: 0 }}>
+                        <Item sx={{ height: '100%', padding: 0 }}>
                             <Map hotelObj={hotelObj} />
                         </Item>
                     </Grid>
-                    <Grid item xs={6} md={8} sx={{ height: '100%' }}>
+                    <Grid item xs={6} md={8} sx={{ height: 'auto', boxShadow: 0, bgcolor: 'white', py: 2 }}>
                         <Item sx={{ boxShadow: 0 }}>
                             <Availability offersObj={hotelObj.offers} />
                         </Item>
                     </Grid>
-                    <Grid item xs={6} md={4} >
-                        <Item sx={{ height: "100%", boxShadow: 0, bgcolor: 'red' }}>
+                    <Grid item xs={0.1} md={0.1} sx={{ height: 'auto', boxShadow: 0 }}>
+
+                    </Grid>
+                    <Grid item xs={5.9} md={3.9} sx={{ height: 'auto', boxShadow: 0, bgcolor: 'white' }}>
+                        <Item sx={{ boxShadow: 0, border: 0 }}>
                             <Ratings ratings={hotelObj.ratings} />
                         </Item>
                     </Grid>

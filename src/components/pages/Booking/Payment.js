@@ -111,8 +111,7 @@ export default function Payment() {
         //     }]
         // }
 
-    
-        navigate('/booking_result', { state: { bookingResponse, offerObj, paymentObj, nonMemberPwd } });
+        navigate('/booking_result', { state: { bookingResponse, offerObj, paymentObj, nonMemberPwd } }); // to BookingResult.js
     }
 
     return (
