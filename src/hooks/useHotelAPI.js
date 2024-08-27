@@ -164,7 +164,8 @@ export async function getIds(name, cityCode) {
 
             const hotelsData = await getData(url);
 
-            console.log("hotelsData: ", hotelsData);
+            // cityCode 내에 있는 모든 호텔 리스트
+            console.log("All hotels in cityCode: ", cityCode, " ===> ", hotelsData);
     
             if (hotelsData && hotelsData.length) {
                 // result of below map will be array  e.g. ["TKSXRAHS", "VJPAR00S", ...]

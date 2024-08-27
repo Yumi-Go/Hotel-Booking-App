@@ -8,12 +8,12 @@ import Typography from '@mui/material/Typography';
 import LinearProgress from '@mui/material/LinearProgress';
 
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
+const Item = styled(Box)(({ theme }) => ({
+  backgroundColor: 'transparent',
+  // ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: 'center',
-  color: theme.palette.text.secondary,
+  boxShadow: 0,
 }));
 
 function CircularProgressWithLabel(props) {
@@ -55,25 +55,27 @@ function LinearProgressWithLabel(props) {
   );
 }
 
-
 export default function Ratings({ ratings }) {
   console.log("Received ratings in Ratings: ", ratings);
 
   return (
     typeof ratings === 'object' ? (
-      <Stack>
+      <Stack sx={{ boxShadow: 0, border: 0 }}>
         <Item>
-          <h3>Overall</h3>
+          <Box sx={{ color: "indigo" }}>
+            <h2>REVIEW</h2>
+          </Box>
+          <h4>Overall</h4>
           [{ratings.numberOfReviews} reviews / {ratings.numberOfRatings} ratings]
           <LinearProgressWithLabel variant="determinate" value={ratings.overallRating} />
         </Item>
         <Item>
-          <Grid container justifyContent="center" alignItems="center" spacing={1} sx={{ margin: 0, backgroundColor: "yellow" }}>
+          <Grid container justifyContent="center" alignItems="center" spacing={1} sx={{ margin: 0 }}>
           {Object.entries(ratings.sentiments).map(([key, value], index) => (
             <Grid item key={key} xs={2} sm={2} md={5} justifyContent="center">
               <Item sx={{ boxShadow: 0, border: 1 }}>
                 <div>
-                  <div>{key}</div>
+                  <div><p>{key}</p></div>
                   <div><CircularProgressWithLabel value={value} /></div>
                 </div>
               </Item>

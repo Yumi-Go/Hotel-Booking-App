@@ -19,11 +19,6 @@ export default function BookingResult() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const offerObj = location.state?.offerObj; // from Payment.js
-    const paymentObj = location.state?.paymentObj; // from Payment.js
-    const nonMemberPwd = location.state?.nonMemberPwd; // from Payment.js
-
-
     // const bookingResponse = location.state?.bookingResponse; // from Payment.js
 
     // successful booking 테스트 끝나면 위에 코멘트처리된 라인 언코멘트하고 밑에 테스트용 데이터 코멘트처리하기
@@ -39,11 +34,15 @@ export default function BookingResult() {
             }]
         }]
     }
-
-
-
-
     console.log("bookingResponse from Payment.js in BookingResult.js: ", bookingResponse);
+    
+    const offerObj = location.state?.offerObj; // from Payment.js
+    const paymentObj = location.state?.paymentObj; // from Payment.js
+    const nonMemberPwd = location.state?.nonMemberPwd; // from Payment.js
+
+
+
+
 
 
     const hasErrors = Object.keys(bookingResponse)?.[0] === 'errors';
