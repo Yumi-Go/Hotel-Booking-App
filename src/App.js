@@ -94,12 +94,10 @@ export default function App() {
               guests={guests}
               setGuests={setGuests}
             />
-            {/* to use hotelObj across multiple components (mainly from HotelDetail to BookingResult) */}
-            <HotelProvider>
               <Routes>
                 <Route path="/" element={<Home searchResult={searchResult} />} />
 
-                {/* have to think about what will be displayed if user input "/hotel" directly without clicking a specific hotel from search result in Home */}
+                {/* have to think about what will be displayed if user input "/hotel-detail" directly without clicking a specific hotel from search result in Home */}
                 <Route path="/hotel-detail" element={<HotelDetail />} />
 
                 {/* {openBooking ?
@@ -115,7 +113,6 @@ export default function App() {
                 <Route path="/login" element={<LogIn />} />
                 <Route path="/history" element={<BookingHistory />} />
               </Routes>
-            </HotelProvider>
           </Box>
       </LocalizationProvider>
     </AuthProvider>
