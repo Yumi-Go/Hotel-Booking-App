@@ -9,8 +9,6 @@ import Availability from "./Availability";
 import Ratings from "./Ratings";
 import Photos from "./Photos";
 import Map from "./Map";
-import { useHotelContext } from "../../../contexts/HotelContext";
-
 
 const Item = styled(Box)(({ theme }) => ({
     padding: 0,
@@ -20,21 +18,13 @@ const Item = styled(Box)(({ theme }) => ({
     boxShadow: 0,
   }));
 
-  
-
 // export default function HotelDetail({ hotelObj, ratings }) { // make hotelObj, ratings single parameter merged later...
 export default function HotelDetail() { // make hotelObj, ratings single parameter merged later...
     
     const location = useLocation();
     const hotelObj = location.state?.hotelObj; // Passing data between pages with useLocation and useNavigate from Home.js
-    const { setHotelObj } = useHotelContext();
-    // setHotelObj(hotelObj); // Keep hotelObj in HotelContext
 
-    useEffect(() => {
-        setHotelObj(hotelObj);
-    }, [hotelObj, setHotelObj]);
-
-    console.log("Received hotelObj in HotelDetail.js (from Home.js): ", hotelObj);
+    console.log("hotelObj in HotelDetail.js (from Home.js): ", hotelObj);
 
 
     // // for testing getPhotosByHotelName.. remove this later

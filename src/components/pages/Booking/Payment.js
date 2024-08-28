@@ -21,7 +21,6 @@ export default function Payment() {
     const [paymentObj, setPaymentObj] = useState({});
     const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('CurrentUser')) || {});
 
-
     const { hotelObj } = useHotelContext();
     console.log("Load hotelObj from HotelContext in Payment.js: ", hotelObj);
 
@@ -29,11 +28,9 @@ export default function Payment() {
         setCurrentUser(JSON.parse(localStorage.getItem('CurrentUser')));
     }, []);
 
-
     useEffect(() => {
         console.log("paymentObj is updated: ", paymentObj);
     }, [paymentObj]);
-
 
     // const [bookingResult, setBookingResult] = useState(false);
     // const handleBookingResult = () => setBookingResult(true);
