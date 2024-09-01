@@ -40,7 +40,7 @@ async function getData(url) {
             headers: { Authorization: `Bearer ${token}` },
         });
         const rawData = await response.json();
-        console.log("Data fetched with token:", token);
+        console.log("raw data: ", rawData);
         return rawData.data;
     } catch (err) {
         console.error("Error fetching data:", err);
@@ -225,7 +225,7 @@ export async function getIds(name, cityCode) {
 // [{ ...hotel, photoUrls: [url1, url2..], offers: [{offer1},{offer2}..] }, { ...hotel, photoUrls: [url1, url2..], offers: [{offer1},{offer2}..] }, ...]
 export async function searchHotels(name, cityCode, searchConditions) {
     try {
-        console.log("received searchCondition: ", searchConditions);
+        console.log("searchCondition in searchHotels (from App.js): ", searchConditions);
         const ids = await getIds(name, cityCode);
         // const hotelIds = ids.join("%2C"); // multiple hotels.. seperated by '%2C' like this.. e.g. hotelIds=MCLONGHM%2CHNPARKGU
         // console.log("aggregated hotelIds: ", hotelIds);

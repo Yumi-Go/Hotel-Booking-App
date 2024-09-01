@@ -9,7 +9,7 @@ export function capitalize(string) {
 }
 
 export function capitalizeWords(paragraph) {
-    if (!paragraph) return paragraph;
+    if (!paragraph) return '';
     return paragraph
         .split(' ')
         .map(word => {

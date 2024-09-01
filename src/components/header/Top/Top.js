@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -18,6 +17,10 @@ export default function TopBar() {
 
     const navigate = useNavigate();
     const menuId = 'primary-search-account-menu';
+
+    const handleHomeClick = () => {
+        navigate('/');
+    };
 
     const handleAccountClick = () => {
         navigate('/account');
@@ -48,7 +51,8 @@ export default function TopBar() {
                         variant="h6"
                         noWrap
                         component="div"
-                        sx={{ display: { xs: 'none', sm: 'block' } }}
+                        sx={{ display: { xs: 'none', sm: 'block' }, cursor: 'pointer' }}
+                        onClick={handleHomeClick}
                     >
                         Hotel Booking Platform
                     </Typography>
