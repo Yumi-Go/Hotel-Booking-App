@@ -5,7 +5,6 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Modal from '@mui/material/Modal';
 import OfferDetail from "./OfferDetail";
-import { useRef } from 'react';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -14,13 +13,14 @@ const Item = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(1),
     textAlign: 'center',
     color: theme.palette.text.secondary,
+    width: '95%',
+    border: '1px solid',
+    cursor: 'pointer',
 }));
 
 
 export default function Availability({ offersObj }) {
-    const ref = useRef(null);
-
-    console.log("Received offersObj in Availability: ", offersObj);
+    console.log("offersObj in Availability (from HotelDetail.js): ", offersObj);
     const [selectedOffer, setSelectedOffer] = useState(null);
     const [open, setOpen] = useState(false);
     
@@ -43,7 +43,7 @@ export default function Availability({ offersObj }) {
         >
             {offersObj.map((offer, index) => (
                 <React.Fragment key={index}>
-                    <Item key={index} onClick={() => handleOpen(offer)} sx={{ width: '95%', border: 1, cursor: 'pointer' }}>
+                    <Item key={index} onClick={() => handleOpen(offer)}>
                         <Box sx={{ textAlign: 'left' }}>
                             Room Type: {offer.room.typeEstimated.category}
                         </Box>
@@ -58,17 +58,19 @@ export default function Availability({ offersObj }) {
                         </Box>
                     </Item>
 
-                    <Modal
-                        key={selectedOffer?.id || 'modal'}
-                        open={open}
-                        onClose={handleClose}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <OfferDetail offerObj={selectedOffer} handleClose={handleClose} ref={ref} />
-                    </Modal>
                 </React.Fragment>
             ))}
+
+            {selectedOffer && (
+                <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <OfferDetail offerObj={selectedOffer} handleClose={handleClose} />
+                </Modal>
+            )}
         </Stack>
     );
 }

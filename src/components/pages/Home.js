@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import useAuth from "../../hooks/useAuth";
 import { useNavigate, Navigate } from 'react-router-dom';
 
-
 // search result (single item for each hotel from multiple hotels)
 export default function Home({ searchResult }) {
 
@@ -90,7 +89,6 @@ export default function Home({ searchResult }) {
     </Box>
   );
 }
-
 
 
 

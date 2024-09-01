@@ -1,34 +1,46 @@
-import React, { forwardRef } from 'react';
+import React from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import Avatar from '@mui/material/Avatar';
+import Divider from '@mui/material/Divider';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import { useNavigate } from 'react-router-dom';
+import CancelSubmitBtn from '../../reusableComponents/CancelSubmitBtn';
 import CheckIcon from '@mui/icons-material/Check';
 import HotelIcon from '@mui/icons-material/Hotel';
 import CloseIcon from '@mui/icons-material/Close';
 import PaymentIcon from '@mui/icons-material/Payment';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import BedIcon from '@mui/icons-material/Bed';
-import Divider from '@mui/material/Divider';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { capitalize, capitalizeWords, extractSquareMeters, formatDescription } from '../../../hooks/useFormat';
-import CancelSubmitBtn from '../../reusableComponents/CancelSubmitBtn';
-import { useNavigate } from 'react-router-dom';
-
 
 
 // offerObj, handleClose from Availability.js
-const OfferDetail = forwardRef(({ offerObj, handleClose }, ref) => {
+export default function OfferDetail ({ offerObj, handleClose }) {
+
+    console.log("offerObj in OfferDetail.js (from Availability.js): ", offerObj);
+
+    const navigate = useNavigate();
+
+    const cancelHandler = () => {
+        // navigate('/');
+        handleClose();
+    }
+
+    const submitHandler = () => {
+        navigate('/booking', { state: { offerObj } });
+    }
+
+    console.log(formatDescription("Prepay Non-refundable Non-changeable, prepay in full\nSuperior King Room, 1 King,\n23sqm/247sqft-35sqm/377sqft, Wireless"));
+
     const style = {
         position: 'absolute',
         top: '50%',
@@ -40,27 +52,9 @@ const OfferDetail = forwardRef(({ offerObj, handleClose }, ref) => {
         p: 0,
     };
 
-    console.log("offerObj in OfferDetail from Availability in OfferDetail.js: ", offerObj);
-
-    const navigate = useNavigate();
-
-
-    const cancelHandler = () => {
-        // navigate('/');
-        handleClose();
-
-    }
-
-    const submitHandler = () => {
-        navigate('/booking', { state: { offerObj } });
-    }
-
-    // console.log(formatDescription("Prepay Non-refundable Non-changeable, prepay in full\nSuperior King Room, 1 King,\n23sqm/247sqft-35sqm/377sqft, Wireless"));
-
 
     return (
-
-        <Box sx={style} ref={ref} tabIndex={-1}>
+        <Box sx={style} tabIndex={-1}>
             <AppBar sx={{ position: 'relative' }} style={{ padding: 0 }}>
                 <Toolbar>
                     <IconButton
@@ -128,8 +122,8 @@ const OfferDetail = forwardRef(({ offerObj, handleClose }, ref) => {
                         </Avatar>
                     </ListItemAvatar>
                     <ListItemText
-                        primary={capitalizeWords(offerObj.policies?.cancellations[0]?.description?.text)}
-                        secondary="Cancellation"
+                        primary={capitalizeWords(offerObj.policies?.cancellations[0]?.description?.text) + " | " + offerObj.policies?.cancellations[0]?.deadline}
+                        secondary="Cancellation Deadline"
                     />
                 </ListItem>
                 <Divider />
@@ -141,7 +135,7 @@ const OfferDetail = forwardRef(({ offerObj, handleClose }, ref) => {
                     </ListItemAvatar>
                     <ListItemText
                         primary={offerObj.policies?.paymentType}
-                        secondary="Payment"
+                        secondary="Payment Type"
                     />
                 </ListItem>
                 <Divider />
@@ -202,10 +196,7 @@ const OfferDetail = forwardRef(({ offerObj, handleClose }, ref) => {
             />            
         </Box>
     );
-});
-
-
-export default OfferDetail;
+}
 
 
 
