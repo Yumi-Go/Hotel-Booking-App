@@ -61,8 +61,8 @@ export default function App() {
     setSearchResult([]);
     try {
       const searchConditions = ({
-        adults: 2,
-        children: 0,
+        adults: guests.adults,
+        children: guests.children,
         checkInDate: formattedCheckInDate,
         checkOutDate: formattedCheckOutDate,
         roomQuantity: 1,

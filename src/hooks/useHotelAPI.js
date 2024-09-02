@@ -69,6 +69,7 @@ async function postData(url, requestBodyObj) {
 }
 
 
+
 // Hotel List API
 async function getHotelIdByCity(cityCode) {
     try {
@@ -152,17 +153,23 @@ export async function getIds(name, cityCode) {
         const result = [];
 
         if (name.length > 0 && cityCode.length > 0) {
-            // Name Search API
+            
+            // Hotel List API
             const url =
             "https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-city?" +
             `cityCode=${cityCode}&` +
             "radius=5&" +
             "radiusUnit=KM&" +
             "hotelSource=ALL";
-            
-            console.log("Searched result by hotel name and city both");
 
+            
             const hotelsData = await getData(url);
+
+            // 여기 해결해야 함!!! getData 에서 CSP 에러
+            //// hard coded url for confirming CSP error in Hotel List API (Amadeus 홈피 reference 에서 아래 url로 try out 해봤을 때도 request 실패함. 그게 CSP 때문이므로 로컬에서도 그런듯)
+            // const hotelsData = await getData("https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-city?cityCode=PAR&radius=5&radiusUnit=KM&hotelSource=ALL");
+
+
 
             // cityCode 내에 있는 모든 호텔 리스트
             console.log("All hotels in cityCode: ", cityCode, " ===> ", hotelsData);
@@ -237,48 +244,74 @@ export async function searchHotels(name, cityCode, searchConditions) {
         // 그 동안 다른 작업 하고있기.
         const result = [];
 
-        // 여기 forEach 안에서 순서대로 리퀘스트하는 것보다 url 리스트로 한번에 모아서 동시에 리퀘스트해야 한번 클릭했을때 한방에 뜨지 않을까 싶음.. 이거 꼭 수정해보기
-        ids.forEach(async(id) => {
-            // Hotel Search API
-            const url =
-            "https://test.api.amadeus.com/v3/shopping/hotel-offers?" +
-            `hotelIds=${id}&` +
-            `adults=${searchConditions.adults}&` +
-            `checkInDate=${searchConditions.checkInDate}&` +
-            `checkOutDate=${searchConditions.checkOutDate}&` +
-            `roomQuantity=${searchConditions.roomQuantity}&` +
-            `priceRange=${searchConditions.priceRange}&` +
-            `currency=${searchConditions.currency}&` +
-            "paymentPolicy=NONE&" +
-            "bestRateOnly=false";
+        // // 여기 forEach 안에서 순서대로 리퀘스트하는 것보다 url 리스트로 한번에 모아서 동시에 리퀘스트해야 한번 클릭했을때 한방에 뜨지 않을까 싶음.. 이거 꼭 수정해보기
+        // // 이거 밑에 Avoid async inside forEach~~~ 라고 설명된 Promise.all 쓴 게 수정된 버젼임. 그걸로 대신 쓰면 더 좋을듯. 시간될 때 반영해보기
+        // ids.forEach(async(id) => {
+        //     // Hotel Search API
+        //     const url =
+        //     "https://test.api.amadeus.com/v3/shopping/hotel-offers?" +
+        //     `hotelIds=${id}&` +
+        //     `adults=${searchConditions.adults}&` +
+        //     `checkInDate=${searchConditions.checkInDate}&` +
+        //     `checkOutDate=${searchConditions.checkOutDate}&` +
+        //     `roomQuantity=${searchConditions.roomQuantity}&` +
+        //     `priceRange=${searchConditions.priceRange}&` +
+        //     `currency=${searchConditions.currency}&` +
+        //     "paymentPolicy=NONE&" +
+        //     "bestRateOnly=false";
+
+        //     const hotelData = await getData(url);
+        //     // console.log("hotelData: ", hotelData);
+
+        //     let eachHotel = {};
+        //     if (hotelData && hotelData.length) {
+        //         console.log(`data of hotel id ${id}: `, hotelData[0]);
+        //         if (hotelData[0].hotel && hotelData[0].offers) {
+        //             const photoUrls = await getPhotosByHotelName(hotelData[0].hotel.name);
+
+        //             //// Uncomment after testing..
+        //             // const ratings = await getRatingsByHotelId(hotelData[0].hotel.hotelId);
+                    
+        //             const ratings = await getRatingsByHotelId("TELONMFS");
+        //             console.log("ratings: ", ratings);
+
+        //             eachHotel = await { ...hotelData[0].hotel, photoUrls: photoUrls, offers: hotelData[0].offers, ratings: ratings };
+        //             console.log("each Hotel with photoUrls & ratings: ", eachHotel);
+        //             result.push(eachHotel);
+        //             localStorage.setItem('searchResult', JSON.stringify(result));
+        //         }                
+        //     }
+        //     // else {
+        //     //     throw new Error(`No hotel data found in hotel id '${id}'`);
+        //     // }
+        // });
+
+
+
+        // Avoid async inside forEach
+        // async inside forEach does not work as expected because forEach doesn't wait for the async function to complete before moving on to the next iteration.
+        // So, Promise.all is used instead below.
+        const requests = ids.map(async (id) => {
+            const url = `https://test.api.amadeus.com/v3/shopping/hotel-offers?hotelIds=${id}&adults=${searchConditions.adults}&checkInDate=${searchConditions.checkInDate}&checkOutDate=${searchConditions.checkOutDate}&roomQuantity=${searchConditions.roomQuantity}&priceRange=${searchConditions.priceRange}&currency=${searchConditions.currency}&paymentPolicy=NONE&bestRateOnly=false`;
 
             const hotelData = await getData(url);
-            // console.log("hotelData: ", hotelData);
 
-            let eachHotel = {};
-            if (hotelData && hotelData.length) {
-                console.log(`data of hotel id ${id}: `, hotelData[0]);
-                if (hotelData[0].hotel && hotelData[0].offers) {
-                    const photoUrls = await getPhotosByHotelName(hotelData[0].hotel.name);
+            if (hotelData && hotelData.length && hotelData[0].hotel && hotelData[0].offers) {
+                const photoUrls = await getPhotosByHotelName(hotelData[0].hotel.name);
+                const ratings = await getRatingsByHotelId(hotelData[0].hotel.hotelId);
 
-                    //// Uncomment after testing..
-                    // const ratings = await getRatingsByHotelId(hotelData[0].hotel.hotelId);
-                    
-                    
-                    const ratings = await getRatingsByHotelId("TELONMFS");
-                    console.log("ratings: ", ratings);
-
-                    
-                    eachHotel = await { ...hotelData[0].hotel, photoUrls: photoUrls, offers: hotelData[0].offers, ratings: ratings };
-                    console.log("each Hotel with photoUrls & ratings: ", eachHotel);
-                    result.push(eachHotel);
-                    localStorage.setItem('searchResult', JSON.stringify(result));
-                }                
+                const eachHotel = await { ...hotelData[0].hotel, photoUrls: photoUrls, offers: hotelData[0].offers, ratings: ratings };
+                console.log("Each hotel with photoUrls & ratings: ", eachHotel);
+                result.push(eachHotel);
+                localStorage.setItem('searchResult', JSON.stringify(result));
             }
-            // else {
-            //     throw new Error(`No hotel data found in hotel id '${id}'`);
-            // }
         });
+
+        await Promise.all(requests);
+
+
+
+
         console.log("result: ", result);
         return result;
     } catch (err) {

@@ -93,7 +93,6 @@ export default function Home({ searchResult }) {
 
 
 
-
 //   // harde coded sample data.. for testing. Remove this later
 //   // 아마데우스 무료 콜 수 다 찼으면, 일단 clickHotel에 있는 hotelObj에 아래 하드코드된 hotelObj를 대신 넣어서 HotelDetail.js 테스트해야 함. 무료 api call 수 다시 리셋될 때까지. 콜 수 리셋되면 실제 데이터로 해보기!
 //   const hotelObj = {
