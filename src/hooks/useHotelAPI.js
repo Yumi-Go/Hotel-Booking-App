@@ -69,7 +69,6 @@ async function postData(url, requestBodyObj) {
 }
 
 
-
 // Hotel List API
 async function getHotelIdByCity(cityCode) {
     try {
@@ -142,10 +141,10 @@ async function getHotelIdByName(name) {
 }
 
 
-
 export async function getIds(name, cityCode) {
 
-    // Name Autocomplete API에서는 결과값이 20개까지만 나오고, 그 안에서도 뭐가 잘못된 건지 cityCode로 검색한거랑 겹치는게 하나도 없음. (e.g. 'CITADINES'으로 검색했을때 파리에 있는 CITADINES 호텔이 몇개 나옴에도 불구하고 PAR로 cityCode로 얻은 리스트에 존재하는 호텔 아이디가 하나도 발견이 안됨. 둘이 뭔가 문제가 있는듯..)
+    // Name Autocomplete API에서는 결과값이 20개까지만 나오고, 그 안에서도 뭐가 잘못된 건지 cityCode로 검색한거랑 겹치는게 하나도 없음.
+    // (e.g. 'CITADINES'으로 검색했을때 파리에 있는 CITADINES 호텔이 몇개 나옴에도 불구하고 PAR로 cityCode로 얻은 리스트에 존재하는 호텔 아이디가 하나도 발견이 안됨. 둘이 뭔가 문제가 있는듯..)
     // 그래서 방법을 바꿈.. 일단은 Hotel List API만 쓰기로.. 아래처럼..
     // cityCode로 검색 -> 그 결과 리스트 내에서 parameter name값이 포함된 호텔 검색 (e.g. parameter name이 'WESTERN'일때 name: "BEST WESTERN JARDIN DE CLUNY"이 찾아지는 것처럼..) 해서 호텔 아이디 리스트 추리기
 
@@ -161,15 +160,8 @@ export async function getIds(name, cityCode) {
             "radius=5&" +
             "radiusUnit=KM&" +
             "hotelSource=ALL";
-
             
             const hotelsData = await getData(url);
-
-            // 여기 해결해야 함!!! getData 에서 CSP 에러
-            //// hard coded url for confirming CSP error in Hotel List API (Amadeus 홈피 reference 에서 아래 url로 try out 해봤을 때도 request 실패함. 그게 CSP 때문이므로 로컬에서도 그런듯)
-            // const hotelsData = await getData("https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-city?cityCode=PAR&radius=5&radiusUnit=KM&hotelSource=ALL");
-
-
 
             // cityCode 내에 있는 모든 호텔 리스트
             console.log("All hotels in cityCode: ", cityCode, " ===> ", hotelsData);
@@ -222,7 +214,6 @@ export async function getIds(name, cityCode) {
         console.error("Error in getIds:", err);
         throw err;
     }
-
 }
 
 
@@ -238,72 +229,38 @@ export async function searchHotels(name, cityCode, searchConditions) {
         // console.log("aggregated hotelIds: ", hotelIds);
         console.log("ids: ", ids);
 
-
-        // Hotel Search API free request quota 초과해서 현재 status: 429, statusText: "Too Many Requests" 응답이 옴. 매월 정해진 quota라 다음달까지 기다려야할듯.
-        // https://developers.amadeus.com/pricing#pricing-list 여기 참고
-        // 그 동안 다른 작업 하고있기.
         const result = [];
 
-        // // 여기 forEach 안에서 순서대로 리퀘스트하는 것보다 url 리스트로 한번에 모아서 동시에 리퀘스트해야 한번 클릭했을때 한방에 뜨지 않을까 싶음.. 이거 꼭 수정해보기
-        // // 이거 밑에 Avoid async inside forEach~~~ 라고 설명된 Promise.all 쓴 게 수정된 버젼임. 그걸로 대신 쓰면 더 좋을듯. 시간될 때 반영해보기
-        // ids.forEach(async(id) => {
-        //     // Hotel Search API
-        //     const url =
-        //     "https://test.api.amadeus.com/v3/shopping/hotel-offers?" +
-        //     `hotelIds=${id}&` +
-        //     `adults=${searchConditions.adults}&` +
-        //     `checkInDate=${searchConditions.checkInDate}&` +
-        //     `checkOutDate=${searchConditions.checkOutDate}&` +
-        //     `roomQuantity=${searchConditions.roomQuantity}&` +
-        //     `priceRange=${searchConditions.priceRange}&` +
-        //     `currency=${searchConditions.currency}&` +
-        //     "paymentPolicy=NONE&" +
-        //     "bestRateOnly=false";
-
-        //     const hotelData = await getData(url);
-        //     // console.log("hotelData: ", hotelData);
-
-        //     let eachHotel = {};
-        //     if (hotelData && hotelData.length) {
-        //         console.log(`data of hotel id ${id}: `, hotelData[0]);
-        //         if (hotelData[0].hotel && hotelData[0].offers) {
-        //             const photoUrls = await getPhotosByHotelName(hotelData[0].hotel.name);
-
-        //             //// Uncomment after testing..
-        //             // const ratings = await getRatingsByHotelId(hotelData[0].hotel.hotelId);
-                    
-        //             const ratings = await getRatingsByHotelId("TELONMFS");
-        //             console.log("ratings: ", ratings);
-
-        //             eachHotel = await { ...hotelData[0].hotel, photoUrls: photoUrls, offers: hotelData[0].offers, ratings: ratings };
-        //             console.log("each Hotel with photoUrls & ratings: ", eachHotel);
-        //             result.push(eachHotel);
-        //             localStorage.setItem('searchResult', JSON.stringify(result));
-        //         }                
-        //     }
-        //     // else {
-        //     //     throw new Error(`No hotel data found in hotel id '${id}'`);
-        //     // }
-        // });
-
-
-
-        // Avoid async inside forEach
+        // To avoid async inside forEach
         // async inside forEach does not work as expected because forEach doesn't wait for the async function to complete before moving on to the next iteration.
-        // So, Promise.all is used instead below.
+        // So, Promise.all is used instead.
         const requests = ids.map(async (id) => {
-            const url = `https://test.api.amadeus.com/v3/shopping/hotel-offers?hotelIds=${id}&adults=${searchConditions.adults}&checkInDate=${searchConditions.checkInDate}&checkOutDate=${searchConditions.checkOutDate}&roomQuantity=${searchConditions.roomQuantity}&priceRange=${searchConditions.priceRange}&currency=${searchConditions.currency}&paymentPolicy=NONE&bestRateOnly=false`;
+            // Hotel Search API
+            const url =
+            "https://test.api.amadeus.com/v3/shopping/hotel-offers?" +
+            `hotelIds=${id}&` +
+            `adults=${searchConditions.adults}&` +
+            `checkInDate=${searchConditions.checkInDate}&` +
+            `checkOutDate=${searchConditions.checkOutDate}&` +
+            `roomQuantity=${searchConditions.roomQuantity}&` +
+            `priceRange=${searchConditions.priceRange}&` +
+            `currency=${searchConditions.currency}&` +
+            "paymentPolicy=NONE&" +
+            "bestRateOnly=false";
 
-            const hotelData = await getData(url);
-
-            if (hotelData && hotelData.length && hotelData[0].hotel && hotelData[0].offers) {
-                const photoUrls = await getPhotosByHotelName(hotelData[0].hotel.name);
-                const ratings = await getRatingsByHotelId(hotelData[0].hotel.hotelId);
-
-                const eachHotel = await { ...hotelData[0].hotel, photoUrls: photoUrls, offers: hotelData[0].offers, ratings: ratings };
-                console.log("Each hotel with photoUrls & ratings: ", eachHotel);
-                result.push(eachHotel);
-                localStorage.setItem('searchResult', JSON.stringify(result));
+            try {
+                const hotelData = await getData(url);
+                if (hotelData && hotelData.length && hotelData[0].hotel && hotelData[0].offers) {
+                    const photoUrls = await getPhotosByHotelName(hotelData[0].hotel.name);
+                    const ratings = await getRatingsByHotelId(hotelData[0].hotel.hotelId);
+                    // const ratings = await getRatingsByHotelId("TELONMFS"); // test data for ratings
+                    const eachHotel = await { ...hotelData[0].hotel, photoUrls: photoUrls, offers: hotelData[0].offers, ratings: ratings };
+                    console.log("Each hotel with photoUrls & ratings: ", eachHotel);
+                    result.push(eachHotel);
+                    localStorage.setItem('searchResult', JSON.stringify(result));
+                }
+            } catch (err) {
+                console.error(`Error fetching data for hotel ID ${id}:`, err);
             }
         });
 
@@ -356,7 +313,6 @@ export async function getPhotosByHotelName(hotelName) {
 }
 
 
-
 // Hotel Ratings API
 export async function getRatingsByHotelId(hotelId) {
     try {
@@ -380,7 +336,6 @@ export async function getRatingsByHotelId(hotelId) {
         return "Error in Ratings Data";
     }
 }
-
 
 
 export async function bookingRequest(requestBodyObj) {

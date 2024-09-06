@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
@@ -24,8 +24,7 @@ import { capitalize, capitalizeWords, extractSquareMeters, formatDescription } f
 
 
 // offerObj, handleClose from Availability.js
-export default function OfferDetail ({ offerObj, handleClose }) {
-
+const OfferDetail = forwardRef(({ offerObj, handleClose }, ref) => {
     console.log("offerObj in OfferDetail.js (from Availability.js): ", offerObj);
 
     const navigate = useNavigate();
@@ -54,7 +53,7 @@ export default function OfferDetail ({ offerObj, handleClose }) {
 
 
     return (
-        <Box sx={style} tabIndex={-1}>
+        <Box sx={style} tabIndex={-1} ref={ref}>
             <AppBar sx={{ position: 'relative' }} style={{ padding: 0 }}>
                 <Toolbar>
                     <IconButton
@@ -160,7 +159,6 @@ export default function OfferDetail ({ offerObj, handleClose }) {
                     />
                 </ListItem>
                 <Divider />
-
             </List>
             {/* <Stack
                 direction="row"
@@ -196,8 +194,8 @@ export default function OfferDetail ({ offerObj, handleClose }) {
             />            
         </Box>
     );
-}
-
+});
+export default OfferDetail;
 
 
 

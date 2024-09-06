@@ -39,12 +39,6 @@ export default function BookingResult() {
     const offerObj = location.state?.offerObj; // from Payment.js
     const paymentObj = location.state?.paymentObj; // from Payment.js
     const nonMemberPwd = location.state?.nonMemberPwd; // from Payment.js
-
-
-
-
-
-
     const hasErrors = Object.keys(bookingResponse)?.[0] === 'errors';
     console.log("hasErrors: ", hasErrors);
 
@@ -56,7 +50,6 @@ export default function BookingResult() {
     }
 
     addSuccessfulBooking();
-
 
     const homeHandler = () => {
         // navigate('/');
