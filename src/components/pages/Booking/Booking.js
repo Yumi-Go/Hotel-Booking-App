@@ -13,13 +13,11 @@ import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 import { Box } from "@mui/material";
 
 
-
 export default function Booking() {
 
     const navigate = useNavigate();
     const location = useLocation();
     const offerObj = location.state?.offerObj; // from OfferDetail.js
-
 
         // // booking부터 payment까지 테스트 이걸로 하기 (테스트 끝나면 이거 지우고 위에 코멘트처리한거 해제)
         // const offerObj = {
@@ -108,14 +106,21 @@ export default function Booking() {
         //     },
         //     "self": "https://test.api.amadeus.com/v3/shopping/hotel-offers/5CD6N4B5OW"
         // }
+        console.log("offerObj from OfferDetail.js (Booking.js): ", offerObj);
 
 
     const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('CurrentUser')) || null);
     const [nonMemberObj, setNonMemberObj] = useState({});
-
-
-    console.log("offerObj from OfferDetail.js in Booking.js: ", offerObj);
-
+    // const [fName, setFName] = useState('');
+    // const [mName, setMName] = useState('');
+    // const [lName, setLName] = useState('');
+    // const [email, setEmail] = useState('');
+    // const [pNum, setPNum] = useState('');
+    // const [address, setAddress] = useState('');
+    // const [password, setPassword] = useState('');
+    // const [confirmPassword, setConfirmPassword] = useState('');
+    const [errors, setErrors] = useState({});
+    const [nonMemberValidation, setNonMemberValidation] = useState(false);
 
     useEffect(() => {
         console.log("nonMemberObj is updated: ", nonMemberObj);
@@ -124,12 +129,12 @@ export default function Booking() {
     const cancelHandler = () => {
         // navigate('/');
         navigate(-1);
-
     }
 
     const submitHandler = () => {
-        if (!currentUser && nonMemberObj.password !== nonMemberObj.confirmPassword) {
-            alert("The password and confirm password do not match!");
+        if (!nonMemberValidation) {
+            const errMsg = Object.values(errors).join('\n');
+            alert(errMsg);
         } else {
             const nonMemberPwd = currentUser ? null : nonMemberObj.password;
             const guestsObj = {
@@ -144,13 +149,13 @@ export default function Booking() {
                 }
             };
             navigate('/payment', { state: { offerObj, guestsObj, nonMemberPwd } }); // to Payment.js
+
         }
     }
 
     const userInfoEditHandler = () => {
         navigate('/account');
     }
-
 
     return (
         <div>
@@ -179,7 +184,12 @@ export default function Booking() {
             <Box>
             {currentUser ? (
                 <BookingUserInfo userInfoEditHandler={userInfoEditHandler} />
-            ) : <BookingNonMemberUserInfo setNonMemberObj={setNonMemberObj} />}
+            ) : (
+                <BookingNonMemberUserInfo
+                setNonMemberValidation={setNonMemberValidation}
+                errors={errors}
+                setErrors={setErrors} />
+            )}
             </Box>
             {/* <Button
                 onClick={userInfoEditHandler}

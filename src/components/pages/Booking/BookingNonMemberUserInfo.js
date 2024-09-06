@@ -3,9 +3,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 
 
-export default function BookingNonMemberUserInfo({ setNonMemberObj }) {
-
-
+export default function BookingNonMemberUserInfo({ setNonMemberValidation, errors, setErrors }) {
 
     const [fName, setFName] = useState('');
     const [mName, setMName] = useState('');
@@ -16,23 +14,21 @@ export default function BookingNonMemberUserInfo({ setNonMemberObj }) {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
-
-
     useEffect(() => {
-        setNonMemberObj({
-            "fName": fName,
-            "mName": mName,
-            "lName": lName,
-            "email": email,
-            "pNum": pNum,
-            "address": address,
-            "password": password,
-            "confirmPassword": confirmPassword,
-        });
-    }, [fName, mName, lName, email, pNum, address, password, confirmPassword, setNonMemberObj]);
+        const validate = () => {
+            let errMsg = {};
+            if (!fName) errMsg.fName = "First Name is required.";
+            if (!lName) errMsg.lName = "Last Name is required.";
+            if (!email) errMsg.email = "Email is required.";
+            if (!password) errMsg.password = "Password is required.";
+            if (password !== confirmPassword) errMsg.confirmPassword = "Passwords do not match.";
+            setErrors(errMsg);
+            if (Object.keys(errMsg).length === 0) setNonMemberValidation(true);
+        };
+    
+        validate();
+    }, [fName, mName, lName, email, pNum, address, password, confirmPassword, setErrors, setNonMemberValidation]);
 
-    
-    
     // change later..
     const countries = [
         { value: 'Ireland', label: 'IR' },
@@ -40,7 +36,6 @@ export default function BookingNonMemberUserInfo({ setNonMemberObj }) {
         { value: 'Korea', label: 'KO' },
         { value: 'France', label: 'FR' },
     ];
-
 
     return (
         <Box
@@ -58,6 +53,8 @@ export default function BookingNonMemberUserInfo({ setNonMemberObj }) {
                     placeholder="Enter Your First Name"
                     variant="standard"
                     onChange={(e) => setFName(e.target.value)}
+                    error={!!errors.fName} // !!errors.fName converts the value of errors.fName to a boolean. If errors.fName is a non-empty string (indicating an error message), !!errors.fName will be true. If errors.fName is undefined or an empty string, !!errors.fName will be false.
+                    helperText={errors.fName}
                 />
                 <TextField
                     id="non-member-mname-textarea"
@@ -73,6 +70,8 @@ export default function BookingNonMemberUserInfo({ setNonMemberObj }) {
                     placeholder="Enter Your Last Name"
                     variant="standard"
                     onChange={(e) => setLName(e.target.value)}
+                    error={!!errors.lName}
+                    helperText={errors.lName}
                 />
             </div>
 
@@ -84,6 +83,8 @@ export default function BookingNonMemberUserInfo({ setNonMemberObj }) {
                     placeholder="Enter Your Last Name"
                     variant="standard"
                     onChange={(e) => setEmail(e.target.value)}
+                    error={!!errors.email}
+                    helperText={errors.email}
                 />
                 <TextField
                     id="non-member-pnum-textarea"
@@ -122,9 +123,11 @@ export default function BookingNonMemberUserInfo({ setNonMemberObj }) {
                     label="Password"
                     type="password"
                     placeholder="Enter Your Password"
-                    helperText="Password for non-member booking inquiry"
                     variant="standard"
                     onChange={(e) => setPassword(e.target.value)}
+                    error={!!errors.password}
+                    helperText= { errors.password ? errors.password : "Password for non-member booking inquiry" }
+
                 />
                 <TextField
                     required
@@ -132,9 +135,10 @@ export default function BookingNonMemberUserInfo({ setNonMemberObj }) {
                     label="Confirm Password"
                     type="password"
                     placeholder="Enter Your Password"
-                    helperText="Enter your password again."
                     variant="standard"
                     onChange={(e) => setConfirmPassword(e.target.value)}
+                    error={!!errors.confirmPassword}
+                    helperText={ errors.confirmPassword ? errors.confirmPassword : "Enter your password again." }
                 />
             </div>
 

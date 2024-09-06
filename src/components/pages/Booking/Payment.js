@@ -8,8 +8,6 @@ import PaymentDetail from "./PaymentDetail";
 import Title from "../../reusableComponents/Title";
 import { bookingRequest } from "../../../hooks/useHotelAPI";
 import useFirestore from "../../../hooks/useFirestore";
-import { useHotelContext } from "../../../contexts/HotelContext";
-
 
 
 export default function Payment() {
@@ -20,9 +18,6 @@ export default function Payment() {
     const nonMemberPwd = location.state?.nonMemberPwd; // from Booking.js
     const [paymentObj, setPaymentObj] = useState({});
     const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('CurrentUser')) || {});
-
-    const { hotelObj } = useHotelContext();
-    console.log("Load hotelObj from HotelContext in Payment.js: ", hotelObj);
 
     useEffect(() => {
         setCurrentUser(JSON.parse(localStorage.getItem('CurrentUser')));
@@ -71,8 +66,6 @@ export default function Payment() {
     //     }
     // }
 
-
-
     // const guestsObj = {
     //     "name": {
     //         "title": "MR",
@@ -94,21 +87,25 @@ export default function Payment() {
 
     const submitHandler = async() => {
         const requestBodyObj = {offerId: offerObj.id, guests: [{...guestsObj}], payments: [{...paymentObj}] };
-        const bookingResponse = await bookingRequest(requestBodyObj);
-        //// for testing... example data
-        // const bookingResponse = {
-        //     "data": [{
-        //         "type": "hotel-booking",
-        //         "id": "XD_8138319951754",
-        //         "providerConfirmationId": "8138319951754",
-        //         "associatedRecords": [{
-        //             "reference": "QVH2BX",
-        //             "originSystemCode": "GDS"
-        //         }]
-        //     }]
-        // }
-
-        navigate('/booking_result', { state: { bookingResponse, offerObj, paymentObj, nonMemberPwd } }); // to BookingResult.js
+        try {
+            const bookingResponse = await bookingRequest(requestBodyObj);
+            //// for testing... example data
+            // const bookingResponse = {
+            //     "data": [{
+            //         "type": "hotel-booking",
+            //         "id": "XD_8138319951754",
+            //         "providerConfirmationId": "8138319951754",
+            //         "associatedRecords": [{
+            //             "reference": "QVH2BX",
+            //             "originSystemCode": "GDS"
+            //         }]
+            //     }]
+            // }
+    
+            navigate('/booking_result', { state: { bookingResponse, offerObj, paymentObj, nonMemberPwd } }); // to BookingResult.js
+        } catch (err) {
+            console.error("Error in submitHandler(Payment.js): ", err);
+        }
     }
 
     return (
