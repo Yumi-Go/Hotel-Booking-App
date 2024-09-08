@@ -70,146 +70,81 @@ async function postData(url, requestBodyObj) {
 
 
 // Hotel List API
-async function getHotelIdByCity(cityCode) {
+async function getHotelsByCity(cityCode) {
     try {
         const url =
-        "https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-city?" +
-        `cityCode=${cityCode}&` +
-        "radius=5&" +
-        "radiusUnit=KM&" +
-        "hotelSource=ALL";
-        
-        const hotels = await getData(url);
-
-        console.log("hotels: ", hotels);
-        
-        const result = [];
-
-        if (hotels && hotels.length) {
-            // result of below map will be array  e.g. ["TKSXRAHS", "VJPAR00S", ...]
-            hotels.forEach(async eachHotel => {
-                result.push(eachHotel);
-            });
-        }
-        else {
-            throw new Error(`No hotel data found in City Code ${cityCode}`);
-        }
-        console.log("result in getHotelIdByCity: ", result);
-        return result;
-    } catch (err) {
-        console.error("Error in getHotelIdByCity:", err);
-        throw err;
-    }
-}
-
-
-// Hotel Name Autocomplete API
-async function getHotelIdByName(name) {
-    try {
-        const url = 
-        "https://test.api.amadeus.com/v1/reference-data/locations/hotel?" +
-        `keyword=${name}&` +
-        "subType=HOTEL_LEISURE&" +
-        "subType=HOTEL_GDS&" +
-        "lang=EN&" +
-        "max=20";
-        
-        const hotels = await getData(url);
-
-        console.log("hotels: ", hotels);
-        const result = [];
-        if (hotels && hotels.length) {
-            // eachHotel.hotelIds is array (e.g. hotelIds: ["TKSXRAHS"])
-            // So, hotels.map(async eachHotel => eachHotel.hotelIds) will be   e.g. [ ["TKSXRAHS"], ["VJPAR00S"], ...]
-            // Finally, result of 2nd forEach(= ids.forEach) will be     e.g. ["TKSXRAHS", "VJPAR00S", ...]            
-            hotels.forEach(async eachHotel => {
-                // eachHotel.hotelIds.forEach(id => {
-                //     result.push(id);
-                // }); // save only hotel ids
-                result.push(eachHotel); // save hotel obj
-            });
-        }
-        else {
-            throw new Error(`No hotel data found in Name ${name}`);
-        }
-        // console.log("result in getHotelIdByName: ", result);
-        return result;
-    } catch (err) {
-        console.error("Error in getHotelIdByCity:", err);
-        throw err;
-    }
-}
-
-
-export async function getIds(name, cityCode) {
-
-    // Name Autocomplete API에서는 결과값이 20개까지만 나오고, 그 안에서도 뭐가 잘못된 건지 cityCode로 검색한거랑 겹치는게 하나도 없음.
-    // (e.g. 'CITADINES'으로 검색했을때 파리에 있는 CITADINES 호텔이 몇개 나옴에도 불구하고 PAR로 cityCode로 얻은 리스트에 존재하는 호텔 아이디가 하나도 발견이 안됨. 둘이 뭔가 문제가 있는듯..)
-    // 그래서 방법을 바꿈.. 일단은 Hotel List API만 쓰기로.. 아래처럼..
-    // cityCode로 검색 -> 그 결과 리스트 내에서 parameter name값이 포함된 호텔 검색 (e.g. parameter name이 'WESTERN'일때 name: "BEST WESTERN JARDIN DE CLUNY"이 찾아지는 것처럼..) 해서 호텔 아이디 리스트 추리기
-
-    try {
-        const result = [];
-
-        if (name.length > 0 && cityCode.length > 0) {
-            
-            // Hotel List API
-            const url =
             "https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-city?" +
             `cityCode=${cityCode}&` +
             "radius=5&" +
             "radiusUnit=KM&" +
             "hotelSource=ALL";
-            
-            const hotelsData = await getData(url);
+        
+        const hotelObjsArr = await getData(url);
+        console.log("hotelObjsArr in getHotelsByCity: ", hotelObjsArr);
 
-            // cityCode 내에 있는 모든 호텔 리스트
-            console.log("All hotels in cityCode: ", cityCode, " ===> ", hotelsData);
-    
-            if (hotelsData && hotelsData.length) {
-                // result of below map will be array  e.g. ["TKSXRAHS", "VJPAR00S", ...]
-                hotelsData.forEach(async eachHotel => {
-                    if (eachHotel.name.includes(name)) {
-                        result.push(eachHotel.hotelId);
-                        // result.push(eachHotel); // to check if the intersection result of cityCode & name is correct
-                    }
-                });
-            } else {
-                throw new Error(`No hotel data found with Hotel name ${name} in City Code ${cityCode}`);
-            }
-
-        } else {
-            // Hotel Name Autocomplete API
-            if (name.length > 0) {
-                const hotelsData = await getHotelIdByName(name);
-                console.log("Searched result by hotel name without city (Name Autocomplete): ", hotelsData);
-                if (hotelsData && hotelsData.length) {
-                    hotelsData.forEach(async eachHotel => {
-                        result.push(eachHotel.id);
-                        // result.push(eachHotel); // to check if the result of name searching is correct
-                    });
-                } else {
-                    throw new Error(`No hotel data found with Hotel name ${name}`);
-                }
-            }
-
-            // Hotel List API
-            if (cityCode.length > 0) {
-                const hotelsData = await getHotelIdByCity(cityCode);
-                console.log("Searched result by city without name: ", hotelsData);
-                if (hotelsData && hotelsData.length) {
-                    hotelsData.forEach(async eachHotel => {
-                        result.push(eachHotel.hotelId);
-                        // result.push(eachHotel); // to check if the result of cityCode searching is correct
-                    });
-                } else {
-                    throw new Error(`No hotel data found with City Code ${cityCode}`);
-                }   
-            }
+        if (!hotelObjsArr || !hotelObjsArr.length) {
+            throw new Error(`No hotel data found in City Code ${cityCode}`);
         }
-        console.log("result in getIds: ", result);
-        return result;
+        // result value will be array  e.g. ["TKSXRAHS", "VJPAR00S", ...]
+        return hotelObjsArr;
+    } catch (err) {
+        console.error("Error in getHotelsByCity:", err);
+        throw err;
+    }
+}
 
+
+// // Hotel Name Autocomplete API (up to 20 hotels).. Leave this for later just in case
+// async function getHotelsByName(name) {
+//     try {
+//         const url = 
+//             "https://test.api.amadeus.com/v1/reference-data/locations/hotel?" +
+//             `keyword=${name}&` +
+//             "subType=HOTEL_LEISURE&" +
+//             "subType=HOTEL_GDS&" +
+//             "lang=EN&" +
+//             "max=20";
+        
+//         const hotelObjsArr = await getData(url);
+//         console.log("hotelObjsArr in getHotelsByName: ", hotelObjsArr);
+
+//         if (!hotelObjsArr || !hotelObjsArr.length) {
+//             throw new Error(`No hotel data found in Name ${name}`);
+//         }        
+//         return hotelObjsArr;
+//     } catch (err) {
+//         console.error("Error in getHotelsByCity:", err);
+//         throw err;
+//     }
+// }
+
+
+
+// name can be "" (empty string), but cityCode must be non-empty string
+// (This should've been restricted in the front-end..)
+export async function getIds(name, cityCode) {
+
+    // Name Autocomplete API는 결과값을 20개까지만 보여줘서 여기서 사용하기 적합치 않을뿐더러, 그 20개 안에서도 뭐가 잘못된 건지 cityCode로 검색한거랑 겹치는게 하나도 없음.
+    // (e.g. 'CITADINES'으로 검색했을때 파리에 있는 CITADINES 호텔이 몇개 나옴에도 불구하고 PAR로 cityCode로 얻은 리스트에 존재하는 호텔 아이디가 하나도 발견이 안됨. 둘이 뭔가 문제가 있는듯..)
+    // 그래서 방법을 바꿈.. 일단은 Hotel List API(getHotelsByCity)만 쓰기로.. 아래처럼..
+    // cityCode로 검색 -> 그 결과 리스트 내에서 parameter name값이 포함된 호텔 검색 (e.g. parameter name이 'WESTERN'일때 name: "BEST WESTERN JARDIN DE CLUNY"이 찾아지는 것처럼..) 해서 호텔 아이디 리스트 추리기
+    try {
+        // result will be array  e.g. ["TKSXRAHS", "VJPAR00S", ...]
+        const result = [];
+        const hotels = await getHotelsByCity(cityCode);
+        console.log("Searched hotels by City (getHotelsByCity) before filtering by Name: ", hotels);
+        if (hotels && hotels.length) {
+            hotels.forEach(eachHotel => {
+                if (eachHotel.name.includes(name)) {
+                    result.push(eachHotel.hotelId);
+                }
+            });
+        }
+        if (!result.length) {
+            throw new Error(`No hotel data found with hotel name "${name}" in city code "${cityCode}"`);
+        }
+        console.log(`hotelIds with hotel name "${name}" in city code "${cityCode}" from getIds(): ${result}`);
+        return result;
     } catch (err) {
         console.error("Error in getIds:", err);
         throw err;
@@ -221,7 +156,7 @@ export async function getIds(name, cityCode) {
 // get offers by searchConditions(except for hotel name)
 // each hotel with multiple offers
 // [{ ...hotel, photoUrls: [url1, url2..], offers: [{offer1},{offer2}..] }, { ...hotel, photoUrls: [url1, url2..], offers: [{offer1},{offer2}..] }, ...]
-export async function searchHotels(name, cityCode, searchConditions) {
+export async function searchHotels(name, cityCode, searchConditions) { // name can be "" (empty string), but cityCode must be non-empty string (This should've been restricted in the front-end..)
     try {
         console.log("searchCondition in searchHotels (from App.js): ", searchConditions);
         const ids = await getIds(name, cityCode);
@@ -237,16 +172,16 @@ export async function searchHotels(name, cityCode, searchConditions) {
         const requests = ids.map(async (id) => {
             // Hotel Search API
             const url =
-            "https://test.api.amadeus.com/v3/shopping/hotel-offers?" +
-            `hotelIds=${id}&` +
-            `adults=${searchConditions.adults}&` +
-            `checkInDate=${searchConditions.checkInDate}&` +
-            `checkOutDate=${searchConditions.checkOutDate}&` +
-            `roomQuantity=${searchConditions.roomQuantity}&` +
-            `priceRange=${searchConditions.priceRange}&` +
-            `currency=${searchConditions.currency}&` +
-            "paymentPolicy=NONE&" +
-            "bestRateOnly=false";
+                "https://test.api.amadeus.com/v3/shopping/hotel-offers?" +
+                `hotelIds=${id}&` +
+                `adults=${searchConditions.adults}&` +
+                `checkInDate=${searchConditions.checkInDate}&` +
+                `checkOutDate=${searchConditions.checkOutDate}&` +
+                `roomQuantity=${searchConditions.roomQuantity}&` +
+                `priceRange=${searchConditions.priceRange}&` +
+                `currency=${searchConditions.currency}&` +
+                "paymentPolicy=NONE&" +
+                "bestRateOnly=false";
 
             try {
                 const hotelData = await getData(url);
@@ -294,18 +229,20 @@ export async function getPhotosByHotelName(hotelName) {
         const response = await fetch(apiUrl, { method: "POST", body, headers });
         const data = await response.json();
         console.log("data in getPhotosByHotelName: ", data);
-        const placeId = Object.values(data.places)[0].id;
-        console.log("place Id in getPhotosByHotelName: ", placeId);
 
-        if (data.places && data.places.length > 0 && data.places[0].photos) {
-            result[placeId] = await data.places[0].photos.map(photo =>
-                `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=1000&maxWidthPx=1000&key=${apiKey}`
-            );
-        } else {
-            throw new Error(`No photos found for hotel: ${hotelName}`);
-        }
-        // console.log("photo result: ", result);
-        return result;
+
+            const placeId = Object.values(data.places)[0].id;
+            console.log("place Id in getPhotosByHotelName: ", placeId);
+
+            if (data.places && data.places.length > 0 && data.places[0].photos) {
+                result[placeId] = await data.places[0].photos.map(photo =>
+                    `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=1000&maxWidthPx=1000&key=${apiKey}`
+                );
+            } else {
+                throw new Error(`No photos found for hotel: ${hotelName}`);
+            }
+            // console.log("photo result: ", result);
+            return result;
     } catch (error) {
         console.error("Error fetching photos:", error);
         throw error;
@@ -316,9 +253,7 @@ export async function getPhotosByHotelName(hotelName) {
 // Hotel Ratings API
 export async function getRatingsByHotelId(hotelId) {
     try {
-        const url = 
-        `https://test.api.amadeus.com/v2/e-reputation/hotel-sentiments?hotelIds=${hotelId}`;
-        
+        const url = `https://test.api.amadeus.com/v2/e-reputation/hotel-sentiments?hotelIds=${hotelId}`;
         const rawRatings = await getData(url);
 
         // const result = {};
