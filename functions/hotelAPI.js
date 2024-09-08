@@ -10,7 +10,7 @@ let tokenExpiry = null;
 
 
 // // to minimize the number of accessing token
-// async function fetchToken() {
+// async function getToken() {
 //   const now = new Date();
 //   if (cachedToken && tokenExpiry && now < tokenExpiry) {
 //     console.log("Using cached token");
@@ -41,7 +41,7 @@ let tokenExpiry = null;
 // }
 
 
-async function fetchToken() {
+async function getToken() {
   const now = new Date();
   if (cachedToken && tokenExpiry && now < tokenExpiry) {
     console.log("Using cached token");
@@ -74,7 +74,7 @@ async function fetchToken() {
 
 
 // async function getData(url) {
-//   const token = await fetchToken();
+//   const token = await getToken();
 //   try {
 //     const response = await fetch(url, {
 //       method: "GET",
@@ -93,7 +93,7 @@ exports.getData = onRequest(async (req, res) => {
   const url = req.query.url; // Assume URL is passed as a query parameter
 
   try {
-    const token = await fetchToken();
+    const token = await getToken();
     const response = await fetch(url, {
       method: "GET",
       headers: {Authorization: `Bearer ${token}`},
@@ -111,7 +111,7 @@ exports.getData = onRequest(async (req, res) => {
 
 
 // async function postData(url, requestBodyObj) {
-//   const token = await fetchToken();
+//   const token = await getToken();
 //   try {
 //     const response = await fetch(url, {
 //       method: "POST",
@@ -135,7 +135,7 @@ exports.getData = onRequest(async (req, res) => {
 exports.postData = onRequest(async (req, res) => {
   const {url, requestBodyObj} = req.body;
   try {
-    const token = await fetchToken();
+    const token = await getToken();
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -201,7 +201,7 @@ exports.getHotelIdByCity = onRequest(async (req, res) => {
   }
 
   try {
-    const token = await fetchToken();
+    const token = await getToken();
     const url = `https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-city?cityCode=${cityCode}&radius=5&radiusUnit=KM&hotelSource=ALL`;
 
     const response = await fetch(url, {
@@ -270,7 +270,7 @@ exports.getHotelIdByName = onRequest(async (req, res) => {
   }
 
   try {
-    const token = await fetchToken();
+    const token = await getToken();
     const url = `https://test.api.amadeus.com/v1/reference-data/locations/hotel?keyword=${name}&subType=HOTEL_LEISURE&subType=HOTEL_GDS&lang=EN&max=20`;
 
     const response = await fetch(url, {

@@ -19,7 +19,7 @@ export default function Home({ searchResult }) {
       textAlign: 'center',
   }));
   
-  console.log("searchResult received: ", searchResult);
+  console.log("searchResult received in Home.js (from App.js): ", searchResult);
 
   useEffect(() => {
     console.log("searchResult prop updated in Home:", searchResult);
