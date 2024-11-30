@@ -189,7 +189,7 @@ export async function searchHotels(name, cityCode, searchConditions) { // name c
                     const photoUrls = await getPhotosByHotelName(hotelData[0].hotel.name);
                     const ratings = await getRatingsByHotelId(hotelData[0].hotel.hotelId);
                     // const ratings = await getRatingsByHotelId("TELONMFS"); // test data for ratings
-                    const eachHotel = await { ...hotelData[0].hotel, photoUrls: photoUrls, offers: hotelData[0].offers, ratings: ratings };
+                    const eachHotel = { ...hotelData[0].hotel, photoUrls: photoUrls, offers: hotelData[0].offers, ratings: ratings };
                     console.log("Each hotel with photoUrls & ratings: ", eachHotel);
                     result.push(eachHotel);
                     localStorage.setItem('searchResult', JSON.stringify(result));
@@ -198,12 +198,7 @@ export async function searchHotels(name, cityCode, searchConditions) { // name c
                 console.error(`Error fetching data for hotel ID ${id}:`, err);
             }
         });
-
         await Promise.all(requests);
-
-
-
-
         console.log("result: ", result);
         return result;
     } catch (err) {
@@ -214,8 +209,12 @@ export async function searchHotels(name, cityCode, searchConditions) { // name c
 
 
 // 나중에 테스트 끝나면 export 지우기
+여기 할 차례!!
+여기 뭔가 잘못됨!!!! 사진은 뜨긴 뜨는데 다른 호텔 사진이 뜸.
+이름이랑 뭔가 연관은 있음. 그래서 이름으로 검색해서 사진을 가져오는게 맞긴 한데.. 이건 뭔가 잘못됨.
 export async function getPhotosByHotelName(hotelName) {
     let result = {};
+    let placeId = null;
     const apiUrl = 'https://places.googleapis.com/v1/places:searchText';
     const apiKey = process.env.REACT_APP_FIREBASE_API_KEY;
     const headers = {
@@ -230,19 +229,25 @@ export async function getPhotosByHotelName(hotelName) {
         const data = await response.json();
         console.log("data in getPhotosByHotelName: ", data);
 
-
-            const placeId = Object.values(data.places)[0].id;
-            console.log("place Id in getPhotosByHotelName: ", placeId);
-
-            if (data.places && data.places.length > 0 && data.places[0].photos) {
-                result[placeId] = await data.places[0].photos.map(photo =>
-                    `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=1000&maxWidthPx=1000&key=${apiKey}`
-                );
-            } else {
+        if (data.places && Array.isArray(data.places) && data.places.length > 0) {
+            data.places.forEach(place => {
+                if (place.displayName.text.toLowerCase() === hotelName.toLowerCase()) {
+                    console.log("place.displayName.text in Google Places API for getPhotosByHotelName: ", place.displayName.text);
+                    placeId = place.id;
+                    console.log("places.id in Google Places API for getPhotosByHotelName: ", placeId);
+                    if (place.photos) {
+                        result[placeId] = place.photos.map(photo =>
+                            `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=1000&maxWidthPx=1000&key=${apiKey}`
+                        );
+                    }
+                }
+            });
+            if (placeId === null) {
                 throw new Error(`No photos found for hotel: ${hotelName}`);
             }
-            // console.log("photo result: ", result);
+            console.log("result in getPhotosByHotelName: ", result);
             return result;
+        }
     } catch (error) {
         console.error("Error fetching photos:", error);
         throw error;
