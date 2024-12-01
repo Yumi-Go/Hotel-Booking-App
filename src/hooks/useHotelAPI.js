@@ -209,9 +209,9 @@ export async function searchHotels(name, cityCode, searchConditions) { // name c
 
 
 // 나중에 테스트 끝나면 export 지우기
-여기 할 차례!!
-여기 뭔가 잘못됨!!!! 사진은 뜨긴 뜨는데 다른 호텔 사진이 뜸.
-이름이랑 뭔가 연관은 있음. 그래서 이름으로 검색해서 사진을 가져오는게 맞긴 한데.. 이건 뭔가 잘못됨.
+// 여기 할 차례!!
+// 여기 뭔가 잘못됨!!!! 사진은 뜨긴 뜨는데 다른 호텔 사진이 뜸.
+// 이름이랑 뭔가 연관은 있음. 그래서 이름으로 검색해서 사진을 가져오는게 맞긴 한데.. 이건 뭔가 잘못됨.
 export async function getPhotosByHotelName(hotelName) {
     let result = {};
     let placeId = null;
