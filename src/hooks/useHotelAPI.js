@@ -25,7 +25,7 @@ async function getToken() {
         cachedToken = authData.access_token;
         // Token for test version is valid for 30 minutes
         tokenExpiry = new Date(now.getTime() + 1800 * 1000); // 1800 seconds * 1000 milliseconds per second = 30 minutes
-        console.log("Token refreshed: ", cachedToken);
+        // console.log("Token refreshed: ", cachedToken);
         return cachedToken;
     } catch (err) {
         console.error("Error obtaining token:", err);
@@ -208,10 +208,10 @@ export async function searchHotels(name, cityCode, searchConditions) { // name c
 }
 
 
+
 // 나중에 테스트 끝나면 export 지우기
 // 여기 할 차례!!
 // 여기 뭔가 잘못됨!!!! 사진은 뜨긴 뜨는데 다른 호텔 사진이 뜸.
-// 이름이랑 뭔가 연관은 있음. 그래서 이름으로 검색해서 사진을 가져오는게 맞긴 한데.. 이건 뭔가 잘못됨.
 export async function getPhotosByHotelName(hotelName) {
     let result = {};
     let placeId = null;
@@ -224,34 +224,56 @@ export async function getPhotosByHotelName(hotelName) {
     };
     const body = JSON.stringify({ textQuery: hotelName, maxResultCount: 20 });
 
+
     try {
         const response = await fetch(apiUrl, { method: "POST", body, headers });
         const data = await response.json();
-        console.log("data in getPhotosByHotelName: ", data);
-
-        if (data.places && Array.isArray(data.places) && data.places.length > 0) {
-            data.places.forEach(place => {
-                if (place.displayName.text.toLowerCase() === hotelName.toLowerCase()) {
-                    console.log("place.displayName.text in Google Places API for getPhotosByHotelName: ", place.displayName.text);
-                    placeId = place.id;
-                    console.log("places.id in Google Places API for getPhotosByHotelName: ", placeId);
-                    if (place.photos) {
-                        result[placeId] = place.photos.map(photo =>
-                            `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=1000&maxWidthPx=1000&key=${apiKey}`
-                        );
-                    }
-                }
-            });
-            if (placeId === null) {
-                throw new Error(`No photos found for hotel: ${hotelName}`);
-            }
-            console.log("result in getPhotosByHotelName: ", result);
-            return result;
+        console.log("data in getPhotosByHotelName:", data);
+    
+        if (!data.places || !Array.isArray(data.places) || data.places.length === 0) {
+          throw new Error(`No results found for: ${hotelName}`);
         }
-    } catch (error) {
+    
+        const normalizedHotelName = hotelName.toLowerCase();
+    
+        let bestPlace = null;
+        for (const place of data.places) {
+          const placeName = place.displayName?.text?.toLowerCase() || "";
+          // If either includes the other, it is considered as a close enough match
+          if (
+            placeName.includes(normalizedHotelName) ||
+            normalizedHotelName.includes(placeName)
+          ) {
+            bestPlace = place;
+            break;
+          }
+        }
+    
+        if (!bestPlace) {
+          bestPlace = data.places[0];
+          console.warn(
+            `No partial match for "${hotelName}". Using the first place result: "${bestPlace.displayName?.text}"`
+          );
+        }
+    
+        if (!bestPlace.photos) {
+          throw new Error(`No photos found for: ${bestPlace.displayName?.text}`);
+        }
+    
+        const placeId = bestPlace.id;
+        const photoUrls = bestPlace.photos.map(photo =>
+          `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=1000&maxWidthPx=1000&key=${apiKey}`
+        );
+    
+        const result = { [placeId]: photoUrls };
+        console.log("result in getPhotosByHotelName: ", result);
+        return result;
+    
+      } catch (error) {
         console.error("Error fetching photos:", error);
         throw error;
-    }
+      }
+
 }
 
 

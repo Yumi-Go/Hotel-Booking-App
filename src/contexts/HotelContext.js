@@ -2,18 +2,20 @@ import React, { createContext, useContext, useState } from 'react';
 
 const HotelContext = createContext();
 
-export const HotelProvider = ({ children }) => {
-    const [hotelObj, setHotelObj] = useState(null);
-    
-    return (
-    <HotelContext.Provider value={{ hotelObj, setHotelObj }}>
-        {children}
+export function useHotelContext() {
+  return useContext(HotelContext);
+}
+
+export function HotelProvider({ children }) {
+  const [hotelObj, setHotelObj] = useState(null);
+  const value = { hotelObj, setHotelObj };
+
+  return (
+    <HotelContext.Provider value={value}>
+      {children}
     </HotelContext.Provider>
-    );
-};
-
-export const useHotelContext = () => useContext(HotelContext);
-
+  );
+}
 
 
 

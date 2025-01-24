@@ -17,6 +17,8 @@ import Booking from './components/pages/Booking/Booking';
 import Payment from './components/pages/Booking/Payment';
 import BookingResult from './components/pages/Booking/BookingResult';
 import LogIn from './components/reusableComponents/LogIn';
+import { HotelProvider } from './contexts/HotelContext';
+
 
 export default function App() {
   const [openBooking, setOpenBooking] = useState(false);
@@ -36,25 +38,25 @@ export default function App() {
   const formattedCheckOutDate = useDate(dates.checkOutDate);
 
   useEffect(() => {
-    console.log("searchResult updated in App:", searchResult);
+    // console.log("searchResult updated in App:", searchResult);
   }, [searchResult]);
 
   useEffect(() => {
-    console.log("hotelName updated in App:", hotelName);
+    // console.log("hotelName updated in App:", hotelName);
   }, [hotelName]);
 
   useEffect(() => {
-    console.log("cityCode updated in App:", cityCode);
+    // console.log("cityCode updated in App:", cityCode);
   }, [cityCode]);
 
   useEffect(() => {
-    console.log(`dates updated in App: checkIn ${dates.checkInDate}, checkOut ${dates.checkOutDate}`);
-    console.log("Formatted checkInDate: ", formattedCheckInDate);
-    console.log("Formatted checkOutDate: ", formattedCheckOutDate);
+    // console.log(`dates updated in App: checkIn ${dates.checkInDate}, checkOut ${dates.checkOutDate}`);
+    // console.log("Formatted checkInDate: ", formattedCheckInDate);
+    // console.log("Formatted checkOutDate: ", formattedCheckOutDate);
   }, [dates, formattedCheckInDate, formattedCheckOutDate]);
 
   useEffect(() => {
-    console.log(`guests updated in App: adults ${guests.adults}, children ${guests.children}`);
+    // console.log(`guests updated in App: adults ${guests.adults}, children ${guests.children}`);
   }, [guests]);
 
   const handleSearch = async() => {
@@ -72,7 +74,7 @@ export default function App() {
 
       const response = await searchHotels(hotelName, cityCode, searchConditions);
       setSearchResult(response);
-      console.log("Updated searchResult in App.js:", response);
+      // console.log("Updated searchResult in App.js:", response);
     } catch (error) {
       console.error("Error in handleSearch: ", error);
       setSearchResult([]);
@@ -82,6 +84,7 @@ export default function App() {
   return (
     <AuthProvider>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <HotelProvider>
           <Box className="App">
             <Top />
             <Search
@@ -113,6 +116,7 @@ export default function App() {
                 <Route path="/history" element={<BookingHistory />} />
               </Routes>
           </Box>
+        </HotelProvider>
       </LocalizationProvider>
     </AuthProvider>
   );
