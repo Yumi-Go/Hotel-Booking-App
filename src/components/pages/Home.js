@@ -19,10 +19,10 @@ export default function Home({ searchResult }) {
       textAlign: 'center',
   }));
   
-  console.log("searchResult received in Home.js (from App.js): ", searchResult);
+  // console.log("searchResult received in Home.js (from App.js): ", searchResult);
 
   useEffect(() => {
-    console.log("searchResult prop updated in Home:", searchResult);
+    // console.log("searchResult prop updated in Home:", searchResult);
   }, [searchResult]);
 
   // // for testing Ratings API.. merge ratings to hotelObj later.. after testing
