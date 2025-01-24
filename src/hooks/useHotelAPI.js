@@ -210,8 +210,6 @@ export async function searchHotels(name, cityCode, searchConditions) { // name c
 
 
 // 나중에 테스트 끝나면 export 지우기
-// 여기 할 차례!!
-// 여기 뭔가 잘못됨!!!! 사진은 뜨긴 뜨는데 다른 호텔 사진이 뜸.
 export async function getPhotosByHotelName(hotelName) {
     let result = {};
     let placeId = null;
@@ -223,7 +221,6 @@ export async function getPhotosByHotelName(hotelName) {
         "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.photos,places.id" // places.id 추가한거 관련 다른 코드 싹 다 고치기.. photoUrls에 id를 넣던가 등등..
     };
     const body = JSON.stringify({ textQuery: hotelName, maxResultCount: 20 });
-
 
     try {
         const response = await fetch(apiUrl, { method: "POST", body, headers });
@@ -285,9 +282,9 @@ export async function getRatingsByHotelId(hotelId) {
 
         // const result = {};
         if (rawRatings) {
-            console.log("rawRatings in getRatingsByHotelId: ", rawRatings);
+            console.log(`rawRatings in getRatingsByHotelId: ${rawRatings}`);
             const ratings = await {...rawRatings[0]};
-            console.log("ratings in getRatingsByHotelId: ", ratings);
+            console.log(`ratings in getRatingsByHotelId: ${ratings}`);
             return ratings;
         } else {
             console.log(`No Ratings data for the hotel ${hotelId}`);
@@ -305,12 +302,12 @@ export async function bookingRequest(requestBodyObj) {
 
     const formattedRequestBodyObj = {data: {...requestBodyObj}};
 
-    console.log("formattedRequestBodyObj: ", formattedRequestBodyObj);
+    console.log(`formattedRequestBodyObj ${formattedRequestBodyObj}`);
     try {
         const url = 'https://test.api.amadeus.com/v1/booking/hotel-bookings';
         const bookingResponse = await postData(url, formattedRequestBodyObj);
         if (bookingResponse) {
-            console.log("bookingResponse in bookingRequest(): ", bookingResponse);
+            console.log(`bookingResponse in bookingRequest(): ${bookingResponse}`);
             return bookingResponse;
         } else {
             console.log(`No response for the Booking Request of offer ${requestBodyObj.offerId}`);
