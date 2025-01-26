@@ -19,6 +19,10 @@ import BookingResult from './components/pages/Booking/BookingResult';
 import LogIn from './components/reusableComponents/LogIn';
 import { HotelProvider } from './contexts/HotelContext';
 
+//// Firebase URL
+// hotel-booking-app-e61c6.web.app
+// or
+// hotel-booking-app-e61c6.firebaseapp.com
 
 export default function App() {
   const [openBooking, setOpenBooking] = useState(false);
@@ -36,6 +40,8 @@ export default function App() {
   
   const formattedCheckInDate = useDate(dates.checkInDate);
   const formattedCheckOutDate = useDate(dates.checkOutDate);
+
+  const apiUrl = 'https://us-central1-hotel-booking-app-e61c6.cloudfunctions.net/hotelAPIsHandler';
 
   useEffect(() => {
     // console.log("searchResult updated in App:", searchResult);
@@ -72,8 +78,10 @@ export default function App() {
         currency: "EUR"
       });
 
-      const response = await searchHotels(hotelName, cityCode, searchConditions);
-      setSearchResult(response);
+      // const response = await searchHotels(hotelName, cityCode, searchConditions);
+      const response = await fetch(`https://hotel-booking-app-e61c6.web.app/__/functions/searchHotels?name=${hotelName}&cityCode=${cityCode}&searchConditions=${JSON.stringify(searchConditions)}`);
+      const data = await response.json();
+      setSearchResult(data);
       // console.log("Updated searchResult in App.js:", response);
     } catch (error) {
       console.error("Error in handleSearch: ", error);
