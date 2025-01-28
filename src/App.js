@@ -78,11 +78,14 @@ export default function App() {
         currency: "EUR"
       });
 
-      // const response = await searchHotels(hotelName, cityCode, searchConditions);
-      const response = await fetch(`https://hotel-booking-app-e61c6.web.app/__/functions/searchHotels?name=${hotelName}&cityCode=${cityCode}&searchConditions=${JSON.stringify(searchConditions)}`);
+      const searchConditionsString = JSON.stringify(searchConditions);
+      const response = await fetch(`${apiUrl}/searchHotels?name=${hotelName}&cityCode=${cityCode}&searchConditions=${encodeURIComponent(searchConditionsString)}`);
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
       const data = await response.json();
       setSearchResult(data);
-      // console.log("Updated searchResult in App.js:", response);
+      console.log("Updated searchResult in App.js:", response);
     } catch (error) {
       console.error("Error in handleSearch: ", error);
       setSearchResult([]);
