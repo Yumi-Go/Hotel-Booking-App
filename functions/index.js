@@ -1,10 +1,11 @@
-import { http } from '@google-cloud/functions-framework';
 import express from 'express';
 import cors from 'cors';
+import { https } from 'firebase-functions';
 
 const app = express();
+app.use(cors({ origin: 'https://hotel-booking-app-e61c6.web.app' }));
+// app.use(cors({ origin: true }));
 app.use(express.json());
-app.use(cors());
 
 let cachedToken = null;
 let tokenExpiry = null;
@@ -17,8 +18,8 @@ async function getToken() {
         return cachedToken;
     }
   
-    const amadeusClientId = process.env.AMADEUS_CLIENT_ID;
-    const amadeusClientSecret = process.env.AMADEUS_CLIENT_SECRET;
+    const amadeusClientId = process.env.REACT_APP_AMADEUS_CLIENT_ID;
+    const amadeusClientSecret = process.env.REACT_APP_AMADEUS_CLIENT_SECRET;
     const amadeusAuthUrl = "https://test.api.amadeus.com/v1/security/oauth2/token";
   
     const requestOptions = {
@@ -331,22 +332,18 @@ export async function bookingRequest(requestBodyObj) {
 }
 
 
-
-
-
-
-
-
-// Set up routes for the API endpoint.
+// API route
 app.get('/searchHotels', async (req, res) => {
     try {
         const { name, cityCode, searchConditions } = req.query;
-        const results = await searchHotels(name, cityCode, searchConditions);
+        const parsedSearchConditions = JSON.parse(searchConditions);
+        const results = await searchHotels(name, cityCode, parsedSearchConditions);
         res.json(results);
     } catch (err) {
         console.error("Error during hotel search:", err);
-        res.status(500).send("Error during hotel search");
+        // res.status(500).send("Error during hotel search");
+        res.status(500).json({ error: "Error during hotel search", details: err.toString() });
     }
 });
 
-http('hotelAPIsHandler', app);
+export const hotelAPIsHandler = https.onRequest(app);
