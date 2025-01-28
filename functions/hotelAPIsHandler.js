@@ -206,7 +206,7 @@ export async function searchHotels(name, cityCode, searchConditions) { // name c
                     const eachHotel = { ...hotelData[0].hotel, photoUrls: photoUrls, offers: hotelData[0].offers, ratings: ratings };
                     console.log("Each hotel with photoUrls & ratings: ", eachHotel);
                     result.push(eachHotel);
-                    localStorage.setItem('searchResult', JSON.stringify(result));
+                    // localStorage.setItem('searchResult', JSON.stringify(result));
                 }
             } catch (err) {
                 console.error(`Error fetching data for hotel ID ${id}:`, err);
