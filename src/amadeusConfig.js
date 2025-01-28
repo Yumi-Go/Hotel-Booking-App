@@ -6,15 +6,15 @@ const amadeus = new Amadeus({
 });
 
 
-amadeus.shopping.hotelOffersSearch
-.get({
-    hotelIds: 'RTPAR001',
-    adults: '2'
-})
-.then(function(response) {
-    console.log(response.data);
-}).catch(function(responseError) {
-    console.log(responseError.code);
-});
+// amadeus.shopping.hotelOffersSearch
+// .get({
+//     hotelIds: 'RTPAR001',
+//     adults: '2'
+// })
+// .then(function(response) {
+//     console.log(response.data);
+// }).catch(function(responseError) {
+//     console.log(responseError.code);
+// });
 
 export default amadeus;
