@@ -2,7 +2,10 @@ import express from 'express';
 import cors from 'cors';
 
 const hotelAPIsApp = express();
-hotelAPIsApp.use(cors({ origin: 'https://hotel-booking-app-e61c6.web.app' }));
+hotelAPIsApp.use(cors({
+    origin: [/^http:\/\/localhost:\d+$/, 'https://hotel-booking-app-e61c6.web.app']
+}));
+  
 // app.use(cors({ origin: true }));
 hotelAPIsApp.use(express.json());
 
@@ -81,7 +84,24 @@ async function postData(url, requestBodyObj) {
     }
 }
 
-
+// Get IATA code for a city
+async function getIataCode(cityInput) {
+    try {
+        const url =
+            "https://test.api.amadeus.com/v1/reference-data/locations?" +
+            `keyword=${encodeURIComponent(cityInput)}&subType=CITY`;
+        const iataData = await getData(url); 
+        if (iataData && iataData.length > 0) {
+            const iata = iataData[0].iataCode; // e.g. "PAR"
+            console.log(`Converted "${cityInput}" to IATA code: ${iata}`);
+            return iata;
+        }
+        throw new Error(`No IATA code found for ${cityInput}`);
+    } catch (err) {
+        console.error("Error converting city to IATA code:", err);
+        return cityInput;
+    }
+}
 
 // Hotel List API
 async function getHotelsByCity(cityCode) {
@@ -93,14 +113,14 @@ async function getHotelsByCity(cityCode) {
             "radiusUnit=KM&" +
             "hotelSource=ALL";
         
-        const hotelObjsArr = await getData(url);
-        console.log("hotelObjsArr in getHotelsByCity: ", hotelObjsArr);
+        const response = await getData(url);
+        console.log("response in getHotelsByCity: ", response);
 
-        if (!hotelObjsArr || !hotelObjsArr.length) {
+        if (!response || !response.length) {
             throw new Error(`No hotel data found in City Code ${cityCode}`);
         }
         // result value will be array  e.g. ["TKSXRAHS", "VJPAR00S", ...]
-        return hotelObjsArr;
+        return response;
     } catch (err) {
         console.error("Error in getHotelsByCity:", err);
         throw err;
@@ -336,7 +356,8 @@ hotelAPIsApp.get('/searchHotels', async (req, res) => {
     try {
         const { name, cityCode, searchConditions } = req.query;
         const parsedSearchConditions = JSON.parse(searchConditions);
-        const results = await searchHotels(name, cityCode, parsedSearchConditions);
+        const newCityCode = await getIataCode(cityCode);
+        const results = await searchHotels(name, newCityCode, parsedSearchConditions);
         res.json(results);
     } catch (err) {
         console.error("Error during hotel search:", err);

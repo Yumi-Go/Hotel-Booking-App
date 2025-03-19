@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import Divider from '@mui/material/Divider';
 import BookingDetail from './BookingDetail';
-import Button from '@mui/material/Button';
 import Title from "../../reusableComponents/Title";
 import CancelSubmitBtn from '../../reusableComponents/CancelSubmitBtn';
 import BookingUserInfo from './BookingUserInfo';

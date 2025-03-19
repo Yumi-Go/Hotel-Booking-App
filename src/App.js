@@ -10,7 +10,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { AuthProvider } from './contexts/AuthContext';
 import { Box } from '@mui/material';
-import { searchHotels } from './hooks/useHotelAPI';
 import HotelDetail from './components/pages/Hotel/HotelDetail';
 import { useDate } from './hooks/useDate';
 import Booking from './components/pages/Booking/Booking';

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import * as React from "react";
 import { styled, alpha } from "@mui/material/styles";
 import Typography from '@mui/material/Typography';
