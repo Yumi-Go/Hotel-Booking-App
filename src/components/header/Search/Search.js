@@ -54,7 +54,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 
-export default function Search({ onSearch, setHotelName, setCityCode, dates, setDates, guests, setGuests }) {
+export default function Search({ onSearch, setHotelName, setCityCode, dates, setDates, guests, setGuests, defaultText, setDefaultText }) {
     const hotelNameRef = useRef(null);
     const cityCodeRef = useRef(null);
 
@@ -72,6 +72,7 @@ export default function Search({ onSearch, setHotelName, setCityCode, dates, set
             return;
         }
         onSearch();
+        setDefaultText(false);
     };
 
     return (

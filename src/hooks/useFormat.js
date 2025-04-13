@@ -24,22 +24,15 @@ export function capitalizeWords(paragraph) {
         .join(' ');
 }
 
-
-
 export function formatDescription(text) {
     if (!text) return [];
-    const result = text.replace(/\n/g, ' ').split(', ');
-    return result.filter((string) => !string.includes('sqm') || !string.includes("sqft"));
+    const result = text.split(/,\s*|\n/);
+    // return result.filter((string) => !string.includes('sqm') || !string.includes("sqft"));
+    return result;
 }
 
-// export function formatDescription(text) {
-//     if (!text) return [];
-//     return text.replace(/\n/g, ' ').split(', ');
-// }
-
-
-
 export function extractSquareMeters(text) {
+    if (!text) return [];
     const pattern = /\b(\d+)sqm/g;
     let results = [];
     let match;

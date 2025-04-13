@@ -45,16 +45,16 @@ export default function Availability({ offersObj }) {
                 <React.Fragment key={index}>
                     <Item key={index} onClick={() => handleOpen(offer)}>
                         <Box sx={{ textAlign: 'left' }}>
-                            Room Type: {offer.room.typeEstimated.category}
+                            Room Type: {offer.room?.typeEstimated?.category || ''}
                         </Box>
                         <Box sx={{ textAlign: 'left' }}>
-                            Beds: {offer.room.typeEstimated.bedType} {offer.room.typeEstimated.beds}
+                            Beds: {offer.room?.typeEstimated?.bedType || ''} {offer.room?.typeEstimated?.beds || ''}
                         </Box>
                         {/* <Box sx={{ textAlign: 'left' }}>
                             Description: {offerObj.room.description.text}
                         </Box> */}
                         <Box sx={{ textAlign: 'left' }}>
-                            Price: {offer.price.total} {offer.price.currency}
+                            Price: {offer.price?.total || ''} {offer.price?.currency || ''}
                         </Box>
                     </Item>
 

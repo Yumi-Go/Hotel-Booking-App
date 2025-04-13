@@ -245,6 +245,7 @@ export async function searchHotels(name, cityCode, searchConditions) { // name c
 
 // 나중에 테스트 끝나면 export 지우기
 export async function getPhotosByHotelName(hotelName) {
+    // Google Places API - Text Search (New)
     const apiUrl = 'https://places.googleapis.com/v1/places:searchText';
     const apiKey = process.env.REACT_APP_FIREBASE_API_KEY;
     const headers = {
@@ -290,6 +291,7 @@ export async function getPhotosByHotelName(hotelName) {
         }
     
         const placeId = bestPlace.id;
+        // Google Places API - Place Photo (New)
         const photoUrls = bestPlace.photos.map(photo =>
           `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=1000&maxWidthPx=1000&key=${apiKey}`
         );
@@ -351,7 +353,7 @@ export async function bookingRequest(requestBodyObj) {
 }
 
 
-// API route
+// API route for searchHotels()
 hotelAPIsApp.get('/searchHotels', async (req, res) => {
     try {
         const { name, cityCode, searchConditions } = req.query;
@@ -360,10 +362,24 @@ hotelAPIsApp.get('/searchHotels', async (req, res) => {
         const results = await searchHotels(name, newCityCode, parsedSearchConditions);
         res.json(results);
     } catch (err) {
-        console.error("Error during hotel search:", err);
+        console.error("Error in Hotel Search:", err);
         // res.status(500).send("Error during hotel search");
-        res.status(500).json({ error: "Error during hotel search", details: err.toString() });
+        res.status(500).json({ error: "Hotel Search Failed", details: err.toString() });
     }
 });
+
+// API route for bookingRequest()
+hotelAPIsApp.post('/bookingRequest', async (req, res) => {
+    try {
+      const requestBodyObj = req.body;
+      console.log("requestBodyObj in /bookingRequest route:", requestBodyObj);  
+      const bookingResponse = await bookingRequest(requestBodyObj);  
+      return res.json(bookingResponse || {});
+    } catch (err) {
+      console.error("Error in Booking Request:", err);
+      return res.status(500).json({ error: "Booking Request Failed", details: err.toString() });
+    }
+  });
+  
 
 export default hotelAPIsApp;

@@ -5,7 +5,7 @@ import useAuth from "../../hooks/useAuth";
 import { useNavigate } from 'react-router-dom';
 
 // search result (single item for each hotel from multiple hotels)
-export default function Home({ searchResult }) {
+export default function Home({ searchResult, defaultText }) {
 
   const { currentUser, logOut } = useAuth();
 
@@ -81,7 +81,7 @@ export default function Home({ searchResult }) {
                   </Item>
                 </Grid>
             ))
-            : <div>{searchResult.length === 0 ? "No Search Result" : "Loading..."}</div>
+            : <div>{searchResult.length === 0 ? (defaultText ? "Hello!" : "No hotel found") : "Loading..."}</div>
             }
           </Grid>
         </Box>

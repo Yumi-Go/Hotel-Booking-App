@@ -25,6 +25,7 @@ import { HotelProvider } from './contexts/HotelContext';
 
 export default function App() {
   const [openBooking, setOpenBooking] = useState(false);
+  const [defaultText, setDefaultText] = useState(true);
   const [searchResult, setSearchResult] = useState([]);
   const [hotelName, setHotelName] = useState("");
   const [cityCode, setCityCode] = useState("");
@@ -41,6 +42,11 @@ export default function App() {
   const formattedCheckOutDate = useDate(dates.checkOutDate);
 
   const apiUrl = 'https://us-central1-hotel-booking-app-e61c6.cloudfunctions.net/hotelAPIsHandler';
+
+  useEffect(() => {
+    setSearchResult([]);
+    localStorage.removeItem('searchResult');
+  }, []);
 
   useEffect(() => {
     // console.log("searchResult updated in App:", searchResult);
@@ -105,9 +111,11 @@ export default function App() {
               setDates={setDates}
               guests={guests}
               setGuests={setGuests}
+              defaultText={defaultText}
+              setDefaultText={setDefaultText}
             />
               <Routes>
-                <Route path="/" element={<Home searchResult={searchResult} />} />
+                <Route path="/" element={<Home searchResult={searchResult} defaultText={defaultText} />} />
 
                 {/* have to think about what will be displayed if user input "/hotel-detail" directly without clicking a specific hotel from search result in Home */}
                 <Route path="/hotel-detail" element={<HotelDetail />} />

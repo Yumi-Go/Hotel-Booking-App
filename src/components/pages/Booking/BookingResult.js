@@ -19,21 +19,21 @@ export default function BookingResult() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    // const bookingResponse = location.state?.bookingResponse; // from Payment.js
+    const bookingResponse = location.state?.bookingResponse; // from Payment.js
 
-    // successful booking 테스트 끝나면 위에 코멘트처리된 라인 언코멘트하고 밑에 테스트용 데이터 코멘트처리하기
-    // for testing successful booking (successful booking can't be made in real for test users because it is only allowed to enterprise version users in Amadeus API)
-    const bookingResponse = {
-        "data": [{
-            "type": "hotel-booking",
-            "id": "XD_8138319951754",
-            "providerConfirmationId": "8138319951754",
-            "associatedRecords": [{
-                "reference": "QVH2BX",
-                "originSystemCode": "GDS"
-            }]
-        }]
-    }
+    // // successful booking 테스트 끝나면 위에 코멘트처리된 라인 언코멘트하고 밑에 테스트용 데이터 코멘트처리하기
+    // // for testing successful booking (successful booking can't be made in real for test users because it is only allowed to enterprise version users in Amadeus API)
+    // const bookingResponse = {
+    //     "data": [{
+    //         "type": "hotel-booking",
+    //         "id": "XD_8138319951754",
+    //         "providerConfirmationId": "8138319951754",
+    //         "associatedRecords": [{
+    //             "reference": "QVH2BX",
+    //             "originSystemCode": "GDS"
+    //         }]
+    //     }]
+    // }
     console.log("bookingResponse from Payment.js in BookingResult.js: ", bookingResponse);
     
     const offerObj = location.state?.offerObj; // from Payment.js
