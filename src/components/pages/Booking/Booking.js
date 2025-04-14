@@ -133,7 +133,7 @@ export default function Booking() {
     }
 
     const submitHandler = () => {
-        if (!nonMemberValidation) {
+        if (!nonMemberValidation && !currentUser) {
             const errMsg = Object.values(errors).join('\n');
             alert(errMsg);
         } else {
