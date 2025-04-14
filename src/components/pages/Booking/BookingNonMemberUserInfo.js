@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
+import { formatPhoneNumber } from "../../../hooks/useFormat";
 
 
-export default function BookingNonMemberUserInfo({ setNonMemberValidation, errors, setErrors }) {
+export default function BookingNonMemberUserInfo({ setNonMemberValidation, errors, setErrors, setNonMemberObj }) {
 
     const [fName, setFName] = useState('');
     const [mName, setMName] = useState('');
@@ -28,6 +29,18 @@ export default function BookingNonMemberUserInfo({ setNonMemberValidation, error
     
         validate();
     }, [fName, mName, lName, email, pNum, address, password, confirmPassword, setErrors, setNonMemberValidation]);
+
+    useEffect(() => {
+        setNonMemberObj({
+            fName,
+            mName,
+            lName,
+            email,
+            pNum,
+            address,
+            password
+        });
+    }, [fName, mName, lName, email, pNum, address, password, setNonMemberObj]);
 
     // change later..
     const countries = [
@@ -88,10 +101,10 @@ export default function BookingNonMemberUserInfo({ setNonMemberValidation, error
                 />
                 <TextField
                     id="non-member-pnum-textarea"
-                    label="Phone Number"
-                    placeholder="Enter Your Phone Number"
+                    label="Phone Number (with Country Code)"
+                    placeholder="Enter Your Phone Number wih Country Code"
                     variant="standard"
-                    onChange={(e) => setPNum(e.target.value)}
+                    onChange={(e) => setPNum(formatPhoneNumber(e.target.value))}
                 />
                 {/* <TextField
                     id="standard-select-countries"

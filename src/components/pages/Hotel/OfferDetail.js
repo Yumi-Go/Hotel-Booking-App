@@ -25,10 +25,13 @@ import {
   extractSquareMeters,
   formatDescription,
 } from "../../../hooks/useFormat";
+import { useHotelContext } from "../../../contexts/HotelContext";
 
 // offerObj, handleClose from Availability.js
 const OfferDetail = forwardRef(({ offerObj, handleClose }, ref) => {
   console.log("offerObj in OfferDetail.js (from Availability.js): ", offerObj);
+  const { hotelObj } = useHotelContext();
+  console.log("offerObj in OfferDetail.js (from context): ", hotelObj);
 
   const navigate = useNavigate();
 
@@ -95,7 +98,7 @@ const OfferDetail = forwardRef(({ offerObj, handleClose }, ref) => {
             </Avatar>
           </ListItemAvatar>
           <ListItemText
-            primary={capitalize(offerObj.room?.typeEstimated?.category).replace(
+            primary={capitalize(offerObj.room?.typeEstimated?.category ?? "").replace(
               "_",
               " "
             )}

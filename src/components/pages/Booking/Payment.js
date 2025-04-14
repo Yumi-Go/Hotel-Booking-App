@@ -6,7 +6,8 @@ import Box from "@mui/material/Box";
 import CancelSubmitBtn from "../../reusableComponents/CancelSubmitBtn";
 import PaymentDetail from "./PaymentDetail";
 import Title from "../../reusableComponents/Title";
-import useFirestore from "../../../hooks/useFirestore";
+import { useHotelContext } from "../../../contexts/HotelContext";
+
 
 export default function Payment() {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ export default function Payment() {
   const offerObj = location.state?.offerObj; // from Booking.js
   const guestsObj = location.state?.guestsObj; // from Booking.js
   const nonMemberPwd = location.state?.nonMemberPwd; // from Booking.js
+  const { hotelObj } = useHotelContext(); // from HotelContext instead of navigation state
   const [paymentObj, setPaymentObj] = useState({});
   const [currentUser, setCurrentUser] = useState(
     JSON.parse(localStorage.getItem("CurrentUser")) || {}
@@ -21,6 +23,10 @@ export default function Payment() {
 
   const apiUrl =
     "https://us-central1-hotel-booking-app-e61c6.cloudfunctions.net/hotelAPIsHandler";
+
+  console.log("hotelObj in Payment.js (from context): ", hotelObj);
+
+  
 
   useEffect(() => {
     setCurrentUser(JSON.parse(localStorage.getItem("CurrentUser")));
@@ -36,6 +42,9 @@ export default function Payment() {
   console.log("offerObj from Booking.js: ", offerObj);
   console.log("guestsObj from Booking.js: ", guestsObj);
   console.log("nonMemberPwd from Booking.js: ", nonMemberPwd);
+
+
+  
 
   // Test data (Requesting payment with real credit card is allowed in Production version. So I should use this test data in Test version)
   // const testRequestBody = {
@@ -105,7 +114,6 @@ export default function Payment() {
     //   }
   
 
-
       const response = await fetch(`${apiUrl}/bookingRequest`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -121,7 +129,12 @@ export default function Payment() {
 
       // to BookingResult.js
       navigate("/booking_result", {
-        state: { bookingResponse, offerObj, paymentObj, nonMemberPwd },
+        state: { 
+          bookingResponse, 
+          offerObj, 
+          paymentObj, 
+          nonMemberPwd,
+        },
       });
     } catch (err) {
       console.error("Error in submitHandler(Payment.js): ", err);

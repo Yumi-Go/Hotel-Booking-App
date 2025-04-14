@@ -60,7 +60,12 @@ export default function useFirestore() {
     //     }]
     // }
     async function addBooking(bookingResponseId, hotelObj, offerObj, paymentObj, nonMemberPwd) {
-
+        if (!hotelObj) {
+            console.error("Hotel object is missing");
+            // Return early but don't throw an error
+            return;
+        }
+        
         console.log("bookingResponseId, hotelObj, offerObj, paymentObj in addBooking() in useFirestore.js: \n", bookingResponseId, hotelObj, offerObj, paymentObj);
         console.log("auth.currentUser: ", auth.currentUser);
         if (auth.currentUser === null && nonMemberPwd !== null) { // for non-member booking

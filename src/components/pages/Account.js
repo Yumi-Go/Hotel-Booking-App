@@ -10,6 +10,7 @@ import Button from '@mui/material/Button';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { capitalize } from '../../hooks/useFormat';
 import Title from '../reusableComponents/Title';
+import { formatPhoneNumber } from '../../hooks/useFormat';
 
 
 export default function Account() {
@@ -23,7 +24,7 @@ export default function Account() {
     const [fName, setFName] = useState(currentUser?.fName || '');
     const [mName, setMName] = useState(currentUser?.mName || '');
     const [lName, setLName] = useState(currentUser?.lName || '');
-    const [phoneNumber, setPhoneNumber] = useState(currentUser?.pNum || '');
+    const [pNum, setPNum] = useState(currentUser?.pNum || '');
     const [address, setAddress] = useState(currentUser?.address || '');
 
     // useEffect(() => {
@@ -48,8 +49,8 @@ export default function Account() {
             return;
         }
         
-        console.log(fName, mName, lName, address, phoneNumber);
-        await updateUserInfo(fName, mName, lName, address, phoneNumber);
+        console.log(fName, mName, lName, address, pNum);
+        await updateUserInfo(fName, mName, lName, address, pNum);
         // window.location.reload();
         navigate('/account');
     };
@@ -122,11 +123,11 @@ export default function Account() {
                 />
                 <TextField
                     id="filled-textarea"
-                    label="Phone Number"
-                    placeholder="Enter Your Phone Number"
+                    label="Phone Number (with Country Code)"
+                    placeholder="Enter Your Phone Number wih Country Code"
                     variant="standard"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    value={pNum}
+                    onChange={(e) => setPNum(formatPhoneNumber(e.target.value))}
                 />
                 {/* <TextField
                     id="standard-select-countries"

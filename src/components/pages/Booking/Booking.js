@@ -10,6 +10,7 @@ import BookingNonMemberUserInfo from "./BookingNonMemberUserInfo";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 import { Box } from "@mui/material";
+import { useHotelContext } from "../../../contexts/HotelContext";
 
 
 export default function Booking() {
@@ -17,6 +18,7 @@ export default function Booking() {
     const navigate = useNavigate();
     const location = useLocation();
     const offerObj = location.state?.offerObj; // from OfferDetail.js
+    const { hotelObj } = useHotelContext();
 
         // // booking부터 payment까지 테스트 이걸로 하기 (테스트 끝나면 이거 지우고 위에 코멘트처리한거 해제)
         // const offerObj = {
@@ -105,8 +107,8 @@ export default function Booking() {
         //     },
         //     "self": "https://test.api.amadeus.com/v3/shopping/hotel-offers/5CD6N4B5OW"
         // }
-        console.log("offerObj from OfferDetail.js (Booking.js): ", offerObj);
-
+        console.log("offerObj in Booking.js (OfferDetail.js): ", offerObj);
+        console.log("hotelObj in Booking.js (from context): ", hotelObj);
 
     const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('CurrentUser')) || null);
     const [nonMemberObj, setNonMemberObj] = useState({});
@@ -148,7 +150,6 @@ export default function Booking() {
                 }
             };
             navigate('/payment', { state: { offerObj, guestsObj, nonMemberPwd } }); // to Payment.js
-
         }
     }
 
@@ -187,7 +188,8 @@ export default function Booking() {
                 <BookingNonMemberUserInfo
                 setNonMemberValidation={setNonMemberValidation}
                 errors={errors}
-                setErrors={setErrors} />
+                setErrors={setErrors}
+                setNonMemberObj={setNonMemberObj} />
             )}
             </Box>
             {/* <Button
