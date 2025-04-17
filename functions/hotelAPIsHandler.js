@@ -219,6 +219,7 @@ export async function searchHotels(name, cityCode, searchConditions) { // name c
 
             try {
                 const hotelData = await getData(url);
+                console.log("hotelData in searchHotels:", hotelData);
                 if (hotelData && hotelData.length && hotelData[0].hotel && hotelData[0].offers) {
                     const photoUrls = await getPhotosByHotelName(hotelData[0].hotel.name);
                     const ratings = await getRatingsByHotelId(hotelData[0].hotel.hotelId);
@@ -245,6 +246,7 @@ export async function searchHotels(name, cityCode, searchConditions) { // name c
 
 // 나중에 테스트 끝나면 export 지우기
 export async function getPhotosByHotelName(hotelName) {
+    console.log("hotelName in getPhotosByHotelName:", hotelName);
     // Google Places API - Text Search (New)
     const apiUrl = 'https://places.googleapis.com/v1/places:searchText';
     const apiKey = process.env.REACT_APP_FIREBASE_API_KEY;
@@ -311,22 +313,47 @@ export async function getPhotosByHotelName(hotelName) {
 // Hotel Ratings API
 export async function getRatingsByHotelId(hotelId) {
     try {
-        const url = `https://test.api.amadeus.com/v2/e-reputation/hotel-sentiments?hotelIds=${hotelId}`;
+        console.log("hotelId in getRatingsByHotelId:", hotelId);
+        // const url = `https://test.api.amadeus.com/v2/e-reputation/hotel-sentiments?hotelIds=${hotelId}`;
+        const url = `https://test.api.amadeus.com/v2/e-reputation/hotel-sentiments?hotelIds=TELONMFS`; // test data
         const rawRatings = await getData(url);
+        console.log("rawRatings in getRatingsByHotelId:", rawRatings);
 
-        // const result = {};
-        if (rawRatings) {
-            console.log(`rawRatings in getRatingsByHotelId: ${rawRatings}`);
-            const ratings = await {...rawRatings[0]};
-            console.log(`ratings in getRatingsByHotelId: ${ratings}`);
+        if (rawRatings && rawRatings.length > 0) {
+            const ratings = {...rawRatings[0]};
+            console.log(`ratings in getRatingsByHotelId:`, ratings);
             return ratings;
         } else {
             console.log(`No Ratings data for the hotel ${hotelId}`);
-            return `No Ratings data for the hotel ${hotelId}`;
+            return {
+                overallRating: 0,
+                numberOfReviews: 0,
+                numberOfRatings: 0,
+                sentiments: {
+                    "Cleanliness": 0,
+                    "Comfort": 0,
+                    "Location": 0,
+                    "Facilities": 0,
+                    "Staff": 0,
+                    "Value for money": 0
+                }
+            };
         }
     } catch (err) {
         console.error("Error in getRatingsByHotelId: ", err);
-        return "Error in Ratings Data";
+        return {
+            overallRating: 0,
+            numberOfReviews: 0,
+            numberOfRatings: 0,
+            sentiments: {
+                "Cleanliness": 0,
+                "Comfort": 0,
+                "Location": 0,
+                "Facilities": 0,
+                "Staff": 0,
+                "Value for money": 0
+            }
+        };
     }
 }
 

@@ -21,6 +21,7 @@ export default function HotelDetail() {
     const { hotelObj } = useHotelContext();
 
     console.log("hotelObj in HotelDetail.js (from context): ", hotelObj);
+    console.log("ratings in HotelDetail.js: ", hotelObj?.ratings);
 
     // // for testing getPhotosByHotelName.. remove this later
     // const [photos, setPhotos] = useState([]);
