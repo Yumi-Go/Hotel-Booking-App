@@ -17,9 +17,9 @@ export default function Payment() {
   const nonMemberPwd = location.state?.nonMemberPwd; // from Booking.js
   const { hotelObj } = useHotelContext(); // from HotelContext instead of navigation state
   const [paymentObj, setPaymentObj] = useState({});
-  const [currentUser, setCurrentUser] = useState(
-    JSON.parse(localStorage.getItem("CurrentUser")) || {}
-  );
+  // const [currentUser, setCurrentUser] = useState(
+  //   JSON.parse(localStorage.getItem("CurrentUser")) || {}
+  // );
 
   const apiUrl =
     "https://us-central1-hotel-booking-app-e61c6.cloudfunctions.net/hotelAPIsHandler";
@@ -28,9 +28,9 @@ export default function Payment() {
 
   
 
-  useEffect(() => {
-    setCurrentUser(JSON.parse(localStorage.getItem("CurrentUser")));
-  }, []);
+  // useEffect(() => {
+  //   setCurrentUser(JSON.parse(localStorage.getItem("CurrentUser")));
+  // }, []);
 
   useEffect(() => {
     console.log("paymentObj is updated: ", paymentObj);
@@ -128,7 +128,7 @@ export default function Payment() {
       console.log("bookingResponse in Payment.js:", bookingResponse);
 
       // to BookingResult.js
-      navigate("/booking_result", {
+      navigate("/result", {
         state: { 
           bookingResponse, 
           offerObj, 

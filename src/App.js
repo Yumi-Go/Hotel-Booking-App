@@ -20,8 +20,6 @@ import { HotelProvider } from './contexts/HotelContext';
 
 //// Firebase URL
 // hotel-booking-app-e61c6.web.app
-// or
-// hotel-booking-app-e61c6.firebaseapp.com
 
 export default function App() {
   const [openBooking, setOpenBooking] = useState(false);
@@ -45,7 +43,7 @@ export default function App() {
 
   useEffect(() => {
     setSearchResult([]);
-    localStorage.removeItem('searchResult');
+    // localStorage.removeItem('searchResult');
   }, []);
 
   useEffect(() => {
@@ -70,7 +68,9 @@ export default function App() {
     // console.log(`guests updated in App: adults ${guests.adults}, children ${guests.children}`);
   }, [guests]);
 
-  const handleSearch = async() => {
+  const handleSearch = async () => {
+    // start timer
+    const timer_start = performance.now();
     setSearchResult([]);
     try {
       const searchConditions = ({
@@ -79,7 +79,7 @@ export default function App() {
         checkInDate: formattedCheckInDate,
         checkOutDate: formattedCheckOutDate,
         roomQuantity: 1,
-        priceRange: "100-1500",
+        priceRange: "10-2000",
         currency: "EUR"
       });
 
@@ -90,7 +90,10 @@ export default function App() {
       }
       const data = await response.json();
       setSearchResult(data);
-      console.log("Updated searchResult in App.js:", response);
+      // stop timer and log
+      const timer_end = performance.now();
+      console.log(`Hotel search took ${(timer_end - timer_start).toFixed(0)} ms`);
+      // console.log("Updated searchResult in App.js:", response);
     } catch (error) {
       console.error("Error in handleSearch: ", error);
       setSearchResult([]);
@@ -117,8 +120,8 @@ export default function App() {
               <Routes>
                 <Route path="/" element={<Home searchResult={searchResult} defaultText={defaultText} />} />
 
-                {/* have to think about what will be displayed if user input "/hotel-detail" directly without clicking a specific hotel from search result in Home */}
-                <Route path="/hotel-detail" element={<HotelDetail />} />
+                {/* have to think about what will be displayed if user input "/hotel" directly without clicking a specific hotel from search result in Home */}
+                <Route path="/hotel" element={<HotelDetail />} />
 
                 {/* {openBooking ?
                 <Route path="/" element={<Booking />} /> 
@@ -127,7 +130,7 @@ export default function App() {
 
                 <Route path="/booking" element={<Booking />} />
                 <Route path="/payment" element={<Payment />} />
-                <Route path="/booking_result" element={<BookingResult />} />
+                <Route path="/result" element={<BookingResult />} />
 
                 <Route path="/account" element={<Account />} />
                 <Route path="/login" element={<LogIn />} />

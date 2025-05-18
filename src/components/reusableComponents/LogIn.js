@@ -2,12 +2,6 @@ import firebase from 'firebase/compat/app';
 import * as firebaseui from 'firebaseui'
 import 'firebaseui/dist/firebaseui.css'
 import { useEffect } from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import firebaseConfig from '../../firebaseConfig';
 import useFirestore from '../../hooks/useFirestore';
 import useAuth from '../../hooks/useAuth';
@@ -19,12 +13,10 @@ export default function LogIn() {
 
     const { auth } = firebaseConfig;
     const { addUser } = useFirestore();
-    const { userStateObserver } = useAuth();
-    const currentUser = JSON.parse(localStorage.getItem('CurrentUser'));
-
+    const { userStateObserver, currentUser } = useAuth();
+    // const currentUser = JSON.parse(localStorage.getItem('CurrentUser'));
 
     useEffect(() => {
-
         var uiConfig = {
             callbacks: {
                 signInSuccessWithAuthResult: function(authResult, redirectUrl) {

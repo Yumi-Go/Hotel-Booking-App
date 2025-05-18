@@ -12,14 +12,13 @@ import { capitalize } from '../../hooks/useFormat';
 import Title from '../reusableComponents/Title';
 import { formatPhoneNumber } from '../../hooks/useFormat';
 
-
 export default function Account() {
     const navigate = useNavigate();
-    const { logOut } = useAuth();
+    const { logOut, currentUser } = useAuth();
     const { updateUserInfo } = useFirestore();
 
-    const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('CurrentUser')) || null);
-    // const currentUser = JSON.parse(localStorage.getItem('CurrentUser')) || null;
+    // Add error states
+    const [errors, setErrors] = useState({});
     
     const [fName, setFName] = useState(currentUser?.fName || '');
     const [mName, setMName] = useState(currentUser?.mName || '');
@@ -27,15 +26,58 @@ export default function Account() {
     const [pNum, setPNum] = useState(currentUser?.pNum || '');
     const [address, setAddress] = useState(currentUser?.address || '');
 
-    // useEffect(() => {
-    //   }, [fName, mName, lName, phoneNumber, address]);
+    // Update form fields when currentUser changes
+    useEffect(() => {
+        if (currentUser) {
+            setFName(currentUser.fName || '');
+            setMName(currentUser.mName || '');
+            setLName(currentUser.lName || '');
+            setPNum(currentUser.pNum || '');
+            setAddress(currentUser.address || '');
+        }
+    }, [currentUser]);
 
     useEffect(() => {
         if (!currentUser) {
-          navigate('/login');
+            navigate('/login');
         }
-      }, [currentUser, navigate]);
+    }, [currentUser, navigate]);
 
+    const validateForm = () => {
+        const newErrors = {};
+        
+        // First Name validation
+        if (!fName.trim()) {
+            newErrors.fName = 'First name is required';
+        } else if (!/^[a-zA-Z\s-']{2,50}$/.test(fName.trim())) {
+            newErrors.fName = 'First name should be 2-50 characters and contain only letters, spaces, hyphens, and apostrophes';
+        }
+
+        // Middle Name validation (optional)
+        if (mName && !/^[a-zA-Z\s-']{2,50}$/.test(mName.trim())) {
+            newErrors.mName = 'Middle name should be 2-50 characters and contain only letters, spaces, hyphens, and apostrophes';
+        }
+
+        // Last Name validation
+        if (!lName.trim()) {
+            newErrors.lName = 'Last name is required';
+        } else if (!/^[a-zA-Z\s-']{2,50}$/.test(lName.trim())) {
+            newErrors.lName = 'Last name should be 2-50 characters and contain only letters, spaces, hyphens, and apostrophes';
+        }
+
+        // Phone Number validation
+        if (pNum && !/^\+?[1-9]\d{1,14}$/.test(pNum.replace(/\s+/g, ''))) {
+            newErrors.pNum = 'Please enter a valid phone number with country code (e.g., +353123456789)';
+        }
+
+        // Address validation
+        if (address && address.length > 200) {
+            newErrors.address = 'Address should not exceed 200 characters';
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
 
     const logoutHandler = async () => {
         await logOut();
@@ -46,6 +88,10 @@ export default function Account() {
         e.preventDefault();
         if (!currentUser) {
             console.log("No user is currently logged in.");
+            return;
+        }
+
+        if (!validateForm()) {
             return;
         }
         
@@ -91,6 +137,8 @@ export default function Account() {
                     variant="standard"
                     value={capitalize(fName)}
                     onChange={(e) => setFName(e.target.value)}
+                    error={!!errors.fName}
+                    helperText={errors.fName}
                 />
                 <TextField
                     id="outlined-textarea"
@@ -99,6 +147,8 @@ export default function Account() {
                     variant="standard"
                     value={capitalize(mName)}
                     onChange={(e) => setMName(e.target.value)}
+                    error={!!errors.mName}
+                    helperText={errors.mName}
                 />
                 <TextField
                     required
@@ -108,6 +158,8 @@ export default function Account() {
                     variant="standard"
                     value={capitalize(lName)}
                     onChange={(e) => setLName(e.target.value)}
+                    error={!!errors.lName}
+                    helperText={errors.lName}
                 />
             </div>
 
@@ -116,7 +168,7 @@ export default function Account() {
                     required
                     id="outlined-textarea"
                     label="Email"
-                    placeholder="Enter Your Last Name"
+                    placeholder="Enter Your Email"
                     variant="standard"
                     value={currentUser?.email}
                     disabled
@@ -124,10 +176,12 @@ export default function Account() {
                 <TextField
                     id="filled-textarea"
                     label="Phone Number (with Country Code)"
-                    placeholder="Enter Your Phone Number wih Country Code"
+                    placeholder="Enter Your Phone Number with Country Code"
                     variant="standard"
                     value={pNum}
                     onChange={(e) => setPNum(formatPhoneNumber(e.target.value))}
+                    error={!!errors.pNum}
+                    helperText={errors.pNum || "Format: +353123456789"}
                 />
                 {/* <TextField
                     id="standard-select-countries"
@@ -151,13 +205,15 @@ export default function Account() {
                     variant="standard"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
+                    error={!!errors.address}
+                    helperText={errors.address}
                 />
             </div>
             <CancelSubmitBtn
                 cancelHandler={cancelHandler}
                 submitHandler={submitHandler}
-                cancelText={"cancel"}
-                submitText={"submit"}
+                cancelText={"Cancel"}
+                submitText={"Submit"}
             />
             <Button
                 variant="text"

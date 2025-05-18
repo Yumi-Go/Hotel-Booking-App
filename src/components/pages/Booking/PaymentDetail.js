@@ -2,15 +2,18 @@ import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
+import useAuth from '../../../hooks/useAuth';
 
 
 export default function PaymentDetail({ currency, price, setPaymentObj }) { // offerObj from Payment.js
 
-    const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('CurrentUser')) || {});
+    // const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('CurrentUser')) || {});
+    const { currentUser } = useAuth();
+    
 
-    useEffect(() => {
-        setCurrentUser(JSON.parse(localStorage.getItem('CurrentUser')));
-    }, []);
+    // useEffect(() => {
+    //     setCurrentUser(JSON.parse(localStorage.getItem('CurrentUser')));
+    // }, []);
 
     const [method, setMethod] = useState('');
     const [vendorCode, setVendorCode] = useState('');

@@ -20,8 +20,8 @@ async function getToken() {
         return cachedToken;
     }
   
-    const amadeusClientId = process.env.REACT_APP_AMADEUS_CLIENT_ID;
-    const amadeusClientSecret = process.env.REACT_APP_AMADEUS_CLIENT_SECRET;
+    const amadeusClientId = process.env.AMADEUS_CLIENT_ID;
+    const amadeusClientSecret = process.env.AMADEUS_CLIENT_SECRET;
     const amadeusAuthUrl = "https://test.api.amadeus.com/v1/security/oauth2/token";
   
     const requestOptions = {
@@ -127,7 +127,6 @@ async function getHotelsByCity(cityCode) {
     }
 }
 
-
 // // Hotel Name Autocomplete API (up to 20 hotels).. Leave this for later just in case
 // async function getHotelsByName(name) {
 //     try {
@@ -157,32 +156,35 @@ async function getHotelsByCity(cityCode) {
 // name can be "" (empty string), but cityCode must be non-empty string
 // (This should've been restricted in the front-end..)
 export async function getIds(name, cityCode) {
-
-    // Name Autocomplete API는 결과값을 20개까지만 보여줘서 여기서 사용하기 적합치 않을뿐더러, 그 20개 안에서도 뭐가 잘못된 건지 cityCode로 검색한거랑 겹치는게 하나도 없음.
-    // (e.g. 'CITADINES'으로 검색했을때 파리에 있는 CITADINES 호텔이 몇개 나옴에도 불구하고 PAR로 cityCode로 얻은 리스트에 존재하는 호텔 아이디가 하나도 발견이 안됨. 둘이 뭔가 문제가 있는듯..)
-    // 그래서 방법을 바꿈.. 일단은 Hotel List API(getHotelsByCity)만 쓰기로.. 아래처럼..
-    // cityCode로 검색 -> 그 결과 리스트 내에서 parameter name값이 포함된 호텔 검색 (e.g. parameter name이 'WESTERN'일때 name: "BEST WESTERN JARDIN DE CLUNY"이 찾아지는 것처럼..) 해서 호텔 아이디 리스트 추리기
-    try {
-        // result will be array  e.g. ["TKSXRAHS", "VJPAR00S", ...]
-        const result = [];
-        const hotels = await getHotelsByCity(cityCode);
-        console.log("Searched hotels by City (getHotelsByCity) before filtering by Name: ", hotels);
-        if (hotels && hotels.length) {
-            hotels.forEach(eachHotel => {
-                if (eachHotel.name.includes(name)) {
-                    result.push(eachHotel.hotelId);
-                }
-            });
+  // Search by cityCode -> filter hotel IDs by name keyword
+  try {
+    // result will be array  e.g. ["TKSXRAHS", "VJPAR00S", ...]
+    const result = [];
+    const hotels = await getHotelsByCity(cityCode);
+    console.log(
+      "Searched hotels by City (getHotelsByCity) before filtering by Name: ",
+      hotels
+    );
+    if (hotels && hotels.length) {
+      hotels.forEach((eachHotel) => {
+        if (eachHotel.name.includes(name)) {
+          result.push(eachHotel.hotelId);
         }
-        if (!result.length) {
-            throw new Error(`No hotel data found with hotel name "${name}" in city code "${cityCode}"`);
-        }
-        console.log(`hotelIds with hotel name "${name}" in city code "${cityCode}" from getIds(): ${result}`);
-        return result;
-    } catch (err) {
-        console.error("Error in getIds:", err);
-        throw err;
+      });
     }
+    if (!result.length) {
+      throw new Error(
+        `No hotel data found with hotel name "${name}" in city code "${cityCode}"`
+      );
+    }
+    console.log(
+      `hotelIds with hotel name "${name}" in city code "${cityCode}" from getIds(): ${result}`
+    );
+    return result;
+  } catch (err) {
+    console.error("Error in getIds:", err);
+    throw err;
+  }
 }
 
 
@@ -244,9 +246,7 @@ export async function searchHotels(name, cityCode, searchConditions) { // name c
 
 
 
-// 나중에 테스트 끝나면 export 지우기
 export async function getPhotosByHotelName(hotelName) {
-    console.log("hotelName in getPhotosByHotelName:", hotelName);
     // Google Places API - Text Search (New)
     const apiUrl = 'https://places.googleapis.com/v1/places:searchText';
     const apiKey = process.env.REACT_APP_FIREBASE_API_KEY;
@@ -256,22 +256,16 @@ export async function getPhotosByHotelName(hotelName) {
         "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.photos,places.id" // places.id 추가한거 관련 다른 코드 싹 다 고치기.. photoUrls에 id를 넣던가 등등..
     };
     const body = JSON.stringify({ textQuery: hotelName, maxResultCount: 20 });
-
     try {
         const response = await fetch(apiUrl, { method: "POST", body, headers });
         const data = await response.json();
-        console.log("data in getPhotosByHotelName:", data);
-    
         if (!data.places || !Array.isArray(data.places) || data.places.length === 0) {
           throw new Error(`No results found for: ${hotelName}`);
         }
-    
         const normalizedHotelName = hotelName.toLowerCase();
-    
         let bestPlace = null;
         for (const place of data.places) {
           const placeName = place.displayName?.text?.toLowerCase() || "";
-          // If either includes the other, it is considered as a close enough match
           if (
             placeName.includes(normalizedHotelName) ||
             normalizedHotelName.includes(placeName)
@@ -280,33 +274,26 @@ export async function getPhotosByHotelName(hotelName) {
             break;
           }
         }
-    
         if (!bestPlace) {
           bestPlace = data.places[0];
           console.warn(
             `No partial match for "${hotelName}". Using the first place result: "${bestPlace.displayName?.text}"`
           );
         }
-    
         if (!bestPlace.photos) {
           throw new Error(`No photos found for: ${bestPlace.displayName?.text}`);
         }
-    
         const placeId = bestPlace.id;
         // Google Places API - Place Photo (New)
         const photoUrls = bestPlace.photos.map(photo =>
           `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=1000&maxWidthPx=1000&key=${apiKey}`
         );
-    
         const result = { [placeId]: photoUrls };
-        console.log("result in getPhotosByHotelName: ", result);
         return result;
-    
       } catch (error) {
         console.error("Error fetching photos:", error);
         throw error;
       }
-
 }
 
 
@@ -363,7 +350,7 @@ export async function bookingRequest(requestBodyObj) {
 
     const formattedRequestBodyObj = {data: {...requestBodyObj}};
 
-    console.log(`formattedRequestBodyObj ${formattedRequestBodyObj}`);
+    // console.log(`formattedRequestBodyObj ${formattedRequestBodyObj}`);
     try {
         const url = 'https://test.api.amadeus.com/v1/booking/hotel-bookings';
         const bookingResponse = await postData(url, formattedRequestBodyObj);

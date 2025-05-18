@@ -11,6 +11,8 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 import { Box } from "@mui/material";
 import { useHotelContext } from "../../../contexts/HotelContext";
+import useAuth from "../../../hooks/useAuth";
+
 
 
 export default function Booking() {
@@ -110,7 +112,8 @@ export default function Booking() {
         console.log("offerObj in Booking.js (OfferDetail.js): ", offerObj);
         console.log("hotelObj in Booking.js (from context): ", hotelObj);
 
-    const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('CurrentUser')) || null);
+    // const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('CurrentUser')) || null);
+    const { currentUser, logOut } = useAuth();
     const [nonMemberObj, setNonMemberObj] = useState({});
     // const [fName, setFName] = useState('');
     // const [mName, setMName] = useState('');

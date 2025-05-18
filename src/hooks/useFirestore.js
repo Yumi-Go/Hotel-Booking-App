@@ -1,9 +1,6 @@
 import firebaseConfig from "../firebaseConfig";
 import { doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
 
-
-
-
 export default function useFirestore() {
 
     const { auth, db } = firebaseConfig;
@@ -46,8 +43,7 @@ export default function useFirestore() {
         });
     }
 
-
-
+    // // for testing..
     // const bookingRequestResult = {
     //     "data": [{
     //         "type": "hotel-booking",

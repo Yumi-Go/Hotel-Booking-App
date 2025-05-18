@@ -6,15 +6,17 @@ import { capitalize } from '../../../hooks/useFormat';
 import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
+import useAuth from '../../../hooks/useAuth';
 
 
 export default function BookingUserInfo({ userInfoEditHandler }) {
 
-    const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('CurrentUser')) || {});
+    // const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('CurrentUser')) || {});
+    const { currentUser } = useAuth();
 
-    useEffect(() => {
-        setCurrentUser(JSON.parse(localStorage.getItem('CurrentUser')));
-    }, []);
+    // useEffect(() => {
+    //     setCurrentUser(JSON.parse(localStorage.getItem('CurrentUser')));
+    // }, []);
 
     // const { fName = "", mName = "", lName = "", email = "", phoneNumber = "" } = currentUser;
 
