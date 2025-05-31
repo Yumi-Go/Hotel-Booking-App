@@ -1,14 +1,14 @@
 import styled from "@emotion/styled";
 import { Box, Grid, Paper, Stack } from "@mui/material";
 import { useEffect } from "react";
-import useAuth from "../../hooks/useAuth";
+// import useAuth from "../../hooks/useAuth";
 import { useNavigate } from 'react-router-dom';
 import { useHotelContext } from "../../contexts/HotelContext";
 
 // search result (single item for each hotel from multiple hotels)
 export default function Home({ searchResult, defaultText }) {
 
-  const { currentUser, logOut } = useAuth();
+  // const { currentUser, logOut } = useAuth();
   const { setHotelObj } = useHotelContext();
   const navigate = useNavigate();
 

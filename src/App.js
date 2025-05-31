@@ -25,7 +25,7 @@ import { HotelProvider } from './contexts/HotelContext';
 // http://localhost:3000
 
 export default function App() {
-  const [openBooking, setOpenBooking] = useState(false);
+  // const [openBooking, setOpenBooking] = useState(false);
   const [defaultText, setDefaultText] = useState(true);
   const [searchResult, setSearchResult] = useState([]);
   const [hotelName, setHotelName] = useState("");

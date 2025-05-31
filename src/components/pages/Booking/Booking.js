@@ -113,7 +113,7 @@ export default function Booking() {
         console.log("hotelObj in Booking.js (from context): ", hotelObj);
 
     // const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('CurrentUser')) || null);
-    const { currentUser, logOut } = useAuth();
+    const { currentUser } = useAuth();
     const [nonMemberObj, setNonMemberObj] = useState({});
     // const [fName, setFName] = useState('');
     // const [mName, setMName] = useState('');

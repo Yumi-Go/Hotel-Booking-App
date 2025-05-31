@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
 import useFirestore from '../../hooks/useFirestore';
 import useAuth from '../../hooks/useAuth';
 import CancelSubmitBtn from '../reusableComponents/CancelSubmitBtn';
@@ -105,13 +104,13 @@ export default function Account() {
         navigate('/');
     }
     
-    // change later..
-    const countries = [
-        { value: 'Ireland', label: 'IR' },
-        { value: 'USA', label: 'US' },
-        { value: 'Korea', label: 'KO' },
-        { value: 'France', label: 'FR' },
-    ];
+    // // change later..
+    // const countries = [
+    //     { value: 'Ireland', label: 'IR' },
+    //     { value: 'USA', label: 'US' },
+    //     { value: 'Korea', label: 'KO' },
+    //     { value: 'France', label: 'FR' },
+    // ];
 
     //// if above useEffect is not working, use this..
     // if (!currentUser) {

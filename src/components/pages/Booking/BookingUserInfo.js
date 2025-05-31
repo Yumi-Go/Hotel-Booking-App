@@ -21,13 +21,13 @@ export default function BookingUserInfo({ userInfoEditHandler }) {
     // const { fName = "", mName = "", lName = "", email = "", phoneNumber = "" } = currentUser;
 
     
-    // change later..
-    const countries = [
-        { value: 'Ireland', label: 'IR' },
-        { value: 'USA', label: 'US' },
-        { value: 'Korea', label: 'KO' },
-        { value: 'France', label: 'FR' },
-    ];
+    // // change later..
+    // const countries = [
+    //     { value: 'Ireland', label: 'IR' },
+    //     { value: 'USA', label: 'US' },
+    //     { value: 'Korea', label: 'KO' },
+    //     { value: 'France', label: 'FR' },
+    // ];
     
     if (!currentUser) {
         return <div><NoAccountsIcon sx={{ fontSize: 100, color: "grey" }}/></div>
