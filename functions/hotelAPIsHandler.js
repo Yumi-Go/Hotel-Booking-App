@@ -256,6 +256,7 @@ export async function getPhotosByHotelName(hotelName) {
         "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.photos,places.id" // places.id 추가한거 관련 다른 코드 싹 다 고치기.. photoUrls에 id를 넣던가 등등..
     };
     const body = JSON.stringify({ textQuery: hotelName, maxResultCount: 20 });
+    let bestPlace = null;
     try {
         const response = await fetch(apiUrl, { method: "POST", body, headers });
         const data = await response.json();
@@ -263,7 +264,6 @@ export async function getPhotosByHotelName(hotelName) {
           throw new Error(`No results found for: ${hotelName}`);
         }
         const normalizedHotelName = hotelName.toLowerCase();
-        let bestPlace = null;
         for (const place of data.places) {
           const placeName = place.displayName?.text?.toLowerCase() || "";
           if (
@@ -283,16 +283,15 @@ export async function getPhotosByHotelName(hotelName) {
         if (!bestPlace.photos) {
           throw new Error(`No photos found for: ${bestPlace.displayName?.text}`);
         }
-        const placeId = bestPlace.id;
         // Google Places API - Place Photo (New)
         const photoUrls = bestPlace.photos.map(photo =>
           `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=1000&maxWidthPx=1000&key=${apiKey}`
         );
-        const result = { [placeId]: photoUrls };
+        const result = { [bestPlace.id]: photoUrls };
         return result;
       } catch (error) {
         console.error("Error fetching photos:", error);
-        throw error;
+        return { [bestPlace.id]: "../public/no_image.png" };
       }
 }
 
