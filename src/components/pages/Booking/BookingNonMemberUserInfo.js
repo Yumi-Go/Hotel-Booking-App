@@ -42,13 +42,13 @@ export default function BookingNonMemberUserInfo({ setNonMemberValidation, error
         });
     }, [fName, mName, lName, email, pNum, address, password, setNonMemberObj]);
 
-    // change later..
-    const countries = [
-        { value: 'Ireland', label: 'IR' },
-        { value: 'USA', label: 'US' },
-        { value: 'Korea', label: 'KO' },
-        { value: 'France', label: 'FR' },
-    ];
+    // // change later..
+    // const countries = [
+    //     { value: 'Ireland', label: 'IR' },
+    //     { value: 'USA', label: 'US' },
+    //     { value: 'Korea', label: 'KO' },
+    //     { value: 'France', label: 'FR' },
+    // ];
 
     return (
         <Box

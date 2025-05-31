@@ -21,8 +21,6 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import BedIcon from "@mui/icons-material/Bed";
 import {
   capitalize,
-  capitalizeWords,
-  extractSquareMeters,
   formatDescription,
 } from "../../../hooks/useFormat";
 import { useHotelContext } from "../../../contexts/HotelContext";

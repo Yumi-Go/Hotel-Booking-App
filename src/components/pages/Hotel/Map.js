@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 export default function Map({ hotelObj }) {
     console.log("Received hotelObj in Map: ", hotelObj);
 

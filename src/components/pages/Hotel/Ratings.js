@@ -1,7 +1,6 @@
 import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Unstable_Grid2';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
 import CancelSubmitBtn from "../../reusableComponents/CancelSubmitBtn";
 import PaymentDetail from "./PaymentDetail";

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
 import firebaseConfig from '../firebaseConfig';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
