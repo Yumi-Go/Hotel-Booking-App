@@ -21,6 +21,9 @@ import { HotelProvider } from './contexts/HotelContext';
 //// Firebase URL
 // hotel-booking-app-e61c6.web.app
 
+//// Local host URL (this app is running on only 3000 port)
+// http://localhost:3000
+
 export default function App() {
   const [openBooking, setOpenBooking] = useState(false);
   const [defaultText, setDefaultText] = useState(true);
