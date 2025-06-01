@@ -55,7 +55,7 @@ async function getData(url) {
             headers: { Authorization: `Bearer ${token}` },
         });
         const rawData = await response.json();
-        console.log("raw data:", rawData);
+        console.log("raw data in getData():", rawData);
         return rawData.data;
     } catch (err) {
         console.error("Error fetching data:", err);
@@ -202,10 +202,11 @@ export async function searchHotels(name, cityCode, searchConditions) { // name c
 
         const result = [];
 
-        // To avoid async inside forEach
-        // async inside forEach does not work as expected because forEach doesn't wait for the async function to complete before moving on to the next iteration.
-        // So, Promise.all is used instead.
-        const requests = ids.map(async (id) => {
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        for (const id of ids) {
             // Hotel Search API
             const url =
                 "https://test.api.amadeus.com/v3/shopping/hotel-offers?" +
@@ -234,8 +235,8 @@ export async function searchHotels(name, cityCode, searchConditions) { // name c
             } catch (err) {
                 console.error(`Error fetching data for hotel ID ${id}:`, err);
             }
-        });
-        await Promise.all(requests);
+            await delay(1000); // Wait 1 second between requests
+        }
         console.log("result: ", result);
         return result;
     } catch (err) {
@@ -243,7 +244,6 @@ export async function searchHotels(name, cityCode, searchConditions) { // name c
         throw err;
     }
 }
-
 
 
 export async function getPhotosByHotelName(hotelName) {
