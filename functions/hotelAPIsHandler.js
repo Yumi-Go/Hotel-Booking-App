@@ -249,7 +249,7 @@ export async function searchHotels(name, cityCode, searchConditions) { // name c
 export async function getPhotosByHotelName(hotelName) {
     // Google Places API - Text Search (New)
     const apiUrl = 'https://places.googleapis.com/v1/places:searchText';
-    const apiKey = process.env.FIREBASE_API_KEY;
+    const apiKey = process.env.REACT_APP_FIREBASE_API_KEY;
     const headers = {
         "Content-Type": "application/json",
         "X-Goog-Api-Key": apiKey,
