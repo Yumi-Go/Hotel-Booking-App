@@ -235,7 +235,7 @@ export async function searchHotels(name, cityCode, searchConditions) { // name c
             } catch (err) {
                 console.error(`Error fetching data for hotel ID ${id}:`, err);
             }
-            await delay(1000); // Wait 1 second between requests
+            await delay(100); // Wait 1 second between requests
         }
         console.log("result: ", result);
         return result;
@@ -291,7 +291,7 @@ export async function getPhotosByHotelName(hotelName) {
         return result;
       } catch (error) {
         console.error("Error fetching photos:", error);
-        return { [bestPlace.id]: "../public/no_image.png" };
+        return { [bestPlace.id]: ["https://hotel-booking-app-e61c6.web.app/no_image.png"] };
       }
 }
 
